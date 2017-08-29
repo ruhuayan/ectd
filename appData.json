@@ -1,0 +1,145 @@
+{
+"projetc": "ECTD",
+    
+"files":[
+    {"file": "submission.html",
+    "method": "post",
+    "sendData": "JSON", 
+    "appData": {
+            "description": "new drug",
+            "folder": "945623", 
+            "version" : "0001",
+            "sequence":  "description1", 
+            "compilation":  true, 
+            "regulatory" : true
+    } },
+
+    {"file": "file-upload.html",
+    "method": "post",
+    "data": [
+        {"id": "49", "text": "a.pdf", "type": "file", "parent":"m11"},
+        { },
+        { }
+    ]},
+
+    {"name": "ECTD v3.2",
+    "ECTDtree":[ 
+        { "id" : "sub1", "parent" : "#", "text" : "Submission 1", "type": "root", "state" : { "opened" : true}},
+        { "id" : "m1", "parent" : "sub1", "text" : "Administrative infromation and Prescribing Information", "state" : { "opened" : true}, "Description": "Administrative infromation and Prescribing Information"},
+        { "id" : "m1us", "parent" : "m1", "text" : "us", "Description": "United States"},
+        { "id" : "m11", "parent" : "m1us", "text" : "11-forms", "Description": "FDA Forms"},
+        { "id" : "m12", "parent" : "m1us", "text" : "12-cover-letters", "Description": "Covering letters"},
+        { "id" : "m112", "parent" : "m1us", "text" : "112-other-correspondence", "Description": "Other Correspondence"},
+        { "id" : "m114", "parent" : "m1us", "text" : "114-labeling", "Description": "Labeling"},
+        { "id" : "m120", "parent" : "m1us", "text" : "120-gen-inves-plan", "Description": "General Investigational plan for initial IND"},
+        { "id" : "m2", "parent" : "sub1", "text" : "Summaries"  },
+        { "id" : "m22", "parent" : "m2", "text" : "22-intro", "Description": "Introduction"},
+        { "id" : "m23", "parent" : "m2", "text" : "23-qos", "Description": "Quality overall Summary" },
+        { "id" : "m24", "parent" : "m2", "text" : "24-noclin-over", "Description": "Nonclinical Overview"},
+        { "id" : "m25", "parent" : "m2", "text" : "25-clin-over", "Description": "Clinical Overview"},
+        { "id" : "m26", "parent" : "m2", "text" : "26-nonclin-sum", "Description": "Nonclinical Written and Tabulated Summaries"},
+        { "id" : "m27", "parent" : "m2", "text" : "22-clin-sum", "Description": "Clinical Summary"},
+        { "id" : "m3", "parent" : "sub1", "text" : "Quality"  },
+        { "id" : "m32", "parent" : "m3", "text" : "32-body-data", "Description": "Body of Data"},
+        { "id" : "m32s", "parent" : "m32", "text" : "32s-drug-sub","Description": "Drug Substance"},
+    { "id" : "m32s0", "parent" : "m32s", "text" : "substance-1-manufacturer-1", "Description": "Drug Substance [Drug Substance Name][Manufacturer"},
+    { "id" : "m32s1", "parent" : "m32s0", "text" : "32s1-gen-info", "Description": "General Information(name, manufacturer"},
+    { "id" : "m32s2", "parent" : "m32s0", "text" : "32s2-manuf", "Description": "Manufacture(name, manufacturer"},
+    { "id" : "m32s3", "parent" : "m32s0", "text" : "32s3-charac", "Description": "Characterisation(name, manufacturer"},
+    { "id" : "m32s4", "parent" : "m32s0", "text" : "32s4-contr-drug-sub", "Description": "Control of Drug Substance(name, manufacturer)"},
+    { "id" : "m32s41", "parent" : "m32s4", "text" : "32s41-spec", "Description": "Specification(name, manufacturer"},
+    { "id" : "m32s42", "parent" : "m32s4", "text" : "32s42-analyt-proc", "Description": "Analytical Protection(name, manufacturer"},
+    { "id" : "m32s43", "parent" : "m32s4", "text" : "32s43-val-analyt-proc", "Description": "Validation of Analytical Procedures(name, manufaturer)"},
+    { "id" : "m32s44", "parent" : "m32s4", "text" : "32s44-batch-analys", "Description": "Batch Analyses(name, manufaturer)"},
+    { "id" : "m32s45", "parent" : "m32s4", "text" : "32s45-justif-spec", "Description": "Justification of Specification(name, manufacturer)"},
+    { "id" : "m32s5", "parent" : "m32s0", "text" : "32s5-ref-stand","Description": "Reference Standards or Materials(anme, manufacturer)"},
+    { "id" : "m32s6", "parent" : "m32s0", "text" : "32s6-cont-closure-sys", "Description": "Container Closure System(name, manufacturer)"},
+    { "id" : "m32s7", "parent" : "m32s0", "text" : "32s7-stab", "Description": "Stability(name, manufacturer)"},
+    { "id" : "m32p", "parent" : "m32", "text" : "32p-drug-prod", "Description": "Drug Product(name, dosage form)"},
+    { "id" : "m32p0", "parent" : "m32p", "text" : "product-1", "Description": "Drug Product(name, dosage form)"},
+    { "id" : "m32p1", "parent" : "m32p0", "text" : "32p1-desc-comp", "Description": "Description and Composition of the Drug Product(name, dosage form)"},
+    { "id" : "m32p2", "parent" : "m32p0", "text" : "32p2-pharm-dev", "Description": "Pharmacertical Development(name, dosage form)"},
+    { "id" : "m32p3", "parent" : "m32p0", "text" : "32p3-manuf", "Description": "Manufature(name, dosage from)"},
+    { "id" : "m32p4", "parent" : "m32p0", "text" : "32p4-contr-excip", "Description": "Control of Excipients(name, dosage form)"},
+    { "id" : "m32p40", "parent" : "m32p4", "text" : "excipient-1","Description": "Control of Excipients(name, dosage form)"},
+    { "id" : "m32p5", "parent" : "m32p0", "text" : "32p5-contr-drug-prod", "Description": "Control of Drug Product(name, dosage form)"},
+    { "id" : "m32p51", "parent" : "m32p5", "text" : "32p51-spec","Description": "Specification(s)(name, dosage form)"},
+    { "id" : "m32p52", "parent" : "m32p5", "text" : "32p52-analyt-proc","Description": "Analytical Procedures(name, dosage form)"},
+    { "id" : "m32p53", "parent" : "m32p5", "text" : "32p53-val-analyt-proc", "Description": "Validation of Analytical Procedures(name, dosage form)"},
+    { "id" : "m32p54", "parent" : "m32p5", "text" : "32p54-batch-analys", "Description": "Batch Analyses(name, dosage form)"},
+    { "id" : "m32p55", "parent" : "m32p5", "text" : "32p55-charac-imp", "Description": "Characterisation of Impurities(name, dosage form)"},
+    { "id" : "m32p56", "parent" : "m32p5", "text" : "32p56-justif-spec", "Description": "Justification of Specifications(name, dosage form)"},
+    { "id" : "m32p6", "parent" : "m32p0", "text" : "32p6-ref-stand", "Description": "Reference Standards or Materials(name, dosage form)"},
+    { "id" : "m32p7", "parent" : "m32p0", "text" : "32p7-cont-closure-sys", "Description": "Conainer Closure System(name, dosage form)"},
+    { "id" : "m32p8", "parent" : "m32p0", "text" : "32p8-stab","Description": "Stability(name, dosage form)"},
+    { "id" : "m32A", "parent" : "m32", "text" : "32a-app", "Description": "Appendices"},
+    { "id" : "m32A1", "parent" : "m32A", "text" : "32a1-fac-equip", "Description": "Facilities and Equipment(name, manufacturer)"},
+    { "id" : "m32A2", "parent" : "m32A", "text" : "32a2-advent-agent", "Description": "Adventitious Agents Safety Evaluation(name, dosage form, manufacturer)"},
+    { "id" : "m32A3", "parent" : "m32A", "text" : "32a3-excip-name", "Description": "Excipients-Name"},
+    { "id" : "m32R", "parent" : "m32", "text" : "32r-reg-info", "Description": "Regional Information"},
+    { "id" : "m33", "parent" : "m3", "text" : "33-lit-ref", "Description": "Literature References"},
+    { "id" : "m4", "parent" : "sub1", "text" : "Nonclinical Reports"  },
+    { "id" : "m42", "parent" : "m4", "text" : "42-stud-rep", "Description": "Study Reports"},
+    { "id" : "m421", "parent" : "m42", "text" : "421-pharmacol", "Description": "Pharmacology"},
+    { "id" : "m4211", "parent" : "m421", "text" : "4211-prim-pd", "Description": "Primary Pharmacodynamics"},
+    { "id" : "m4212", "parent" : "m421", "text" : "4212-sec-pd", "Description": "Secondary Pharmacodynmics"},
+    { "id" : "m4213", "parent" : "m421", "text" : "4213-safety-pharmacol", "Description": "Safety Pharmacology"},
+    { "id" : "m4214", "parent" : "m421", "text" : "4214-pd-drug-interact", "Description": "Pharmacodynamic Drug Interactions"},
+    { "id" : "m422", "parent" : "m42", "text" : "422-pk", "Description": "Pharmacokinetics"},
+    { "id" : "m4221", "parent" : "m422", "text" : "4221-analyt-met-val", "Description": "Analytical Methods and Validation Reports"},
+    { "id" : "m4222", "parent" : "m422", "text" : "4222-absorp", "Description": "Absorption"},
+    { "id" : "m4223", "parent" : "m422", "text" : "4223-distrib", "Description": "Distribution"},
+    { "id" : "m4224", "parent" : "m422", "text" : "4224-metab", "Description": "Metabolism"},
+    { "id" : "m4225", "parent" : "m422", "text" : "4225-excr", "Description": "Excretion"},
+    { "id" : "m4226", "parent" : "m422", "text" : "4226-pk-drug-interact", "Description": "Pharmacokinetic Drug Interactions"},
+    { "id" : "m4227", "parent" : "m422", "text" : "4227-other-pk-stud", "Description": "Other Pharmacokinetic Studies"},
+    { "id" : "m423", "parent" : "m42", "text" : "423-tox", "Description": "Toxicology"},
+    { "id" : "m4231", "parent" : "m423", "text" : "4231-single-dose-tox", "Description": "Single-Dose Toxicity"},
+    { "id" : "m4232", "parent" : "m423", "text" : "4232-repeat-dose-tox", "Description": "Repeat-Dose Toxicity"},
+    { "id" : "m4233", "parent" : "m423", "text" : "4233-genotox", "Description": "Genotoxicity"},
+    { "id" : "m42331", "parent" : "m4233", "text" : "42331-in-vitro", "Description": "In vitro"},
+    { "id" : "m42332", "parent" : "m4233", "text" : "42332-in-vitro", "Description": "In vitro"},
+    { "id" : "m4234", "parent" : "m423", "text" : "4234-carcigen", "Description": "Carcinogenicity"},
+    { "id" : "m42341", "parent" : "m4234", "text" : "42341-lt-stud", "Description": "Lont-term studies"},
+    { "id" : "m5", "parent" : "sub1", "text" : "Clinical Study Reports" }]
+    },
+    
+    {"file":"edit-info.html",
+    "method": "post",
+    "data":[{
+        "appID": "000000000",
+        "companyName": "3D Medcines(Sichuan) Co.Ltd.",
+        "description": "Investigational New Drug Application for KN035, IND 901193",
+        "appNumber": "901193",
+        "appType": "Investigational New Drug(IND)",
+        "subID":  "0000",
+        "subType":  "Original Application"
+    }]
+    }, 
+    
+    {   "file": "edit-link.html",
+        "method":"post",
+        "data":[{
+            "textOperations": [{
+                "id": "text-editable-5",
+                "page":"1", 
+                "position":{"x": 146, "y": 180},
+                "pw":595, 
+                "style": {"font": "times_roman", "fontSize": 15.999974988277783, "color": ["1", " 87", " 155"], "bold": true, "italic": false},
+                "text":"www.google.com"       
+            }],
+            "linkOperations":[{
+                "boundingBox": {"left": 19.688618136464825, "top": 183.3725999209382, "width": 115, "height": 22},
+                "id": "target-editable-3",
+                "page": "5",
+                "pw": 595,              
+                "tfid": "13078",
+                "tpage":20,
+                "uri":"b.pdf"
+            }]
+    }]
+    
+        
+    }
+]
+}

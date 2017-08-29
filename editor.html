@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PDF editor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  <link href="css/editor.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="all">
+    
+    <div class="rightPanel">
+        <nav class="navbar" style=" border-radius: 0; background: rgb(56,148,210); ">
+            <div class="container-fluid">
+    <!--<div class="navbar-header"> <a class="navbar-brand" href="#">Tools</a></div>-->
+                <ul class="nav navbar-nav navbar-tools tools-menu edit-menu" id="tools-menu">
+                    <li><a href="#"><i class="fa fa-square-o fa-3x"></i><div>select</div></a></li>
+                    <li><a href="#" title="Add Link" data-tool="link"><i class="fa fa-link fa-3x" aria-hidden="true"></i><div>link</div></a></li>
+                    <li><a href="#" data-tool="text" title="Add new text"><i class="fa fa-file-text-o fa-3x" aria-hidden="true"></i><div>note</div></a></li>
+                    <li><a href="#"><i class="fa fa-files-o fa-3x" aria-hidden="true"></i><div>duplicate</div></a></li>
+                    <li><a href="#" title="Ctrl+Z" data-tool="backward"><i class="fa fa-backward fa-3x" aria-hidden="true"></i><div>backward</div></a></li>
+                    <li><a href="#" title="Ctrl+Y" data-tool="forward"><i class="fa fa-forward fa-3x" aria-hidden="true"></i><div>forward</div></a></li>
+                    <li><a href="#"><i class="fa fa-check-square-o fa-3x" aria-hidden="true"></i><div>check</div></a></li>
+                    <li><a href="#"><i class="fa fa-star-half-o fa-3x" aria-hidden="true"></i><div>favorite</div></a></li>
+                    <li><a href="#" data-tool="delete" title="Delete current page"><i class="fa fa-window-close-o fa-3x" aria-hidden="true"></i><div>delete</div></a></li>
+                    <li><a href="#"><i class="fa fa-bookmark-o fa-3x" aria-hidden="true"></i><div>bookmark</div></a></li>
+                    <li><a href="#"><i class="fa fa-align-left fa-3x" aria-hidden="true"></i><div>align</div></a></li>
+                    <li><a href="#"><i class="fa fa-square fa-3x" aria-hidden="true"></i><div>color</div></a></li>
+                    <li><a href="#"><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i><div>highlight</div></a></li>
+                    <li><a href="#"><i class="fa fa-font fa-3x" aria-hidden="true"></i><div>font</div></a></li>
+                    <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o fa-3x"></i><div>save</div></a></li>
+                    <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download fa-3x" aria-hidden="true"></i><div>download</div></a></li>
+                    <li><a href="#"><i class="fa fa-caret-right fa-3x" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="row-fluid">
+            <div class="col-sm-2 sidebar" style="margin: 0 auto;/* font-family: 'HelveticaNeue*';*/ overflow-x: scoll;">
+                <h2>OUTLINES</h2>
+                <div id="jstree" style="border-top: 1px solid #999;"> </div>
+            </div>
+        
+            <div class="col-sm-10 panel-container">
+                
+                <div class="pdf-editor panel-left" data-loaded="false" data-task="edit" id="pdf-editor">
+                    <nav class="right-tabs">
+                      <a href="#" class="pdfTab">PDF file to edit</a>
+                         <!-- <a href="#" >new tab</a>
+                        <a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>-->
+                    </nav>
+                    <div class="drop-file-zone">
+                        <div class="drop-files-zone-hint"><i class="fa fa-plus fa-3x"></i><br />Drag &amp; drop file here</div>
+                    </div>    
+                    <div class="fileZone"> </div><!-- tools Menu -->
+                </div>
+                <div class="splitter"><div class="top-sp"></div><div class="bottom-sp"></div></div><div class=" panel-mid"></div>
+                <div class="pdf-frame panel-right" id="pdf-frame" data-loaded="false">
+                    <nav class="right-tabs">
+                        <a href="#" class="pdfTab">PDF file to view</a>
+                    </nav>
+                    <div class="drop-file-zone">
+                                <div class="drop-files-zone-hint"><i class="fa fa-plus fa-3x"></i><br />Drag &amp; drop file here</div>
+                    </div>    
+                    <div class="fileZone"></div>
+                </div> 
+            </div>
+        </div>
+        <div class="container-fluid process-line" style="text-align: center; width: 100%;  position: absolute; bottom: 0;"> 
+            <ul class="nav-process">
+                <li class="active"><i class="fa fa-dot-circle-o" aria-hidden="true"></i><div>Upload</div></li>
+                <li class="line"></li>
+                    <li><i class="fa fa-dot-circle-o " aria-hidden="true"></i><div>Edit</div></li><li class="line"></li>
+                    <li><i class="fa fa-dot-circle-o " aria-hidden="true"></i><div>Save</div></li><li class="line"></li>
+                    <li><i class="fa fa-dot-circle-o" aria-hidden="true"></i><div>Submit</div></li>
+            </ul>
+                   
+        </div>
+        
+        <div class="container centered" style="width:50%;">
+                    <div class="row">
+                        <script>
+                            window.lastTextEditSettings = {
+                                size: 16,
+                                color: '#00000',
+                                font: 'Helvetica,serif'
+                            };
+                            //$('.font-size-opts').attr('title',window.lastTextEditSettings.size);
+                        </script>
+                        <div style="display: none" class="text-editable-menu edit-menu" id="text-editable-menu">
+                            <div aria-label="..." role="group" class="btn-group">
+                                <button class="btn btn-default font-bold-opts"><i class="fa fa-bold"></i></button>
+                                <button class="btn btn-default font-italic-opts"><i class="fa fa-italic"></i></button>
+                                <div role="group" class="btn-group">
+                                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"><i class="fa fa-text-height"></i><span class="caret"></span></button>
+                                    <ul class="dropdown-menu font-size-opts" title="16">
+                                        <li><input name="fontSize" value="10" max="100" min="1" type="range">
+                                       </li>
+                                    </ul>
+                                </div>
+                                <div role="group" class="btn-group">
+                                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">Font Family<span class="caret"></span></button>
+                                    <ul class="dropdown-menu font-family-opts">
+                                        <li><a data-font="Helvetica,sans-serif" class="helvetica" href="javascript://">Helvetica</a></li>
+                                        <li><a data-font="'Times New Roman',serif" class="times-new-roman" href="javascript://">Times New Roman</a></li>
+                                        <li><a data-font="'Courier New',monospace" class="courier" href="javascript://">Courier</a></li>
+                                    </ul>
+                                </div>
+                                <div role="group" class="btn-group">
+                                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">Color<span class="caret"></span></button>
+                                    <div class="dropdown-menu color-opts">
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #01579B" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #0277BD" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #0288D1" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #039BE5" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #03A9F4" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #29B6F6" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #4FC3F7" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #81D4FA" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #B3E5FC" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #E1F5FE" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #1B5E20" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #2E7D32" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #388E3C" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #43A047" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #4CAF50" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #66BB6A" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #81C784" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #A5D6A7" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #C8E6C9" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #C8E6C9" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #F57F17" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #F9A825" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FBC02D" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FDD835" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFEB3B" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFEE58" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFF176" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFF59D" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFF9C4" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFFDE7" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #B71C1C" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #C62828" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #D32F2F" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #E53935" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #F44336" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #EF5350" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #E57373" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #EF9A9A" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFCDD2" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FFEBEE" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #4A148C" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #6A1B9A" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #7B1FA2" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #8E24AA" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #9C27B0" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #AB47BC" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #BA68C8" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #CE93D8" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #E1BEE7" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #F3E5F5" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #3E2723" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #4E342E" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #5D4037" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #6D4C41" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #795548" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #8D6E63" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #A1887F" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #BCAAA4" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #D7CCC8" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #EFEBE9" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                        <div class="color-swatch-col">
+                                            <a style="background-color: #212121" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #424242" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #616161" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #757575" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #9E9E9E" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #BDBDBD" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #E0E0E0" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #EEEEEE" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #F5F5F5" class="color-swatch" href="javascript://"></a>
+                                            <a style="background-color: #FAFAFA" class="color-swatch" href="javascript://"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-default delete-opts"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </div><!-- text edit tools-->
+
+                        <div style="display: none" class="link-editable-menu edit-menu" id="link-editable-menu">
+                            <div aria-label="..." role="group" class="btn-group">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-link"></i> </span>
+                                        <input autocomplete="off" placeholder="12345" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <button class="btn btn-default delete-opts"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </div><!-- link edit tools -->
+                    
+                    </div>
+                </div><!-- edit dropdown tools -->      
+        <div style="display:none" id="selectionBorder"></div>
+        <div style="display: none" class="modal app-modal" id="removeUnusedTextPrompt">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+                                <div class="modal-title">
+                                    There are some unused text edits. (the default <i>Text here</i>)<br> Should we remove them before continuing?
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-no btn-light btn-xs" type="button">No, don't remove</button>
+                                <button class="btn btn-yes btn-xs" type="button">Yes, remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    </div>
+</div>
+    <script src="dist/jstree.min.js"></script>                          
+<script> 
+//$(function () {
+    $('#jstree').jstree({
+        "core" : {
+        "animation" : 0,
+        "check_callback" : function (op, node, par, pos, more) { //console.log(node);                                                                                               
+            if ((op === "move_node" || op === "copy_node") && node.type && node.type == "root") {
+                return false;
+            }
+            if ((op === "move_node" || op === "copy_node") && more && more.core && !confirm('Are you sure ...')) {
+                return false;
+            }
+            return true;
+        },
+        "data" : [
+{ "id" : "ajson1", "parent" : "#", "text" : "root node - stupid file" },
+{ "id" : "ajson11", "parent" : "#", "text" : "root 1 node" },
+{ "id" : "ajson12", "parent" : "#", "text" : "root 2 node" },
+{ "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
+{ "id" : "ajson3", "parent" : "ajson2", "text" : "a.pdf","type" : "file" },
+{ "id" : "ajson4", "parent" : "ajson2", "text" : "b.pdf","type" : "file" },
+]
+},
+  "types" : {
+    "#" : {
+      "max_children" : 1, 
+      "max_depth" : 4, 
+      "valid_children" : ["root"]
+    },
+    "root" : {
+      "icon" : "/static/3.1.1/assets/images/tree_icon.png",
+      "valid_children" : ["default"]
+    },
+    "default" : {
+      "valid_children" : ["default","file"]
+    },
+    "file" : {
+      "icon" : "glyphicon glyphicon-file",
+      "valid_children" : []
+    }
+  },
+"plugins" : [
+"contextmenu", "dnd", "types"
+]
+    });
+    // 7 bind to events triggered on the tree
+    $('#jstree').on("changed.jstree", function (e, data) {                                   //console.log(data);
+        var fileName = $.trim(data.node.text);
+        if(fileName.indexOf('.pdf')>0) {                                                                          //console.log(data.selected[0]==='pdf');
+            open(data.node.text);
+        }
+    });
+</script><!--tree view-->
+<script src="dist/pdfjs/pdf.min.js"></script>
+    <script>
+        PDFJS.workerSrc = 'dist/pdfjs/pdf.worker.js';
+        PDFJS.cMapUrl = './cmaps/';
+        PDFJS.cMapPacked = true;
+        PDFJS.disableStream = true; 
+    </script>
+<script src="dist/jquery-resizable.js"></script>
+<script>
+    $(document).on('dnd_move.vakata', function (e, data) {                  //data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');      
+            }).on('dnd_stop.vakata', function (e, data) {                               // console.log(data.element.text);
+                var fileName = $.trim(data.element.text);                               //console.log(fileName);
+                var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
+                if(fileName.indexOf('.pdf')>0) {                                                
+                    if(t.parents('div.pdf-editor').length) open(fileName, t.parents('div#pdf-editor'));
+                    else if(t.parents('div.pdf-frame').length) open(fileName, t.parents('div#pdf-frame'));
+                }   
+    });
+</script>
+<script>
+    //////////////////////////////////////////////
+    //        load pdf 2 html
+    //////////////////////////////////////////////
+    var pdfFile={}, pdfCache={}, pdfEditor = $('.pdf-editor'), pdfFrame = $('.pdf-frame'), _EH=$(window).height()-145;  // console.log(_EH)    
+
+    function open(file, panel){                                          //console.log('panel: ',panel[0].id);          
+        if(!panel) {                                                          
+            if(pdfEditor.attr('data-loaded')=='false') openFile(file, pdfEditor);       
+            else if(pdfFrame.attr('data-loaded')=='false')  openFile(file, pdfFrame);
+            else alert('Can not open another pdf file !!!');
+        }else if(panel[0].id==='pdf-editor'){                                 //console.log('panel: ',panel);
+            if(panel.attr('data-loaded')=='false')  openFile(file, panel);
+            else alert('PDF Editor can not load another pdf');
+        }else if(panel[0].id==='pdf-frame'){
+            if(panel.attr('data-loaded')=='false')  openFile(file, panel);//openFile(file, fileZone);
+            else alert('PDF frame can not load another pdf');
+        } 
+    }
+    
+    function openFile(file, panel){                                            //console.log(fileZone.parent());
+        panel.find('.drop-file-zone').fadeOut(300);
+        panel.attr('data-loaded', 'true');
+        panel.find('.fileZone').fadeIn(300);
+        var pdf; 
+        for(var filename in pdfCache){    //console.log(filename)
+            if (filename === file){pdf = pdfCache[filename]; } 
+        }
+        if(pdf){
+            pdfFile[panel[0].id] = {'name': file, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};
+            pdf2html(file, pdf, panel);
+        }else 
+            PDFJS.getDocument('http://localhost/pdfEditor/pdfFiles/'+ file).then(function(pdf) {         
+                pdfFile[panel[0].id] = {'name': file, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      console.log('pdfFile: ',pdfFile);
+                pdfCache[file] = pdf;
+                pdf2html(file, pdf, panel);
+            });
+    }
+    function pdf2html(file, pdf, panel){
+            var fileZone = panel.find('.fileZone');
+            for (var i = 1; i <= pdf.numPages; i++) genHtml(i, fileZone);
+                    
+            renderPDF(pdf, fileZone, true);              // renderFirstTime - true
+            //getMetadata(pdf);
+            //if(panel[0].id==='pdf-editor') createInsertTag(fileZone);  
+            $('.splitter').fadeIn(300); 
+            panel.find('.pdfTab').html(file+'<i class="fa fa-times" aria-hidden="true" style="float:right; margin-right: 1em;" onclick="closeFile(this)"></i>');
+            if(pdfEditor.attr('data-loaded')==='true' && pdfFrame.attr('data-loaded')==='true'){
+                toggleSplitter(false);
+                //pdfEditor.resize({enabled: false});
+            }
+           $('.process-line').css({'opacity': .3});
+            fileZone.css({'border': '1px solid #999', 'height': _EH}).scroll(function(e){
+                hideEditMenu();
+                renderPDF(pdf, fileZone, true);            //renderFirstTime - false
+            });
+    }
+    function closeFile(div){                                                    //console.log($(div).parents('div.pdf-editor'));
+        if($(div).parents('div.pdf-editor').length){
+            var panel = $(div).parents('div.pdf-editor');
+            closePanel(panel);
+            panel.find('.pdfTab').html('file to edit');                           //console.log(pdfFile);
+ 
+        }else if($(div).parents('div.pdf-frame').length) {
+            var panel = $(div).parents('div.pdf-frame');
+            closePanel(panel);                                        
+            panel.find('.pdfTab').html('file to view');                            //console.log(pdfFile); 
+        }     
+        if(pdfEditor.attr('data-loaded')=='false' && pdfFrame.attr('data-loaded')=='false'){
+                toggleSplitter(false);
+                $('.process-line').css({'opacity': 1});
+        }else{
+                toggleSplitter(true);
+        }
+    }
+    function closePanel(panel){
+        
+        panel.attr('data-loaded', 'false');
+        panel.find('.drop-file-zone').fadeIn(300);
+        if(panel.find('iframe').length>0) panel.find('iframe').remove();
+        else
+        panel.find('.fileZone').fadeOut(300, function(){
+            $(this).remove();
+            $('<div class="fileZone"> </div>').insertAfter(panel.find('.drop-file-zone'));
+        });
+        //delete pdfFile[panel[0].id];   
+    }
+    pdfEditor.resize({
+                    minWidth: 350,
+                    maxWidth: $('.panel-container').width()-200,
+                    handleSelector: ".splitter",
+                    resizeHeight: false,
+                    onDragStart: function(e, $el, opts){ hideEditMenu(); },
+                    onDragEnd: function(e, $el, opts ){  
+                        for(var key in pdfFile){
+                            var o = pdfFile[key];
+                            o.panel.find('.fileZone').find(".page-wrap").removeClass('rendered');
+                            renderPDF(o.pdf, o.panel.find('.fileZone'), false);
+                        }
+                        var ob = pdfFile['pdf-editor'];                         //console.log('ob: ', ob);
+                        if(ob && ob.dataLoaded){ 
+                            scaleOperations(ob, pdfEditor.find('.fileZone'));
+                        }
+                    }
+                });
+    function toggleSplitter(show){
+        if(show){
+            $('.splitter').show();
+            $('.panel-mid').hide();
+        }else{
+            $('.splitter').hide();
+            $('.panel-mid').show();   
+        }
+    }
+    function scaleOperations(ob, editZone){
+        
+        if(hasValidOP(operationCount)){
+            var scale = (editZone.width()-window.browserScrollbarWidth)/ob.pdfWidth;    //console.log('scale2',scale);                     
+            var opList = getOpList();                                     
+            for(var op in opList){
+                if(opList[op].length>0){                                   
+                    var operations = opList[op];                                //console.log(operations);
+                    for(var i=0; i<operations.length; i++) {
+                        var operation = operations[i];                            console.log(operation);
+                        if(operation.boundingBox)                  // link edit 
+                            $('#'+operation.id).css({
+                                'width': operation.boundingBox.width * scale,
+                                'height': operation.boundingBox.height * scale,
+                                'top': operation.boundingBox.top * scale,
+                                'left': operation.boundingBox.left * scale
+                            });   
+                        if(operation.position)                  // text edit 
+                             $('#'+operation.id).css({
+                                'left': operation.position.x * scale,
+                                'top': operation.position.y * scale,
+                                'font-size': operation.style.fontSize * scale,
+                                'line-height': (operation.style.fontSzie+2) * scale
+                            });  
+                        if(operation.page)                    // add page
+                            scaleTemplate(ob, scale, editZone.find('.page-wrap'));
+                                                                           //console.log('canvas', ob.pdfWidth * scale);
+                    }
+                }
+            }
+        }else console.log('did not edit at all');        
+    }
+    function genHtml(pageNum, fileZone) {                                                                  //console.log('page Num: ', pageNum);
+        var //i = $('<div class="page-container"></div>'),
+            //n = $('<div class="page-tools-menu"><div class="btn-group btn-group-vertical" role="group" aria-label="Page Tools"><button type="button" class="btn btn-default btn-xs" title="Delete PDF Page" data-tool="delete-page" style=""><i class="fa fa-trash-o"></i></button></div></div>'),
+            pageWrap = $('<div class="page-wrap"><canvas class="page"></canvas></div>').attr("data-page-num", pageNum).attr("data-original-page-num", pageNum);
+            //i.append(n).append('<div class="page-number-label"></div>').append(o),
+            //i.append(o),
+            //i.find(".page-number-label").text(pageNum),
+            fileZone.append(pageWrap);
+        var w = fileZone.width(), h = _EH;                                                                    
+        pageWrap.find("canvas.page").attr("height", h).attr("width", w);                     //console.log('filezone width ', fileZone, fileZone.width());
+    }
+    function renderPDF(pdf, fileZone, renderFirstTime) {
+        fileZone.find(".page-wrap").not(".rendered").each(function() {
+            if ($(this).isInViewport() ) {                                                        
+                var e = parseInt($(this).attr("data-original-page-num"));                            console.log(e, ' in view port');                           
+                e&&pdf ? render(pdf, fileZone, e, renderFirstTime, function() {}) : console.log('pdf page not found') ;  // scaleTemplate(fileZone, $(this))
+            } 
+        });
+    } function scaleTemplate(ob, scale, pageWrap){
+        var pdfWidth = ob.pdfWidth, pdfHeight = ob.pdfHeight;
+        //var scale = ( fileZone.width()- window.browserScrollbarWidth) / pdfWidth;    //console.log('scaleTemplate: ',scale);
+        pageWrap.attr("data-scale", scale).addClass("rendered");
+        var canvas = pageWrap.find('canvas.page').get(0); 
+        canvas.width =pdfWidth * scale, canvas.height = pdfHeight * scale;
+                            
+    }////**************have not used the function getMetadata()************************************/
+    function getMetadata(pdf) {
+        pdf.getMetadata().then(function(t) {                                          //console.log('pdf metadata: ', t);
+            t && t.info && t.info.Creator && t.info.Creator.indexOf("Canon") >= 0 && alert("Editing a scanned PDF? Warning: support for this type of documents is limited.", "warning")
+        }).catch(function(t) {
+            console.log(t);
+        });
+    }
+    /*function createInsertTag(fileZone) {
+        var t = '<div class="page-between"><a onclick="insertPage(this)" class="btn btn-light btn-xs">Insert page here</a></div>';
+        fileZone.find(".page-container").each(function() {
+            $(this).prepend(t);                                                 //console.log('pagewrap width:',$(this).find('.page-wrap').offset().left, $(this).find('.page-wrap').offset().top);
+        });
+        var e = $('<div class="page-container last"></div>').append(t);
+        fileZone.append(e);
+    }*/
+    jQuery.fn.isInViewport = function() {
+            var el = this[0];
+            var rect = el.getBoundingClientRect();                              //console.log('page: ', $(this).height(), rect.top)
+            if (rect.top == 0 && rect.bottom == 0 && rect.left == 0 && rect.right == 0) 
+                return false;
+            var outsideViewport = (
+                rect.bottom < 0 ||
+                ///rect.right < 0 ||
+                rect.top > $(window).height() //||
+                //rect.left > $(window).width()
+            );
+            return !outsideViewport;
+    };
+    function render(pdf,fileZone, e, renderFirstTime, a) {
+        var panel_id = fileZone.parent()[0].id;                                //console.log('details: ',panel_id, renderFirstTime);
+        pdf.getPage(e).then(function(page) {
+            //var i = E(),          // var w = $('.pdf-editor').width()-50     
+            var n = page.getViewport(1),                                          
+                o = (fileZone.width()- window.browserScrollbarWidth) / n.width,                                                 
+                r = page.getViewport(o),
+                pageWrap = fileZone.find(".page-wrap[data-original-page-num=" + e + "]").attr("data-scale", o).addClass("rendered").attr('data-pdfW', n.width);
+                
+                if(!pdfFile[panel_id].pdfWidth) pdfFile[panel_id].pdfWidth = n.width;    
+                if(!pdfFile[panel_id].pdfHeight) pdfFile[panel_id].pdfHeight = n.height;
+            var canvas = pageWrap.find("canvas.page").get(0),
+                ctx = canvas.getContext("2d");
+                canvas.height = r.height,
+                canvas.width = r.width;                                                //console.log('scale0: ', o);
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: r
+            }; 
+            page.render(renderContext).then(function(){
+                //canvas.show();
+            });
+            /*d.clearRect(0, 0, s.width, s.height);
+            var textLayer = $('<div class="textLayer"></div>');
+            textLayer.css({
+                    height: r.height + "px",
+                    width: r.width + "px"
+                }),
+                pageWrap.append(textLayer);
+            var f = $('<div class="formLayer"></div>');
+            if (f.css({
+                    height: r.height + "px",
+                    width: r.width + "px"
+                }),
+                pageWrap.append(f),
+                1 == e) {
+                pageWrap.parents(".page-container").clone().removeClass("page-container").attr("id", "new-page-template").css({
+                        display: "none"
+                    }).insertBefore(pageWrap.parents(".page-container"));
+            }*/
+            /*var h = t.render(l);
+            return h.promise.then(function() {
+                //$(document).trigger("pdfPageContentRendered", {pageNum: e }),
+                    t.getTextContent({
+                        normalizeWhitespace: !0
+                    }).then(function(text) {
+                        var a = PDFJS.renderTextLayer({
+                            textContent: text,
+                            container: textLayer.get(0),
+                            viewport: r,
+                            textDivs: [],
+                            enhanceTextSelection: !0
+                        });
+                        a.promise.then(function() {
+                            textLayer.find(".endOfContent").remove(),
+                                displayText(textLayer),
+                                setFont(textLayer);
+                                if(panel_id==='pdf-editor' && renderFirstTime) {     
+                                    addFontOpts();                     //console.log('fonts:' ,document.PDFJSFonts);                                
+                                }                                  // to add fonts to text editor
+                                PDFJS.FormFunctionality.setPostRenderHook(function(t) {
+                                    var e = PDFJS.FormFunctionality.getFormValues();
+                                    e && Object.keys(e).length > 0 && toggleTool("form");
+                                }),
+                                PDFJS.FormFunctionality.renderForm(f.get(0), t, r, {}),
+                                setCanvasHeight(s.height),       // s- canvas height
+                                t.cleanup();                                   
+                        })
+                    }),
+                    a(null);  // no functionality
+            }, function(t) {
+                a(t);        // no functionality
+            });*/
+        });
+    }
+    
+   /* function displayText(textLayer) {
+        var divs = textLayer.find("div").map(function(t, e) {
+            var a = $(e),
+                i = a.position(),
+                n = a.height(),
+                o = b(a),                                                           
+                r = a.width() * o,
+                u = a.text().trim();                                            //console.log('scale: '  + o);
+            return n > 2 * r && u.length > 1 || void 0 != a.attr("data-angle") ? (a.addClass("not-editable"),
+                null) : (a.css({
+                    width: r,
+                    "overflow-x": "hidden",
+                    transform: "none"
+                }),
+                new C({
+                    top: i.top,
+                    bottom: i.top + n,
+                    left: i.left,
+                    right: i.left + r,
+                    height: n,
+                    width: r,
+                    scaleX: o,
+                    text: a.text(),
+                    fontFace: a.attr("data-font-face"),
+                    node: a
+                }))
+        }).toArray();
+        divs.sort(function(t, e) {
+            var a = F(t.top, e.top, 4);
+            return a ? t.left - e.left : t.top - e.top;
+        });
+        var a;
+        divs.forEach(function(t, e, i) {
+            if (null != t)
+                if (a) {
+                    var n = F(a.top, t.top, 4),
+                        o = F(a.right, t.left, a.height);
+                    if (n && o) {
+                        a.right + getFontHeight(a.fontFace) < t.left && a.node.append(" "),
+                            a.node.append(t.node.html()),
+                            t.node.remove();
+                        var r = $(a.node);
+                        a.node = r,
+                            a.width = t.right - a.left,
+                            a.height = Math.max(t.height, a.height),
+                            a.right = t.right,
+                            a.node.css({
+                                width: a.width
+                            })
+                    } else
+                        a = t
+                } else
+                    a = t
+        })
+    }
+    function setFont(textLayer) {
+        textLayer.find("div").map(function(t, e) {
+            var a = $(e),
+                i = a.attr("data-font-face");
+            a.css({
+                "font-family": i
+            });
+        });
+    }
+    
+    function addFontOpts() {                                                   
+        var t = $(".font-family-opts"),
+            e = Object.keys(document.PDFJSFonts);                                //console.log('fonts:' ,document.PDFJSFonts);//console.log(e);
+        e.length > 0 && (0 == t.find("li.divider").length && t.append('<li role="separator" class="divider"></li>'),
+        //for (var i=0; i<e.length; i++){
+            $.each(e, function(i) {
+                if (!(t.find('[data-font="' + e[i] + '"]').length > 0)) {
+                    var a = document.PDFJSFonts[e[i]];                             //console.log('pdf uses font: ', a);
+                    "+" == a.charAt(6) && (a = a.substring(7)),
+                        a = a.replace(/-/g, " ");
+                       if(t.find('li').find('a').text().indexOf(a)<0)
+                        t.append('<li><a data-font="' + e + '" class="doc-font" href="javascript://">' + a + ' <span class="input-help"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" data-html="true" title="This is a document embedded font. Characters may be missing."></i></span></a></li>');
+                }
+            }),
+            $('.font-family-opts .input-help [data-toggle="tooltip"]').tooltip());
+    }
+                                                               
+    function setCanvasHeight(h) {
+        //At || (At = !0,
+            $(".page-wrap").not(".rendered").each(function() {
+                $(this).find("canvas").attr("height", h);})
+                                                                                   //)
+    }*/
+    var fontHeights = {};    
+    function getFontHeight(t) {
+        if (!fontHeights[t]) {
+            var e = $('<span style="font-family: ' + t + ';">&nbsp;</span>');
+            $("body").append(e);
+            var a = e.width();
+            e.remove(),
+                fontHeights[t] = a;
+        }
+        return fontHeights[t];
+    }
+    function b(t) {
+        var e = t.css("transform");
+        if ("none" == e)
+            return 1;
+        var a = e.substring(7, e.length - 1).split(", ");
+        return parseFloat(a[0]);
+    }
+    function C(t) {
+        return $.extend(this, t),
+            this;
+    }
+    function F(t, e, a) {
+        return a = a || 2,
+            Math.abs(t - e) <= a;
+    }
+    function toggleTool(t) {
+        hideEditMenu(); removeTool(); if(!isTool(t)) setTool(t);
+        //isTool(t) ? removeTool() : setTool(t);                                                       //console.log('tool ',editPages.attr("data-tool")); 
+    }
+    function isTool(t) {
+        return pdfEditor.attr("data-tool") == t;
+    }
+    
+    var  toolsMenu = $("#tools-menu");//,hint = $("#global-help-hint"),Ct,;
+    function removeTool() {
+        toolsMenu.find("[data-tool]").removeClass("active"),                    
+            pdfEditor.attr("data-tool", "none");
+    }
+    function setTool(t) {
+        var a = toolsMenu.find("[data-tool=" + t + "]");
+        //removeTool(),
+            pdfEditor.attr("data-tool", t),
+            a.addClass("active");
+    }
+   
+    (function getScrollbarWidth() {
+        var div, body, W = window.browserScrollbarWidth;
+        if (W === undefined) {
+            body = document.body, div = document.createElement('div');
+            div.innerHTML = '<div style="width: 50px; height: 50px; position: absolute; left: -100px; top: -100px; overflow: auto;"><div style="width: 1px; height: 100px;"></div></div>';
+            div = div.firstChild;
+            body.appendChild(div);
+            W = window.browserScrollbarWidth = div.offsetWidth - div.clientWidth;
+            body.removeChild(div);
+        }
+        return W;
+    })();
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    //////////////////////////////////////////////
+    //        edit pdf
+    //////////////////////////////////////////////
+    function hideEditMenu(){
+         if ($(".text-editable").attr("contenteditable", "false").each(function() {
+                        var t = $(this);
+                        t.hasClass("noDrag") || t.draggable("enable")
+                    }),$("#text-editable-menu").is(":visible"))                                    
+                    return void $("#text-editable-menu").hide();                
+                /*if ($("#image-editable-menu").is(":visible"))
+                    return void $("#image-editable-menu").hide();*/
+               
+                var i = $("#link-editable-menu");
+                if (i.is(":visible")) {
+                    i.hide();
+                    var n = $("#" + i.attr("data-target-id"));
+                    return n.find(".ui-resizable-handle").hide(),
+                        void n.removeClass("active");
+                } 
+    }
+        pdfEditor.on("click", function(evt) {                                                                 
+            var e = $(evt.target);                  //console.log("Mouse clicked at ", e); // X(e, class) - e.hasClass(class)
+            if (!(X(e, "text-editable-menu") || X(e, "link-editable-menu") || X(e, "text-editable") || X(e, "target-editable"))) {                                                                  
+               hideEditMenu();
+                /*            to edit pdf text  
+                var o = e.prop("tagName") || "";
+                if ("DIV" == o.toUpperCase() && e.parent().hasClass("textLayer") && !e.hasClass("not-editable")&& isTool('text')) {
+                    //Analytics.trackEvent("pdf-editor-usage", "text-tool", "edit");
+                    var r = e,
+                        u = r.parents(".page-wrap");
+                    v(r);
+                    var //s = r.css("top"),d = r.css("left"),
+                        //fontSize = r.css("font-size"),
+                        f = $("<div></div>").css({
+                            position: "absolute",
+                            "z-index": "10",
+                            top: r.offset().top - u.offset().top- 2,
+                            left: r.offset().left - u.offset().left - 2
+                        });
+                    u.append(f),
+                        f.html(r.text()).addClass("existingTextEdit"),
+                        f.attr("data-original-font-face", r.attr("data-font-face"));
+                    var p = r.attr("data-font-color") || "#000000";
+                    f.inlineEditor(r.css("font-size"), r.attr("data-font-face"), p, !1, !0),
+                        r.addClass("edited").attr("data-inline-editor-id", f.attr("id"))
+                }*/
+                // create text
+                if ((e.hasClass("page") || e.hasClass("not-editable"))&&isTool('text')) {      //console.log('mouse click at canvas')
+                    if (Et)return;
+                    //Analytics.trackEvent("pdf-editor-usage", "text-tool", "inserted");
+                    var u = e.parents(".page-wrap"),
+                        f = $("<div></div>").css({
+                            position: "absolute",
+                            "z-index": "10",
+                            top: evt.pageY - u.offset().top - window.lastTextEditSettings.size,
+                            left: evt.pageX - u.offset().left
+                        });                                                     
+                    u.append(f),                                                   //console.log('textinput ', f.offset().left);
+                        f.html("www.sample.com").inlineEditor();
+                }
+            }
+        });
+    function X(t, e) {
+        return t.hasClass(e) || t.parents("." + e).length > 0;
+    }
+    jQuery.fn.inlineEditor = function(t, e, a, i, n) {
+            var o = $(this[0]);removeOperationCache();
+            o.attr("id", "text-editable-" + ++operationCount).addClass("text-editable").attr("contenteditable", "true").addClass('operation_'+operationCount),
+                o.on("focus", function(t) {
+                    setPosnFont(o, r),
+                        o.draggable("disable")
+                }),
+                o.click(function(t) {
+                    o.is('[contenteditable="false"]') && (o.attr("contenteditable", "true"),
+                        o.focus())
+                }),
+                o.keypress(function(t) {
+                    return 13 != t.which
+                }),
+                o.dblclick(function() {
+                    //o.selectText()
+                }),
+                o.blur(function(t) {
+                    Et = !0,
+                        setTimeout(function() {
+                            Et = !1
+                        }, 100)
+                }),
+                o.on("paste", function(t) {
+                    t.preventDefault();
+                    var e = "";
+                    t.clipboardData || t.originalEvent.clipboardData ? e = (t.originalEvent || t).clipboardData.getData("text/plain") : window.clipboardData && (e = window.clipboardData.getData("Text"));
+                    try {
+                        document.queryCommandSupported("insertText") ? document.execCommand("insertText", !1, e) : document.execCommand("paste", !1, e)
+                    } catch (t) {
+                        document.execCommand("paste", !1, e)
+                    }
+                });
+            var r = o.parents(".page-wrap"),
+                u = parseFloat(r.attr("data-scale")),
+                s = void 0,
+                d = void 0;
+            n !== !0 && (t = t || u * window.lastTextEditSettings.size + "px",
+                    e = e || window.lastTextEditSettings.font,
+                    a = a || window.lastTextEditSettings.color,
+                    s = s || window.lastTextEditSettings.weight,
+                    d = d || window.lastTextEditSettings.style),
+                o.css({
+                    "font-size": t,
+                    "line-height": t+2,
+                    color: a,
+                    "font-family": e,
+                    "font-weight": s,
+                    "font-style": d
+                }),
+                o.draggable({
+                    containment: r
+                }),
+                i === !0 && (o.addClass("noDrag"),
+                    o.draggable("disable")),
+                o.on("dragstop", function() {
+                    o.css({
+                        width: ""
+                    })
+                }),
+                o.focus()
+        };
+    function setPosnFont(textinput, pageWrap) {
+        var a = $("#text-editable-menu");
+        var u = parseFloat(pageWrap.attr("data-scale")),
+            s = textinput.css("font-size").slice(0,-2) / u;
+        a.find("input[name=fontSize]").val(s),
+            a.css({
+                position: "absolute",
+                "z-index": "1000",
+                top: textinput.offset().top + textinput.height() + 15,
+                left: textinput.offset().left
+            }).attr("data-target-id", textinput.attr("id")).show();                               //console.log('text edit menu', textinput.offset().left);
+    }
+    
+    /*function v(t) {
+        var e = m(t.get(0).getBoundingClientRect()),
+            a = t.parent(".textLayer");
+        a.find("div").not(t).each(function() {
+            var t = $(this),
+                a = m(this.getBoundingClientRect()),
+                i = e.right >= a.right && e.left <= a.left && e.bottom >= a.bottom && e.top <= a.top;
+            i && ($("#" + t.attr("data-inline-editor-id")).remove(),
+                t.remove())
+        })
+    }  
+    function m(t) {
+        return {
+            top: Math.floor(t.top),
+            left: Math.floor(t.left),
+            bottom: Math.floor(t.bottom),
+            right: Math.floor(t.right)
+        }
+    }*/
+</script>
+<script>
+ 
+    var Et = !1, operationCount=0, operationCache=[], backIndex=0; // Et - editable
+    $(document).keydown(function(e){                 // hand undo/redo hotkey
+        if( e.which === 89 && e.ctrlKey ){
+            if(pdfEditor.attr('data-loaded')==='true') forwardHandler();                                                   //alert('control + y'); 
+        }else if( e.which === 90 && e.ctrlKey ){
+            if(pdfEditor.attr('data-loaded')==='true') backwardHandler();                                                      //alert('control + z'); 
+        }          
+    }).keyup(function(e) {27 == e.keyCode && removeTool() })
+      .on("keyup", ".text-editable", function(t) { 
+            //bt($(this));
+        });
+    toolsMenu.find("[data-tool=backward]").click(function(){backwardHandler()});
+    toolsMenu.find("[data-tool=forward]").click(function(){forwardHandler()});
+    function forwardHandler(){
+        //removeTool("forward");   
+        toolsMenu.find("[data-tool=forward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});                                                       //console.log(operationCache)
+        if(operationCache.length){
+            var _id = operationCache.pop(); 
+            var target = pdfEditor.find('.operation_'+_id);            
+            if(target.length){
+                target.show(); 
+                backIndex=_id; 
+            } 
+        }                                                                       console.log('cache', operationCache)
+    }function backwardHandler(){
+        //removeTool("backward");
+        toolsMenu.find("[data-tool=backward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});
+        if(backIndex===0 && operationCount>0 &&!operationCache.length) 
+            backIndex = operationCount;
+        removeLastOperation();                                                  console.log('back index: ', backIndex, operationCache);
+                                                           
+    }function removeLastOperation(){
+        if(backIndex<=0) return; 
+        var target = pdfEditor.find('.operation_'+backIndex);                           console.log('target',target, backIndex)
+        if(target.length && target.is(":visible")){
+            if(target[0].id.toString().indexOf('page')<0) $('body').find("[data-target-id="+target[0].id+"]").hide();
+            target.hide();//target.css('visibility', 'hidden'); 
+            operationCache.push(backIndex); backIndex--; return;
+        } else {backIndex--; removeLastOperation();}
+    }function removeOperationCache(){
+        if(operationCache.length){
+          while(operationCache.length){
+            var target = pdfEditor.find('.operation_'+operationCache.pop());            
+            if(target.length){
+                target.remove();
+                if(target[0].id.toString().indexOf('page')>=0) resetPageNum();  //if operation is insert page, reset page number
+            } 
+          }
+          
+        }              backIndex=0;                                                         console.log('cache', operationCache)
+    }
+  
+    toolsMenu.find("[data-tool=text]").click(function() {
+        //    Analytics.trackEvent("pdf-editor-usage", "text-tool", "pressed"),W()
+        toggleTool("text");        
+    });
+    toolsMenu.find("[data-tool=link]").click(function() {
+            // Analytics.trackEvent("pdf-editor-usage", "link-tool", "pressed"),
+        toggleTool("link");
+    });
+    toolsMenu.find("[data-tool=delete]").click(function(){
+        // Analytics.trackEvent("pdf-editor-usage", "delete-tool", "pressed"),
+        removeTool('delete'); 
+    });function deletePage(){
+        
+    }; 
+    $(".link-editable-menu .delete-opts").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "link-tool", "delete");
+            var t = $(this),
+                e = $("#" + t.parents(".link-editable-menu").attr("data-target-id"));
+            e.remove(),
+                t.parents(".link-editable-menu").hide();
+        });
+    $(".text-editable-menu .font-size-opts input[name=fontSize]").on("input change", function(t) {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "font-size");
+            var e = $(this),
+                a = parseInt(this.value),
+                i = getTextTarget($(this)),
+                r = parseFloat(i.parents(".page-wrap").attr("data-scale"));
+            setStyle(e, "font-size", r * a + "px"),
+                setStyle(e, "line-height", r * a + "px"),
+                setStyle(e, "height", ""),
+                window.lastTextEditSettings.size = a
+                $('.font-size-opts').attr('title',window.lastTextEditSettings.size);
+        }),
+        $(".text-editable-menu .color-opts a").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "color");
+            var t = $(this),
+                e = t.css("background-color");
+            setStyle(t, "color", e),
+                window.lastTextEditSettings.color = e;
+        }),
+        $(".text-editable-menu .font-family-opts a").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "font-family");
+            var t = $(this),
+                e = t.attr("data-font");
+            setStyle(t, "font-family", e),
+                window.lastTextEditSettings.font = e
+        }),
+    $(".text-editable-menu .font-bold-opts").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "bold");
+            window.lastTextEditSettings.weight = r($(this), "font-weight", "bold", "400")
+        }),
+        $(".text-editable-menu .font-italic-opts").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "italic");
+            window.lastTextEditSettings.style = r($(this), "font-style", "italic", "normal")
+        }),
+    $(".text-editable-menu .delete-opts").click(function() {
+            //Analytics.trackEvent("pdf-editor-usage", "text-tool", "delete");
+            var t = $(this),
+                e = $("#" + t.parents(".text-editable-menu").attr("data-target-id"));
+            e.hasClass("existingTextEdit") ? e.text("") : e.remove(),
+                t.parents(".text-editable-menu").hide();
+    });
+    $(".link-editable-menu input[type=text]").on("input", function() {               // you can get e.position + e.dimension of link                                                                                            
+        var t = $(this),
+            e = $("#" + t.parents(".link-editable-menu").attr("data-target-id"));                    //console.log(e);
+        var inputNum = parseInt(t.val().trim());
+        if(Number.isInteger(inputNum) && inputNum <= pdfFile['pdf-editor'].pdf.numPages && inputNum>0)
+            e.attr("data-uri", t.val());
+        else {t.val('');};
+    });
+     /*var rangyAutoInitialize = false;
+        rangy.config.autoInitialize = false;
+    rangy.init();
+    var yt = rangy.createHighlighter();*/
+    //$(".textLayer div").on("mouseup", function(t){ 
+    /*$(document).on("mouseup", ".textLayer div", function(t) {
+        if(window.getSelection().toString().trim()==="") return;
+         var span = document.createElement("span");
+            span.style = "background: yellow;text-decoration: underline;";
+        var textRange = window.getSelection().getRangeAt(0);//console.log(textRange);
+            try{ textRange.surroundContents(span);$(span).addClass("textHL operation_"+ ++operationCount);
+               $(span).attr('')
+            } catch(err) {console.log(err);}
+        });
+    function insertPage(btn){                                                // $('.page-between a').click()
+        //Analytics.trackEvent("pdf-editor-usage", "insert-page");
+        removeOperationCache();
+        var pc = $(btn).parents('.page-container'); var canvas = pdfEditor.find('canvas.page').first();                              //console.log(pc);
+        var w = canvas.width(), h= canvas.height(), scale=pdfEditor.find('.page-wrap').first().attr('data-scale'); 
+        $('<div class="page-container" data-new-page="true"><div class="page-between"><a onclick="insertPage(this)" class="btn btn-light btn-xs">Insert page here</a></div><div class="page-wrap rendered" data-scale="'+scale+'"><canvas class="page" width='+w+' height='+h+'></canvas></div></div').addClass('operation_'+ ++operationCount).attr('id', 'page-'+operationCount).insertBefore(pc);
+        resetPageNum();                              
+    }function resetPageNum(){
+        var t = 1;
+        $(".page-container").each(function() {
+            var e = $(this),
+                a = e.find(".page-wrap");                                       //console.log('pagewrap width:',a.offset().left, a.offset().top);
+            a.attr("data-page-num", t),
+                e.find(".page-number-label").text(t),
+                t++
+        })
+    }*/
+    (function() {
+            var el, x1 = 0,  x2 = 0,                // el - element $(this)
+                y1 = 0, y2 = 0,
+                u = $("#selectionBorder"),
+                s = !1;
+            $(document).on("mousedown", ".page-wrap", function(i) {hideEditMenu();             //console.log('mouse down on page wrap');
+                    isTool("link") && (i.preventDefault(),
+                        s = !0,
+                        el = $(this),
+                        u.show(),
+                        x2 =  x1 = i.pageX,
+                        y2 = y1 = i.pageY,
+                        setPositions());
+                }),
+                $(document).on("mousemove", function(e) {
+                    isTool("link") && s && (x2 = e.pageX,
+                        y2 = e.pageY,
+                        setPositions());
+                }),
+                $(document).on("mouseup", function(t) {
+                    if ( isTool("link") && s) {
+                        var leftX = Math.min(x1, x2),
+                            rightX = Math.max(x1, x2),
+                            topY = Math.min(y1, y2),
+                            bottomY = Math.max(y1, y2),
+                            g = el.find("canvas.page"),                                 // canvas = page
+                            h = leftX - g.offset().left,
+                            m = topY - g.offset().top,
+                            width = rightX - leftX,
+                            height = bottomY - topY;                                            console.log('page position: ', g.offset().left, g.offset().top);
+                                                                                                
+                        if (width < 5 || height < 5)
+                            return;
+                        createTargetShape(m, h, width, height, el);
+                        /*try {
+                            isTool("whiteout") ? i("rectangle", m, h, width, height, "transparent", "#FFFFFF", el) :isTool("link") && p(m, h, width, height, el);
+                        } catch (t) {
+                            console.log(t);
+                        }*/
+                        u.hide(),
+                            s = !1,
+                            removeTool();
+                    }
+                });
+               
+            function setPositions() {
+                var t = Math.min(x1, x2),
+                    e = Math.max(x1, x2),
+                    i = Math.min(y1, y2),
+                    s = Math.max(y1, y2);
+                u.css({
+                    left: t + "px",
+                    top: i  + "px",
+                    width: e - t + "px",
+                    height: s - i + "px"
+                });
+            }
+        })();
+
+    function createTargetShape(t, l, w, h, o) {                  // t- top, l - left, i - width, n - height, o - $(document)
+                                                                                                     //console.log('rectangle: ', t, l, w, h);
+        w = w || 200, h = h || 100;
+        var target = $('<div class="target-editable"></div>');                                           // link retangle
+        removeOperationCache();                                                                                 //parseFloat(o.attr("data-scale"));
+        target.attr("id", "target-editable-" + ++operationCount).addClass('operation_'+operationCount)
+            .css({
+                width: w + "px",
+                height: h + "px",
+                position: "absolute",
+                top: t + "px",
+                left: l + "px"
+            }).draggable().resizable({
+                handles: "all"
+            }).addClass("active").addClass("shape-rectangle"),
+                    
+            setTimeout(function() { openLinkEdit(target);  }, 100),    
+
+            target.click(function(t) {
+                var e = $(this);
+                openLinkEdit(e),
+                    target.find(".ui-resizable-handle").show(),
+                    target.addClass("active");
+            }).on("resizestart", function() {
+                //e()
+            }).on("resizestop", function() {
+                setTimeout(function() {
+                    openLinkEdit(target)
+                }, 100)
+            }).on("dragstart", function() {
+                $("#link-editable-menu").hide();
+            }).on("dragstop", function() {
+                setTimeout(function() {
+                    //c(target)
+                    openLinkEdit(target);
+                }, 100)
+            }).on("mouseover", function() {
+                target.find(".ui-resizable-handle").show();
+            }).on("mouseout", function() {
+                //var t = $("#target-editable-menu");
+                var t=$('#link-editable-menu');
+                target.hasClass("active") || t.is(":visible") && t.attr("data-target-id") == target.attr("id") || target.find(".ui-resizable-handle").hide()
+            }),
+            o.append(target);
+    }
+    function openLinkEdit(t) {
+                                                                                        //  console.log("f1");
+        var e = $("#link-editable-menu");
+        e.find("input").val(t.attr("data-uri") || ""),
+            e.css({
+                position: "absolute",
+                "z-index": "1000",
+                top: t.offset().top - 60,
+                left: t.offset().left
+            }).attr("data-target-id", t.attr("id")).show();
+    }
+    function getTextTarget(t) {
+        return $("#" + t.parents(".text-editable-menu").attr("data-target-id"))
+    }
+    function setStyle(t, e, a) {
+        var i = {};
+        i[e] = a, getTextTarget(t).css(i).focus();   
+    }
+    function r(t, e, a, i) {
+        var r = getTextTarget(t).css(e);
+        return r == i ? (setStyle(t, e, a),
+            a) : (setStyle(t, e, i),
+            i);
+    }
+</script>
+<script>
+    //////////////////////////////////////////// //////////////////////////////
+    //              Saving PDF file
+    ///////////////////////////////////////////////////////////////////////////
+    //var opList = {};
+    var operations = ["appendTextOperations", "editTextOperations",  "insertPageOperations", "highlightTextOperations", "linkOperations", "formValues"];
+    $("#save-pdf-btn").click(function(t) {
+        if(!pdfFile['pdf-editor']) {alert('file not opened!!!'); return;}       //console.log(hasValidOP(operationCount));
+        if(!hasValidOP(operationCount)) {alert('file not edited!!!'); return;}
+        
+        removeOperationCache();                                   // to remove operations deleted but saved in cache
+            t.preventDefault();
+            var e = [];
+            // debugger;
+            pdfEditor.find(".text-editable").each(function() {            
+                    var t = $(this);
+                    "www.sample.com" == t.text() && e.push(t);
+                }),
+                e.length > 0 ? removeTextPrompt(function(t) {    
+                    "yes" == t && e.forEach(function(t) {
+                            t.remove();
+                        }),
+                       sendOpList(getOpList());// it(getOpList()); // it - submit
+
+                }) :  sendOpList(getOpList());//it(getOpList()); // it - submit
+    });function sendOpList(opList){
+        var opl = opList;
+        for(var op in opl){
+            if(opl[op].length<=0) delete opl[op];
+        }
+        var ob = pdfFile['pdf-editor'];
+        $.post('edit.php',{data: JSON.stringify(opl), width: parseInt(ob.pdfWidth),file: ob.name }, function(result){
+            if(result && result.indexOf('.pdf')){
+                pdfFrame.find('iframe').remove();
+                pdfFrame.find('.drop-file-zone').fadeOut(300);
+                var fileZone = pdfFrame.find('.fileZone');
+                pdfFrame.attr('data-loaded')=='true' && fileZone.is(":visible") && fileZone.remove() && $('<div class="fileZone"></div>').insertAfter(pdfFrame.find('.drop-file-zone'));;
+                pdfFrame.attr('data-loaded', 'true');
+                toggleSplitter(false);
+                pdfFrame.find('.pdfTab').html(result+'<i class="fa fa-times" aria-hidden="true" style="float:right; margin-right: 1em;" onclick="closeFile(this)"></i>');
+                var frame = $('<iframe src=pdfFiles/'+result+' width="100%" height="100%" class="resultFrame"></iframe>');
+                pdfFrame.append(frame);
+                //openFile(result.trim(), pdfFrame);
+            }    
+            //if(result) document.write(result);
+        });
+    }
+    function removeTextPrompt(confirm) {                                  console.log('text-editable checking before submit' );
+        var e = $("#removeUnusedTextPrompt");
+        e.find(".btn-yes").off("click").on("click", function() {
+                confirm("yes"),
+                    e.modal("hide")
+            }),
+            e.find(".btn-no").off("click").on("click", function() {
+                confirm("no"),
+                    e.modal("hide")
+            }),
+            e.modal("show")
+    } 
+    function applyFun(t, e) {
+        return function() {
+            try {
+                e.apply(this)
+            } catch (e) {
+                console.log("Exception occurred", t, e);//Raven.captureException(e)      
+            }
+        }
+    }
+    function getOpList() {                                                                //console.log("caller is " + arguments.callee.caller.toString());
+        var t = {};
+        operations.forEach(function(e) {  // Tt - editor tool functions array
+            t[e] = []; 
+        });
+        //var e = ($(".task-form"), pdfEditor);
+         pdfEditor.find(".text-editable").each(applyFun(".text-editable", function() {
+                var e = $(this);
+                //if (!e.hasClass("existingTextEdit")) {
+                    var a = e.parents(".page-wrap"),
+                        i = a.find("canvas.page"),
+                        n = a.attr("data-scale"), //Big(a.attr("data-scale"))
+                       
+                        r = e.css("font-family").split(",")[0].trim().toLowerCase(),
+                        u = "times_roman";                                                  console.log('pNo/scale: ',a.attr("data-page-num"), n)
+                    r.indexOf("helvetica") >= 0 && (u = "helvetica"),
+                        r.indexOf("Courier New") >= 0 && (u = "courier"),
+                        document.PDFJSFonts[r] && (u = document.PDFJSFonts[r]);
+                    var s = e.css("font-size").slice(0, -2),
+                        d = s/n,  //Big(s).div(n),
+                        //l = e.height(),
+                        //c = (l-d)/2, //Big(l).minus(d).div(2),
+                        f = {
+                            id: $(this)[0].id,
+                            text: Y(e.text()),
+                            position: {
+                                x: parseInt(e.css("left").slice(0, -2)/n),//Big(e.css("left").slice(0, -2)).div(n),
+                                y: parseInt((e.offset().top-i.offset().top)/n) //Big(i.attr("height")).minus(Big((e.css("top")))).minus(l).plus(c).div(n)
+                               
+                            },
+                            style:{
+                                font: u,
+                                fontSize: d,
+                                color: getColor(e.css("color")),
+                                bold: "bold" == e.css("font-weight"),
+                                italic: "italic" == e.css("font-style")
+                            },  
+                            page: a.attr("data-page-num"),
+                        };
+                    "" != f.text.trim() && t.appendTextOperations.push(f)
+                //}
+            })),
+        pdfEditor.find(".target-editable").each(applyFun(".target-editable", function(){       //console.log('inside at function - target', new Big(1, 5));
+                 
+                var  a =  $(this).parents(".page-wrap"),
+                    n = parseFloat(a.attr("data-scale")),
+                   // u = this.getBoundingClientRect(),
+                    d =  $(this).offset(),
+                    id = $(this)[0].id,
+                    l = a.offset(),
+                    f = {
+                        left: (d.left - l.left)/n,                   //parseInt(new Big(d.left - l.left).div(n).round()),
+                        top: (d.top - l.top)/n,                       //parseInt(new Big(parseInt(i.attr("height")) - (d.top - l.top)).div(n).round()),
+                        width: parseInt($(this).width()/n),
+                        height: parseInt($(this).height()/n)
+                    };
+                //f.left >= 0 && f.top >= 0 && f.right >= 0 && f.bottom >= 0 && f.top > f.bottom && f.left < f.right ? c.push(f) : console.log("Ignoring invalid link bounding box", f);
+                                                                                                            //console.log('id',id);
+                var p = {
+                    id: id,
+                    boundingBox: f,
+                    page: a.attr("data-page-num"),
+                    uri:  $(this).attr("data-uri")
+                };
+                p.id /*&& p.uri*/ && t.linkOperations.push(p);                    //console.log(c); to JSON.stringify(p) before sending to server
+            }));
+            /*$(".page-container[data-new-page=true]").each(function() {
+                var e = $(this),
+                    a = e.find('.page-wrap').attr("data-page-num");
+                t.insertPageOperations.push({
+                    id: $(this)[0].id,
+        
+                    page: a
+                });
+            });*/
+            
+            return t;
+    }
+    
+    function getColor(t) {         //console.log('color: ', t.toString());
+        if ("rgba(0, 0, 0, 0)" != t.trim() && "transparent" != t.trim()) {
+            /*if (0 == t.trim().indexOf("#"))
+                return t;*/
+            if (0 == t.trim().indexOf("rgb(")) {
+                var e = t.slice(4, -1).split(","); return e;
+                /*return e = $.map(e, function(t) {
+                        return t.indexOf(".") >= 0 ? Math.round(255 * parseFloat(t.trim())) : parseInt(t.trim())
+                    }),"#" + q(t[0]) + q(t[1]) + q(t[2])   */
+            }
+            //return "#000000";
+        }
+    }
+    function Y(t) {
+        var kt = /[\0-\x1F\x7F-\x9F\xAD\u0378\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
+        return t.replace(kt, "").replace(/\u3000/g, " ").replace(/\u2003/g, " ").replace(/\u2002/g, " ").replace(/\u2005/g, " ").replace(/\u2006/g, " ").replace(/\u2000/g, " ").replace(/\u202F/g, " ").replace(/\u0009/g, "").replace(/\u200B/g, "").replace(/\u2028/g, "")
+    }
+     function q(t) {
+        var e = t.toString(16);
+        return 1 == e.length ? "0" + e : e
+    }
+   /* $('form.task-form').submit(function(e) {
+        e.preventDefault();
+        var formData =JSON.stringify( $(this).serializeArray() );                console.log(formData);
+                  
+    });function it(t) {
+        var e = $(".task-form");
+        operations.forEach(function(a) {
+            e.find('[name="' + a + '[]"]').remove(),
+                t[a].forEach(function(t) {
+                    e.append($('<input type="hidden" name="' + a + '[]">').val(t))
+                })
+        });
+        //var a = Date.now() - St;
+        //e.find('[name="elapsedTime"]').val(Math.floor(a / 1e3)),
+        e.submit();
+    }
+    function isListEmpty(opList){
+        for (var op in opList){
+            if(opList[op].length>0) return false;
+        }
+        return true;
+    }*/
+    function hasValidOP(op){
+        if(op===0) return false;
+        for(var i=op; i>=1; i--){
+            var target = pdfEditor.find('.operation_'+i);
+            if(target.length && target.is(":visible")) {console.log('target',i);return true; }
+        }
+        return false;
+    }
+</script>
+    <script src="https://use.fontawesome.com/572e7c8d9e.js" async="async"></script>
+    </body>
+</html>

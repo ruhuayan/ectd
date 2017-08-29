@@ -1,0 +1,442 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="editPost">{{onePost.id ? 'Edit post' : 'Create new'}}</a>
+        </li>
+    </ul>
+    <div class="bt_language">
+        <!--    <button ng-click="changeLanguage('en')">English</button>
+        <button ng-click="changeLanguage('sp')">Spanish</button>-->
+        <form name="myForm">
+            <label for="mySelect">Selected Language:</label>
+            <select name="mySelect" id="mySelect" ng-options="option.name for option in availableLanguages track by option.id" ng-model="selectedOption" ng-change="selectchange(selectedOption)"></select>
+        </form>
+    </div>
+
+</div>
+
+<h3 class="page-title"> {{onePost.id ? 'Edit post' : 'Create new post'}}
+    <small></small>
+</h3>
+
+<div class="row">
+    <div class="col-md-8">
+
+
+        <widget>
+            <!-- <h4 class="mt-0">{{onePost.id ? 'Edit post' : 'Create new'}}</h4>
+          -->
+            <form novalidate role="form" name="postForm" class="form-horizontal mt" ng-submit="postForm.$valid && (onePost.id ? update() : save())">
+                <div class="alert alert-danger display-hide">
+                    <button class="close" data-close="alert"></button> You have some form errors. Please check below.
+                </div>
+                <div class="form-group" ng-if="onePost.id">
+                    <label class="col-sm-2 control-label" for="id">Id</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="Id" name="postId" class="form-control" ng-model="onePost.id" ng-disabled="true" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="col-sm-2 control-label" for="title">{{'Post Title' | translate}}</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="title" name="title" class="form-control" ng-model="onePost.postTitle" required ng-minlength=3 ng-maxlength=100 />
+                        <div ng-show="postForm.title.$invalid && (postForm.title.$dirty || postForm.$submitted)">
+                            <small class="error" ng-show="postForm.title.$error.required">
+                                Title is required.
+                            </small>
+                            <small class="error" ng-show="postForm.title.$error.minlength">
+                                Title is required to be at least 3 characters
+                            </small>
+                            <small class="error" ng-show="postForm.title.$error.maxlength">
+                                Title cannot be longer than 100 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label class="col-sm-2 control-label" for="title"></label>
+                    <div class="col-md-4">
+                        <a href="#" data-target="#myModal_autocomplete" role="button" class="btn btn-default" data-toggle="modal">
+                            <i class="icon-picture"></i> Add Media </a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="description">Post Content</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="description" name="description" rows="6" ng-model="onePost.postContent" required ng-minlength=3 ck-editor></textarea>
+                        <!--  <textarea name="description" class="form-control" rows="5" ng-model="onePost.postContent" required ng-minlength=3 ck-editor/>
+                     -->
+                        <div ng-show="postForm.description.$invalid && (postForm.description.$dirty  || postForm.$submitted)">
+                            <small class="error" ng-show="postForm.description.$error.required">
+                                Description is required.
+                            </small>
+                            <small class="error" ng-show="postForm.description.$error.minlength">
+                                Description is required to be at least 5 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span ng-if="showReturnBtn">
+                        <button type="button" class="btn" ng-click="returnBack()">Return</button>
+                    </span>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </widget>
+
+
+
+
+
+
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <!-- categories -->
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>Select Categories </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse"> </a>
+                            <a href="javascript:;" class="reload"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" id="chats">
+                        <div name="form-group" class="scroller" style="height: 400px;" data-always-visible="1" data-rail-visible="0">
+
+                            <ul style="list-style-type:none;">
+                                <!--   <li><input type='checkbox' value="-0" check-list='checked_fruits'>Uncategorized</li>
+                               -->
+                                <li ng-repeat="item in categoryList" data-ng-include="'views/category/categoryTree.html'"></li>
+                            </ul>
+
+                        </div>
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Optional </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- categories -->
+
+
+
+        <!-- Tags -->
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="portlet box purple">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>Tags </div>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse"> </a>
+                            <a href="javascript:;" class="reload"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body" id="chats">
+
+
+                        <select style="width: 100%;" ui-select2='select2Options' multiple ng-model="list_of_string">
+       
+                                   
+                                    <option ng-repeat="tag in tags  track by tag.id   " value="{{tag.id}}" >{{tag.data.termName}}</option>
+                                    </select>
+
+                        <div class="text-right">
+                            <button type="submit" ng-click="addTag()" class="btn btn-primary">Add</button></span>
+
+                        </div>
+                        <span class="help-block">Select or input new tags and Press 'Add' button </span>
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Optional </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        
+    </div>
+    </div>
+
+    <!-- ************************************** testing cases **********************************************-->
+    <!--   <div class="row">
+            <div class="col-md-12">
+
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-bubble font-hide hide"></i>
+                            <span class="caption-subject font-hide bold uppercase">Tags</span>
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" id="chats">
+
+
+
+                        <select style="width: 100%;" ui-select2='select2Options'  ng-model-options="{debounce: 100}" multiple data-ng-model="searchStr" ng-keyup="(searchStr.length > 0) && load()">
+                                    
+                                    <option ng-repeat="item in responseData track by item.id" vlaue="{{item.id}}">{{item.data.termName}}</option>
+                                </select>
+
+                        <div class="text-right">
+                            <button type="submit" ng-click="addTag()" class="btn btn-primary">Add</button></span>
+
+                        </div>
+                        <span class="help-block">Separate tags with commas</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+     -->
+
+    <!--   <div>
+
+           <input ng-model="searchText" />
+            <div ng-repeat="merchant in merchants | merchantFilter:searchText">
+                {{merchant}}
+            </div>
+        </div>
+
+-->
+    <!--
+        <select style="width: 100%;" ui-select2='select2Options' data-ng-model="searchStr" multiple ng-model-options="{debounce: 100}">
+            <option ng-repeat="tag in responseData track by tag.id" value="{{tag.data.termName}}">{{tag.data.termName}}</option>
+        </select>
+        <br>
+-->
+
+    <!--  working
+           <input type="text" data-ng-model="searchStr" ng-model-options="{debounce: 100}">
+        <br>
+        <select ng-show="searchStr !==''" >
+            <option ng-repeat="item in responseData">{{item.data.termName}}</option>
+        </select>-->
+
+    <!--   <div>
+
+           <input ng-model="searchText" />
+            <div ng-repeat="merchant in tags | merchantFilter:searchText track by $index">
+         {{merchant.data.termName}}
+            </div>
+        </div>-->
+    <!--  <div class="form-group">
+            <label>Mes centres d'intérêt</label>
+            <div class="input-group" style="margin-bottom: 8px;">
+                <input id="tagInsert" type="text" name="newTag" ng-model="searchStr" ng-model-options="{debounce: 100}" class="form-control" typeahead-loading="loadingTags"  ng-disabled="interestLimit" autocomplete="on">
+                <span class="input-group-btn"><span class="btn btn-primary" ng-click="addInterest()" analytics-on="click" ng-disabled="interestLimit" analytics-event="Ajout Interet" analytics-category="Profil">Ajouter</span></span>
+            </div>
+            <p class="form__field__error" ng-show="interestLimit">Vous avez atteint la limite de 10 centres d'intérêt.</p>
+            <ul class="tags">
+                <li class="tag" ng-repeat="item in responseData | merchantFilter:searchStr">{{item.data.termName}} <i class="icon-close"  analytics-on analytics-event="Supprimer Interet" analytics-category="Profil"></i></li>
+            </ul>
+        </div>
+        <p>{{interests}}</p>-->
+
+    <!--
+        <div class="form-group">
+            <label>Mes centres d'intérêt</label>
+            <div class="input-group" style="margin-bottom: 8px;">
+                <input id="tagInsert" type="text" name="newTag" ng-model="searchStr" ng-model-options="{debounce: 100}" typeahead="tag.name for tag in responseData | filter: searchStr" class="form-control" typeahead-loading="loadingTags" ng-keydown="addInterestOnEvent($event)"
+                    ng-disabled="interestLimit" autocomplete="on">
+                <span class="input-group-btn"><span class="btn btn-primary" ng-click="addInterest()" analytics-on="click" ng-disabled="interestLimit" analytics-event="Ajout Interet" analytics-category="Profil">Ajouter</span></span>
+            </div>
+            <p class="form__field__error" ng-show="interestLimit">Vous avez atteint la limite de 10 centres d'intérêt.</p>
+            <ul class="tags">
+                <li class="tag" ng-repeat="name in interests track by $index">{{ name }} <i class="icon-close" ng-click="removeInterest($index)" analytics-on analytics-event="Supprimer Interet" analytics-category="Profil"></i></li>
+            </ul>
+        </div>
+        <p>{{interests}}</p>-->
+    <!-- Tags -->
+
+    <!--
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-bubble font-hide hide"></i>
+                            <span class="caption-subject font-hide bold uppercase">Tags</span>
+                        </div>
+
+                    </div>
+                    <div class="portlet-body" id="chats">
+
+
+                        <input type="text" data-ng-model="searchStr" ng-model-options="{debounce: 1000}">
+                        <br>
+                        <textarea>{{responseData}}</textarea>
+
+                        <div class="text-right">
+                            <button type="submit" ng-click="addTag()" class="btn btn-primary">Add</button></span>
+
+                        </div>
+                        <span class="help-block">Separate tags with commas</span>
+                    </div>
+
+                </div>
+
+            </div>-->
+
+
+
+
+    <!-- -->
+    <!--   <span ng-repeat="item in categoryList">
+      <input type='checkbox' value="{{item.id}}" check-list='checked_fruits'> {{item.data.termName}}<br />
+    </span>
+  -->
+    <div>The following categories are checked: {{checked_fruits | json}}</div>
+
+
+
+
+
+
+    <div class="row" ng-if="onePost.id">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN REGIONAL STATS PORTLET-->
+
+            <div class="portlet light boardered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-green"></i>Recent Activities </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+
+
+                <div class="portlet-body">
+                    <div class="scroller" style="height:80px;" data-always-visible="1" data-rail-visible="0">
+                        <ul class="feeds">
+                            <li>
+                                <div class="col1">
+                                    <div class="cont">
+                                        <div class="cont-col1">
+                                            <div class="label label-sm label-info">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cont-col2">
+                                            <div class="desc"> Post Last Modified on :
+                                                <span class="label label-sm label-default "> {{onePost.postModified | stringToDate:"medium" }}
+                                                   
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+
+                            <li>
+                                <div class="col1">
+                                    <div class="cont">
+                                        <div class="cont-col1">
+                                            <div class="label label-sm label-info">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cont-col2">
+                                            <div class="desc"> Post Created on :
+                                                <span class="label label-sm label-warning "> {{onePost.createdAt | stringToDate:"medium" }}
+                                                   
+                                                </span>
+                                               &nbsp;  by : {{onePost.user.userName}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END REGIONAL STATS PORTLET-->
+        </div>
+    </div>
+    <!--Modal implementation -->
+
+
+
+    <div id="myModal_autocomplete" class="modal fade" role="dialog" aria-hidden="true" class="scroller" style="height: 800px;" data-always-visible="1" data-rail-visible="0">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="clearSelection()"></button>
+                    <h4 class="modal-title">Radio Switch in Modal</h4>
+                </div>
+                <div class="modal-body form">
+                    <form action="#" class="form-horizontal form-row-seperated">
+                        <div class="form-group">
+                            <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-repeat="item in medialist">
+                                <a class="thumbnail" href="#" ng-click="selected.item = item">
+                                    <div ng-if="item.contentType == 'image/jpeg' || item.contentType == 'image/png' ">
+                                        <img class="img-responsive" data-ng-src="{{ item.src | trustUrl }}" alt="">
+                                    </div>
+                                    <div ng-if="item.contentType == 'video/mp4' || item.contentType == 'video/mp3'">
+
+                                        <video width="100%" height="auto" controls data-ng-src="{{ item.src | trustUrl }}">
+                                            Your browser does not support the video tag.
+                                         </video>
+
+                                    </div>
+                                    <div ng-if="item.contentType == 'application/pdf'">
+
+                                        <img class="img-responsive" src="../assets/pages/img/custom/pdf-file.jpg" alt="PDF">
+                                        <span class="filename" style="font-size:1rem;">{{item.fileName}}</span>
+
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearSelection()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="selected.item" ng-click="addToPost()">
+                                    <i class="fa fa-check" ></i>Insert into post</button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <!-- -->
+        <script>
+            ComponentsSelect2.init(); // init todo page
+            ComponentsBootstrapSelect.init(); // init todo page
+        </script>

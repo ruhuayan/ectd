@@ -1,0 +1,20 @@
+
+        #jsECTDtree{
+            border-top: 1px solid #999; 
+            height: 750px; 
+            overflow-y: scroll; 
+            /*-ms-overflow-style: none;  
+            overflow: -moz-scrollbars-none;*/
+            overflow-x: scroll;
+           
+        }
+        .portlet-body #jsECTDtree{
+            width:100%;
+        }
+        .portlet .form-body .form-group{
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+    .portlet .form-body .form-group.first{
+        margin-top: -8px;
+    }

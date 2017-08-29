@@ -1,0 +1,52 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="category">Domain List Page</a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <widget>
+            <header>
+                <button type="button" class="btn btn-sm btn-gray mt-n-xs pull-right" ui-sref="domainedit({id: null})">Create new Domain</button>
+                <h4 class="widget-title">Available Domains</h4>
+            </header>
+        
+            <table datatable="ng" class="table table-striped table-bordered table-hover table-checkable order-column">
+                <thead>
+                    <tr>
+                        <th>Domain Id</th>
+                        <th>Domain Name </th>
+                        <th> Domain Url </th>
+                        <th> Date </th>
+
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd gradeX" data-ng-repeat="domain in domainlist">
+                         <td>{{domain.id}}</td>
+                        <td>{{domain.domainName}}</td>
+                        <td>{{domain.url}}</td>
+
+
+                        <td class="center"> {{domain.createdAt}} </td>
+                        <td >
+                            <button type="button" class="btn btn-default" ui-sref="domainedit({id: domain.id})">Edit</button>
+                            <button type="button" class="btn btn-danger" ng-click="deleteDomain(domain.id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+        </widget>
+
+    </div>
+</div>

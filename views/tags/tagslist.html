@@ -1,0 +1,70 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="tagslist">Tag List</a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <widget>
+            <header>
+                <button type="button" class="btn btn-sm mt-n-xs pull-right" ui-sref="editTag({id: null})">Create New Tag</button>
+                <h4 class="widget-title">Tags</h4>
+            </header>
+
+
+            <label> Records per page: </label>
+            <select ng-model="pagesize.id" ng-change="newlist(pagesize.id);" convert-to-number>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+
+            <table class="table table-striped table-bordered table-hover table-checkable order-column table-custom">
+                <thead>
+                    <tr>
+                        <th> Id</th>
+                        <th> Tag Title </th>
+                        <th> Date </th>
+
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd gradeX" data-ng-repeat="item in tagslist">
+                        <td> {{item.id}} </td>
+                        <td>
+                            {{item.data.termName}}
+                        </td>
+
+                        <td class="center"> {{item.data.createdAt}} </td>
+                        <td>
+                            <button type="button" class="btn btn-default" ui-sref="editTag({id: item.id})">Edit</button>
+                            <button type="button" class="btn btn-danger" ng-click="deleteTag(item.id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </widget>
+          <button type="button" ng-hide='pageno == totalpages ' class="btn btn-default" style="float:right;" ng-click='nextPage()'>Next</button>
+           <button type="button" disabled class="btn btn-default" style="float:right;">Page {{pageno}} of {{totalpages}}</button>
+        <button type="button" ng-show='pageno > 1 ' class="btn btn-default" style="float:right;" ng-click='previousPage()'>Previous</button>
+       
+      
+        <!--<p> Showing {{itemsPerPage}} of  {{recordsTotal}} entries</p>-->
+        <!--     <p id="pagination-here"></p>-->
+    </div>
+
+
+</div>
+<!--<script>
+    TableDatatablesManaged.init();
+</script>-->
