@@ -11,11 +11,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a ui-sref="dashboard">Home</a>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a ui-sref="fileupload">File Upload</a>
+            <a ui-sref="fileupload"><span class="title" translate>UPLOAD</span></a>
         </li>
     </ul> 
 </div>
@@ -27,14 +27,14 @@ END PAGE HEADER-->
         <span class="label label-danger">File Upload: Add files to correct location and give file correct name.</span>
     </h3>
 </div>-->
-<div class="row" id="FileUploadCtrl" ng-controller="FileUploadCtrl" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+<div class="row" id="FileUploadCtrl" ng-controller="FileUploadCtrl" nv-file-drop="" uploader="uploader">
     <div class="col-md-4">
         
         <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <!--<i class="icon-settings font-green-sharp"></i>-->
-                    <span class="caption-subject bold uppercase">Application</span>
+                    <span class="caption-subject bold uppercase"><span class="title" translate>APPLICATION</span></span>
                     <a class="btn-circle" ng-click="toggleTree()">
                         <i class="fa fa-caret-up" title="close file tree" ng-show="open"></i>
                         <i class="fa fa-caret-down" title="open file tree" ng-hide="open"></i>
@@ -44,8 +44,8 @@ END PAGE HEADER-->
                     <form class="form-horizontal" role="form" ng-submit="savetree();">
                     <div class="form-actions">
                             <div class="btn-group">
-                                    <button type="submit" class="btn btn-sm green">Save</button>
-                                    <button type="button" class="btn btn-sm default" ng-click="canceltree()">Cancel</button>
+                                    <button type="submit" class="btn btn-sm green"><span class="title" translate>SAVE</span></button>
+                                    <button type="button" class="btn btn-sm default" ng-click="canceltree()"><span class="title" translate>CANCEL</span></button>
                             </div>
                     </div>
                     </form>
@@ -78,8 +78,8 @@ END PAGE HEADER-->
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <i class="icon-settings font-green-sharp"></i>
-                    <span class="caption-subject bold uppercase">Upload queue</span>
-                    <span class="caption-helper"> (Max: 10 files) (Max file size: 3mb) </span>
+                    <span class="caption-subject bold uppercase" translate>UPQUEUE</span>
+                    <span class="caption-helper" translate>MAXFILE </span><span class="caption-helper" translate>MAXSIZE</span>
                 </div>
                 <div class="actions">
                     <div class="btn-group">
@@ -113,7 +113,7 @@ END PAGE HEADER-->
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
                            
-                            <span class="caption-subject bold uppercase">Uploaded Files</span>
+                            <span class="caption-subject bold uppercase" translate>UPFILES</span>
                             <a class="btn btn-circle btn-icon-only" href="#" title="delete file"><i class="fa fa-times"></i> </a>
                         </div>
                         
@@ -132,11 +132,11 @@ END PAGE HEADER-->
                     <table class="table table-hover table-light">
                         <thead>
                             <tr class="uppercase">
-                                <th width="50%">Name</th>
-                                <th ng-show="uploader.isHTML5">Size</th>
-                                <th ng-show="uploader.isHTML5">Progress</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th width="50%" translate>NAME</th>
+                                <th ng-show="uploader.isHTML5" translate>SIZE</th>
+                                <th ng-show="uploader.isHTML5" translate>PROGRESS</th>
+                                <th translate>STATUS</th>
+                                <th translate>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,9 +165,9 @@ END PAGE HEADER-->
                                     <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
                                         <span class="glyphicon glyphicon-upload"></span> Upload </button>-->
                                     <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel </button>
+                                        <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCEL</span></button>
                                     <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                        <span class="glyphicon glyphicon-trash"></span> Remove </button>
+                                        <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVE</span> </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -180,11 +180,11 @@ END PAGE HEADER-->
                     </div>
                 </div>
                 <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length||!appCreated">
-                    <span class="glyphicon glyphicon-upload"></span> Upload all </button>
+                    <span class="glyphicon glyphicon-upload"></span><span class="title" translate>UPLOADALL</span> </button>
                 <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel all </button>
+                    <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCELALL</span></button>
                 <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-                    <span class="glyphicon glyphicon-trash"></span> Remove all </button>
+                    <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVEALL</span> </button>
                 </div>
         </div>
         </div>

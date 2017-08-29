@@ -57,11 +57,36 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CANCEL: "Cancel", 
         CREATEAPP: "Create Application",
         EDITAPP: "Edit Application", 
+        OBJECT: "Object",
         
+        /* LOGIN */
+        LOGINTO: "LOG INTO",
+        SYSTEM: "SYSTEM",
+        LOGIN: 'LOGIN',
+        REGISTER: "Register",
+        FORGOTPW: 'Forgot password?',
+        USERNAME: "Username",
+        HAVEACC: 'Have an account？',
+        PW: 'Password',
+        NOACC: 'Don\'t have an account？',
         
-        CONTACTUS: 'Contact us',
+        /* UPLOAD*/
+        UPQUEUE: "Upload Queue",
+        UPFILES: "Uploaded Files", 
+        CHOOSEFILE: "Choose File",
+        MAXFILE: "(Max: 10 files)",
+        MAXSIZE: "(Max Size: 3mb)",
+        NAME: "Name", 
+        SIZE: "Size",
+        PROGRESS: "Progress",
+        STATUS: "Status",
+        UPLOADALL: "Upload all",
+        CANCELALL: "Cancel all",
+        REMOVEALL: "Remove all",
+        SAVE: 'Save',
+        
         PRICE: 'Price',
-        LOGIN: 'Login / Register',
+         CONTACTUS: 'Contact us',
          //header
         LANGUAGE: 'Language',
         USER: 'User',
@@ -108,7 +133,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         NEWPW: 'New Password',
         REPW: 'Re-type New Password',
         
-        SAVE: 'Save Changes',
+        
         //Upgrade page
         MININGPOWER: 'Mining Power',
         HASHPOWER: 'Hash Power (MH): ',
@@ -125,16 +150,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         TOTAL: 'Total',
         STATUS: 'Status',
         QUANTITY: 'Quantity',
-        PAIDON: 'Placed on',
-        //login page
-        USERNAME: 'User name',
-        SIGNUP: 'Sign up',
-        HAVEACC: 'Have an account？',
-        LOG: 'Sign in',
-        PW: 'Password',
-        FORGOTPW: 'Forgot password?',
-        STAYLOG: 'Stay logged in',
-        NOACC: 'Don\'t have an account？'
+        PAIDON: 'Placed on'
+        
     };
 
     var cn_translations = {
@@ -174,6 +191,31 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CANCEL: "取消", 
         CREATEAPP: "建立申请表",
         EDITAPP: "修改申请表", 
+        OBJECT:"目标",
+        
+        LOGINTO: "进入",
+        SYSTEM: "系统",
+        LOGIN: '登录',
+        REGISTER: "登记",
+        FORGOTPW: '忘记密码?',
+        HAVEACC: 'Have an account？',
+        PW: '密码',
+        USERNAME: '用户名',
+        
+        /* UPLOAD*/
+        UPQUEUE: "上传文件",
+        UPFILES: "已上传文件", 
+        CHOOSEFILE: "选择文件",
+        MAXFILE: "(每次可上传 10个文件)",
+        MAXSIZE: "(文件不大于 3mb)",
+        NAME: "文件名", 
+        SIZE: "大小",
+        PROGRESS: "进度",
+        STATUS: "状况",
+        UPLOADALL: "上传所有",
+        CANCELALL: "取消所有",
+        REMOVEALL: "删除所有",
+        SAVE:'保存信息',
         
         //sidebar
         ORDERS: '我的订单',
@@ -213,8 +255,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CURPW: '目前密码',
         NEWPW: '新密码',
         REPW: '重新输入新密码',
-        CANCEL: '取消',
-        SAVE:'保存信息',
+       
+        
         //Upgrade page
         MININGPOWER: '挖矿算力',
         HASHPOWER: 'Hash 算力 (MH): ',
@@ -234,14 +276,14 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         STATUS: '状态',
         PAIDON: '下单日期',
         //login page
-        USERNAME: '用户名',
+        /*
         SIGNUP: '注册',
         HAVEACC: '拥有账号？',
         LOG: '登陆',
         PW: '密码',
         FORGOTPW: '忘记密码?',
         STAYLOG: '保持登陆',
-        NOACC: '没有账号？'
+        NOACC: '没有账号？'*/
     };
    
 
