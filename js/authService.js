@@ -25,7 +25,7 @@
 
             $http({
                 method: 'POST',
-                url: 'http://192.168.88.187:8080/ecvcms/f/login',
+                url: 'http://192.168.88.187:8080/ectd/f/login',
             }).success(function successCallback(response) {
                 //console.log(response);
                 callback(response);

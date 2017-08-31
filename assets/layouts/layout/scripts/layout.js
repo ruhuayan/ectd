@@ -582,9 +582,9 @@ var Layout = function () {
     return {
         // Main init methods to initialize the layout
         //IMPORTANT!!!: Do not modify the core handlers call order.
-        headerStarted: false, 
+        //headerStarted: false, 
         initHeader: function() {  console.log('initHeader',++count)
-            this.headerStared = true;
+            //this.headerStared = true;
             handleHorizontalMenu(); // handles horizontal menu    
         },
 
@@ -622,10 +622,10 @@ var Layout = function () {
         },
 
         init: function () {            
-            //this.initHeader();
+            this.initHeader();
             this.initSidebar(null);
             this.initContent();
-            this.initFooter();
+            //this.initFooter();
         },
 
         loadAjaxContent: function(url, sidebarMenuLink) {

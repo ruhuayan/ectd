@@ -35,11 +35,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a ui-sref="dashboard">Home</a>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a>Edit Information</a>
+            <a><span class="title" translate>EDITINFO</span></a>
         </li>
     </ul> 
 </div>
@@ -64,7 +64,7 @@ END PAGE HEADER-->
                     </a>
                 </div>
                 <div class="actions">
-                    <a class="btn btn-sm green" ui-sref="editlink">Edit Link</a>
+                    <a class="btn btn-sm green" ui-sref="editlink"><span class="title" translate>EDITLINK</span></a>
                 </div>
             </div>
             <div class="portlet-body"><div id="jsECTDtree" class="scroller"> </div>
@@ -78,7 +78,7 @@ END PAGE HEADER-->
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <i class="icon-settings font-green-sharp"></i>
-                    <span class="caption-subject bold uppercase">Adminstration Information</span>  
+                    <span class="caption-subject bold uppercase"><span class="title" translate>ADMINISTRATION</span></span>  
                 </div>
                 
                 <div class="actions">
@@ -98,7 +98,7 @@ END PAGE HEADER-->
                 <div class="panel panel-primary">
                     <div class="panel-heading" role="tab" id="headingOne">
                         <a class="panel-title" onclick="Portlet.togglePanel(this, 0);" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseOne">
-                            USA (V3.3)</a>
+                            <span class="title" translate>USA</span></a>
                     </div>
                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body" >
@@ -107,7 +107,7 @@ END PAGE HEADER-->
                             <div class="form-body">         
                        
                                 <div class="form-group first" ng-class="{'has-error' : adminForm.applicationID.$touched && adminForm.applicationID.$invalid || !isAppIDNum}">
-                            <label for="applicationID" class="col-sm-3"><span class="form-label bold">Application ID(D-U-N-SO)</span></label>
+                            <label for="applicationID" class="col-sm-3"><span class="form-label bold"><span class="title" translate>APPLICATION</span> ID(D-U-N-SO)</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="applicationID" id="applicationID" ng-model="adminData.applicationID" placeholder="000000000"
                                        minlength="9" maxlength="9"  required ng-disabled="uneditable" ng-change="isAppIDNum = isStringNumberic(adminForm.applicationID.$viewValue)">
@@ -116,7 +116,7 @@ END PAGE HEADER-->
                             </div>
                         </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.companyName.$invalid && adminForm.companyName.$touched }">
-                            <label for="companyName" class="col-sm-3"><span class="form-label bold">Company Name</span> </label>
+                                    <label for="companyName" class="col-sm-3"><span class="form-label bold" translate>COMPANYNAME</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="adminData.companyName" placeholder="Enter Company Name" required ng-disabled="uneditable">
                                 <p ng-show=" adminForm.companyName.$touched && adminForm.companyName.$invalid" class="help-block">Company Name is required.</p>
@@ -124,7 +124,7 @@ END PAGE HEADER-->
                         </div>
                            
                                 <div class="form-group">
-                                     <label for="description" class="col-sm-3"><span class="form-label">Submission Description</span></label>
+                                    <label for="description" class="col-sm-3"><span class="form-label" translate>SUBMISSION</span>&nbsp;<span class="form-label" translate>DESCRIPTION</span></label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control input-sm" name="description" id="description" ng-model="adminData.description" maxlength="128"
                                                placeholder="Enter Submission Description" ng-disabled="uneditable">
@@ -133,7 +133,7 @@ END PAGE HEADER-->
                                 </div>
                         
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.appNumber.$invalid && adminForm.appNumber.$touched }">
-                                    <label for="appNumber" class="col-sm-3"><span class="form-label bold">Application Number</span> </label>
+                                    <label for="appNumber" class="col-sm-3"><span class="form-label bold" translate>APPLICATION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span> </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control input-sm" name="appNumber" id="appNumber" ng-model="adminData.appNumber" placeholder="Enter Application Number" ng-disabled="uneditable" required>
                                         <p ng-show=" adminForm.appNumber.$touched && adminForm.appNumber.$invalid" class="help-block">Application Number is required.</p>
@@ -141,7 +141,8 @@ END PAGE HEADER-->
                         </div>
                        
                                 <div class="form-group"  ng-class="{ 'has-error' : adminForm.appType.$invalid && adminForm.appType.$touched }">
-                                    <label for="appType" class="col-sm-3"><span class="form-label bold">Application Type</span> </label>
+                                    <label for="appType" class="col-sm-3"><span class="form-label bold" translate>APPLICATION</span> &nbsp;<span class="form-label bold" translate>TYPE</span>
+                                    </label>
                                     <div class="col-sm-9">
                                         <select class="form-control input-sm" name="appType" id="appType" ng-model="adminData.appType" required ng-disabled="uneditable">
                                             <option  ng-repeat="x in appTypes">{{x}}</option>
@@ -152,7 +153,7 @@ END PAGE HEADER-->
                         
                         
                                 <div class="form-group row" ng-class="{ 'has-error' : adminForm.subID.$invalid && adminForm.subID.$touched ||!isSubIDNum }">
-                            <label for="subID" class="col-sm-3"><span class="form-label bold">Submission ID</span></label>
+                                    <label for="subID" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span>&nbsp; ID</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="subID" id="subID" ng-model="adminData.subID" placeholder="0000" 
                                        minlength="4" maxlength="4" ng-change="isSubIDNum = isStringNumberic(adminForm.subID.$viewValue)" ng-disabled="uneditable" ng-required="true">
@@ -161,7 +162,8 @@ END PAGE HEADER-->
                             </div>
                         </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.subType.$invalid && adminForm.subType.$touched }">
-                            <label for="subType" class="col-sm-3"><span class="form-label bold">Submission Type</span> </label>
+                            <label for="subType" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>TYPE</span>
+                            </label>
                             <div class="col-sm-9">
                                 <select class="form-control input-sm" name="subType" id="subType" ng-model="adminData.subType" ng-required="true" ng-disabled="uneditable">
                                             <option  ng-repeat="x in subTypes">{{x}}</option>
@@ -170,7 +172,7 @@ END PAGE HEADER-->
                             </div>
                         </div>  
                                 <div class="form-group">
-                            <label for="effType" class="col-sm-3"><span class="form-label">Supplement Effective Date Type</span></label>
+                                    <label for="effType" class="col-sm-3"><span class="form-label" translate>SUP_EFF</span></label>
                             <div class="col-sm-9">
                                 <select class="form-control input-sm" name="effType" id="effType" ng-model="adminData.effType" ng-disabled="uneditable">
                                     <option>None</option>
@@ -181,7 +183,8 @@ END PAGE HEADER-->
                         </div>
                                 
                                 <div class="form-group row" ng-class="{'has-error': adminForm.subnum.$touched && adminForm.subnum.$invalid||!isSubnumNum}">
-                            <label for="subnum" class="col-sm-3"><span class="form-label bold">Submission Number</span></label>
+                            <label for="subnum" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span>
+                            </label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="subnum" id="subnum" ng-model="formData.subnum" placeholder="0000" 
                                        minlength="4" maxlength="4" ng-change="isSubnumNum = isStringNumberic(adminForm.subnum.$viewValue)" ng-disabled="uneditable" ng-required="true">
@@ -190,7 +193,8 @@ END PAGE HEADER-->
                             </div>
                         </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.subSubType.$invalid && adminForm.subSubType.$touched }">
-                            <label for="subSubType" class="col-sm-3"><span class="form-label bold">submission-sub-type</span> </label>
+                            <label for="subSubType" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>SUBTYPE</span> 
+                            </label>
                             <div class="col-sm-9">
                                 <select class="form-control input-sm" name="subSubType" id="subSubType" ng-model="adminData.subSubType" ng-disabled="uneditable" required>
                                     <option  ng-repeat="x in subSubTypes">{{x}}</option>
@@ -201,8 +205,8 @@ END PAGE HEADER-->
                                 <div class="form-actions">
                             <div class="row">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <button type="submit" class="btn green" ng-disabled="adminForm.$invalid || uneditable">Save</button>
-                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelAdinfo()">Cancel</button>
+                                    <button type="submit" class="btn green" ng-disabled="adminForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
+                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelAdinfo()"><span class="title" translate>CANCEL</span></button>
                                 </div>
                             </div>
                         </div>
@@ -213,7 +217,8 @@ END PAGE HEADER-->
                 </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading" role="tab" id="headingTwo">
-                        <a class="panel-title" onclick="Portlet.togglePanel(this, 1);" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseTwo">Applicant contacts</a>
+                        <a class="panel-title" onclick="Portlet.togglePanel(this, 1);" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseTwo">
+                            <span class="title" translate>APP_CONTACT</span></a>
                     </div>
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body">
@@ -222,7 +227,7 @@ END PAGE HEADER-->
                             <div class="form-body">    
                                 
                                 <div class="form-group first"  ng-class="{ 'has-error' : contactForm.contactType.$invalid && contactForm.contactType.$touched }">
-                                    <label for="contactType" class="col-sm-3"><span class="form-label">Contact Type</span> </label>
+                                    <label for="contactType" class="col-sm-3"><span class="form-label" translate>CONT_TYPE</span> </label>
                                     <div class="col-sm-9">
                                         <select class="form-control  input-sm" name="contactType" id="contactType" ng-change="updateContact()" ng-model="contactData.contactType" required ng-disabled="uneditable">
                                             <option  ng-repeat="x in contactTypes">{{x}}</option>
@@ -231,14 +236,14 @@ END PAGE HEADER-->
                                     </div>
                                 </div>
                                 <div class="form-group" ng-class="{ 'has-error' : contactForm.contactName.$invalid && contactForm.contactName.$touched }">
-                                    <label for="contactName" class="col-sm-3"><span class="form-label">Contact Name</span> </label>
+                                    <label for="contactName" class="col-sm-3"><span class="form-label" translate>CONT_NAME</span> </label>
                                     <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="contactName" id="contactName" ng-model="contactData.contactName" placeholder="Contact Name" required ng-disabled="uneditable">
                                 <p ng-show="contactForm.contactName.$touched && contactForm.contactName.$invalid" class="help-block">Contact Name is required.</p>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid || !isPhoneNum}">
-                            <label for="phone" class="col-sm-3"><span class="form-label">Telephone Number</span></label>
+                            <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span></label>
                             <div class="col-sm-9">
                                 <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" minlength="10" maxlength="10"
                                        ng-required="true" ng-disabled="uneditable" ng-change="isPhoneNum = isStringNumberic(contactForm.phone.$viewValue)">
@@ -248,7 +253,7 @@ END PAGE HEADER-->
                             </div>
                         </div>
                         <div class="form-group" ng-class="{ 'has-error' : contactForm.email.$invalid && contactForm.email.$touched }">
-                            <label for="email" class="col-sm-3"><span class="form-label">Email</span> </label>
+                            <label for="email" class="col-sm-3"><span class="form-label" translate>EMAIL</span> </label>
                             <div class="col-sm-9">
                                 <input type="email" class="form-control input-sm" name="email" id="email" ng-model="contactData.email" placeholder="sample@ectd.com" required ng-disabled="uneditable">
                                 <p ng-show="contactForm.email.$touched && contactForm.email.$invalid" class="help-block">Email is invalid.</p>
@@ -258,8 +263,8 @@ END PAGE HEADER-->
                         <div class="form-actions">
                             <div class="row">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <button type="submit" class="btn green" ng-disabled="contactForm.$invalid || uneditable">Save</button>
-                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelContact()">Cancel</button>
+                                    <button type="submit" class="btn green" ng-disabled="contactForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
+                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelContact()"><span class="title" translate>CANCEL</span></button>
                                 </div>
                             </div>
                         </div>
@@ -271,19 +276,23 @@ END PAGE HEADER-->
                 </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading" role="tab" id="headingThree">
-                        <a class="panel-title" onclick="Portlet.togglePanel(this, 2);" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseThree">Application Cross Reference</a>
+                        <a class="panel-title" onclick="Portlet.togglePanel(this, 2);" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseThree">
+                            <span class="title" translate>CROSS_REF</span></a>
                     </div>
                     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                       <div class="panel-body">
                         <form class="form-horizontal" role="form" ng-submit="submitReference();" name="referenceForm">
                             <div class="form-body">    
                                 <div class="form-group">
-                                    <label class="col-sm-3"><span class="form-label">Application Cross Reference</span></label>
+                                    <label class="col-sm-3"><span class="form-label" translate>APPLICATION</span>&nbsp;<span class="form-label" translate>CROSS_REF</span>
+                                    </label>
                                     <div class="col-sm-9">
-                                        <label><input type="radio" ng-model="referenceData.reference" ng-value="true" ng-checked="referenceData.reference" ng-disabled="uneditable"> &nbsp;Yes</label> &nbsp;&nbsp;
-                                        <label><input type="radio" ng-model="referenceData.reference" ng-value="false" ng-checked="!referenceData.reference" ng-disabled="uneditable"> &nbsp;No</label>
+                                        <label><input type="radio" ng-model="referenceData.reference" ng-value="true" ng-checked="referenceData.reference" ng-disabled="uneditable">
+                                            &nbsp;<span class="title" translate>YES</span></label> &nbsp;&nbsp;
+                                        <label><input type="radio" ng-model="referenceData.reference" ng-value="false" ng-checked="!referenceData.reference" ng-disabled="uneditable">
+                                            &nbsp;<span class="title" translate>NO</span></label>
                                         <div ng-class="{'has-error' : referenceForm.refAppNum.$invalid && referenceForm.refAppNum.$touched }" ng-show="referenceData.reference">
-                                            <label for="refAppNum" ><span class="form-label">Referenced Application Number: &nbsp; &nbsp;</span></label>
+                                            <label for="refAppNum" ><span class="form-label">Referenced Application Number: </span>&nbsp; &nbsp;</label>
                                             <input type="text"  name="refAppNum" id="refAppNum" ng-model="referenceData.refAppNum" placeholder="0000000" ng-disabled="uneditable">
                                         </div>
                                     </div>
@@ -303,8 +312,8 @@ END PAGE HEADER-->
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-offset-2 col-md-10">
-                                            <button type="submit" class="btn green" ng-disabled="referenceForm.$invalid || uneditable">Save</button>
-                                            <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelReference()">Cancel</button>
+                                            <button type="submit" class="btn green" ng-disabled="referenceForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
+                                            <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelReference()"><span class="title" translate>CANCEL</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -622,7 +631,7 @@ END PAGE HEADER-->
                         toastr.success('Admin info Saved');
                         $cookies.putObject("adminData",$scope.adminData);
                         //$scope.uneditable = true;
-                        Portlet.write(result);
+                        //Portlet.write(result);
                     }
                 });
             }   
@@ -654,7 +663,7 @@ END PAGE HEADER-->
                         if(!findContact) contacts.push(angular.copy($scope.contactData));
                         //$scope.uneditable = true;
                         $cookies.putObject("contactData", contacts);
-                        Portlet.write(result);                                  //console.log(contacts);
+                        //Portlet.write(result);                                  //console.log(contacts);
                     }
                 });
             }   
@@ -736,7 +745,7 @@ END PAGE HEADER-->
                 $.post('php/tag.php', {'appData': genData}, function(result){
                     if(result) {
                         toastr.success('General info');
-                        Portlet.write(result, true);                                       
+                        //Portlet.write(result, true);                                       
                         
                         if($scope.genData.nodeId=="m32s"||$scope.genData.nodeId=="m23S"){ 
                             var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.substance+"]";
@@ -895,7 +904,7 @@ END PAGE HEADER-->
                     "types" : { "#" : {"max_children" : 8, "max_depth" :8, "valid_children" : ["root"]},
                         "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["default"] },
                         "default" : {"valid_children" : ["folder", "file"]},
-                        "folder": {"icon" : "glyphicon glyphicon-folder-open", "valid_children" : ["folder","file"]},
+                        "folder": {"valid_children" : ["folder","file"]},
                         "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },

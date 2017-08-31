@@ -300,12 +300,12 @@
                     "types" : { "#" : {"max_children" : 8, "max_depth" :8, "valid_children" : ["root"]},
                         "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["default"] },
                         "default" : {"valid_children" : ["default", "folder", "file"]},
-                        "folder": {"icon" : "glyphicon glyphicon-folder-open", "valid_children" : ["folder","file"]},
+                        "folder": { "valid_children" : ["folder","file"]},
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },
                     "plugins" : ["dnd", "types", "state"]
                 }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
-                    $("#"+data.node.id).prop("title",data.node.original.Description );
+                     $("#"+data.node.id).prop("title", data.node.text);
                 }).bind("loaded.jstree", function (event, data) {
                     $('#jsECTDtree').css('height', _EH);
                     //$(this).jstree('open_all');
@@ -398,7 +398,7 @@
                 return;
             }else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
         }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             // path = getPathByfileId(fileId);
-            PDFJS.getDocument({url: 'http://localhost/pdfEditor/pdfFiles/'+ file}, null, null, function(progress){
+            PDFJS.getDocument({url: '/pdf/pdfFiles/'+ file}, null, null, function(progress){
                                                                                      //console.log((progress.loaded/progress.total)*100);
                 panel.find('div.load-process').show();
                 panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');

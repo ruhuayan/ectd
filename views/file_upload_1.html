@@ -113,7 +113,7 @@ END PAGE HEADER-->
                         <div id="uploadFileTree"></div> 
                     </div>
                 </div>
-                <div class="col-sm-8 upload-queue">
+                <div class="col-sm-8">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
                             <input class="btn btn-success btn-s" type="file" nv-file-select="" uploader="uploader" accept="application/pdf" multiple />
@@ -183,22 +183,6 @@ END PAGE HEADER-->
     </div>
     
 </div>
-<div class="modal fade " id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content alert alert-warning">
-      <div class="modal-header">
-        <h4 class="modal-title bold"></h4>
-      </div>
-      <div class="modal-body bold">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="confirmBtn">Delete</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script>
@@ -276,7 +260,7 @@ END PAGE HEADER-->
         uploader.onCompleteItem = function(fileItem, res, status, headers){
             if(res){                                                             //console.log(res);
                 //if(removeFile($rootScope.uploadFiles, fileItem, 0)) {fileItem.remove(); return; }            //to make sure that no duplicate file name
-                var treeNode = {'id': res.fid, 'parent': 'up1', 'text': res.filename, 'type': 'file', 'Description': 'File ID: '+res.fid, "path": res.path,  "state": {}};
+                var treeNode = {'id': res.fid, 'parent': 'up1', 'text': res.filename, 'type': 'file', 'Description': 'File ID: '+res.fid, "state": {}};
                 $rootScope.uploadFiles.push(treeNode);                                                                                
             };
         };
@@ -398,10 +382,6 @@ END PAGE HEADER-->
         $scope.hideUpfileNode = function(id){                                     
             getUpfileNodeById(id).state =  { "hidden" : true };                                                                    //console.log('disable',$rootScope.uploadFiles)
         };
-        $scope.deleteFileNode = function(id){
-            var node = getUpfileNodeById(id);   
-            $scope.uploadFiles.splice( $.inArray(node, $scope.uploadFiles), 1 );                                                //console.log($scope.uploadFiles);
-        }
         $scope.showUpfileNode = function(id){
             var node = getUpfileNodeById(id); 
             node.state =  { "hidden" : false };
@@ -452,12 +432,7 @@ END PAGE HEADER-->
             node.original.name = name;
             node.original.fileId= fileId;        
         }
-        function dblclickEventHandler(event){
-            var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#uploadFileTree').jstree(true).get_node(nodeId);                        
-            window.open(node.original.path,'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
-        }
-        function subtreeMenu(node) {
+        function customMenu(node) {
             var items = {
                 'create':{  //create new node
                     'label': 'create',
@@ -492,21 +467,15 @@ END PAGE HEADER-->
                                         $('#jsECTDtree').jstree(true).set_text(obj, obj.text+'.pdf');
                                 }); 
                             }else{
+                                var orignal_text = obj.text;
                                 inst.edit(obj, obj.text, function(){                                   // console.log('text: ', obj.text);
-                                    $('#jsECTDtree').jstree(true).set_text(obj, obj.text);
+                                    if(obj.text.match(/\s/g)){
+                                        toastr.warning("Folder name can't contain space!!!");
+                                        $('#jsECTDtree').jstree(true).set_text(obj, orignal_text);
+                                    }else
+                                        $('#jsECTDtree').jstree(true).set_text(obj, obj.text);
                                 });
                             }
-                    }
-                },
-                "duplicate": {
-                    "label": "Duplicate",
-                    "action": function(data){
-                         var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference); 
-                        if(obj.type == "file"){                                     // not yet finished
-                            $('#uploadFileTree').jstree(true).show_node(obj.id);
-                            angular.element("#FileUploadCtrl").scope().showUpfileNode(obj.id);
-                        }
                     }
                 },
                 'remove': { // The "delete" menu item
@@ -529,70 +498,26 @@ END PAGE HEADER-->
 
             return items;
         }
-        function uptreeMenu(node) {
-            var items = {
-                "duplicate": {
-                    "label": "Duplicate",
-                    "action": function(data){
-                        var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference); 
-                        if(obj.type == "file"){                                     // not yet finished
-                            //$('#uploadFileTree').jstree(true).show_node(obj.id);
-                            //angular.element("#FileUploadCtrl").scope().showUpfileNode(obj.id);
-                        }
-                    }
-                },
-                'remove': { // The "delete" menu item
-                    'label': "Delete",
-                    'action': function (data) { 
-                        $("#myModal").find(".modal-title").html("Delete Item");
-                        $("#myModal").find(".modal-body").html("Are you sure that you want to delete the item ?");
-                        $("#myModal").modal(); 
-                        $("#myModal").find("#confirmBtn").click(function(e){
-                            var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference); 
-                            $('#uploadFileTree').jstree(true).hide_node(obj.id);                        //console.log( data);
-                            angular.element("#FileUploadCtrl").scope().deleteFileNode(obj.id);
-                            $("#myModal").modal("hide"); 
-                        });
-                                     
-                        /*if(inst.is_selected(obj)) {
-				inst.delete_node(inst.get_selected());
-			}else {
-                            inst.delete_node(obj);
-			}*/
-                        
-                    }
-                }
-            };
-
-            return items;
-        }
         return {
             initSubTree: function(json){
                 var jsECTDtree; 
                $('#jsECTDtree').css("height", $(window).height()-250).jstree({
                     "core" : {
                         //"animation" : 0,
-                        "check_callback" : function(op, node, node_parent, node_position, more) {
-                            if(op=="move_node" && node.type!=="file"){
-                                return false;
-                            }
-                            return true;
-                        },
+                        "check_callback" : true,
                         "themes" : { "stripes" : true },
                         "data" : json
                     },
                     "types" : { "#" : {"max_children" : 8, "max_depth" :8, "valid_children" : ["root"]},
                         "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["default"]},
                         "default" : {"valid_children" : ["folder", "tag", "file"]},
-                        "folder": {"valid_children" : ["folder","file"]},
+                        "folder": {"icon" : "glyphicon glyphicon-folder-open", "valid_children" : ["folder","file"]},
                         "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },
                     "plugins" : ["contextmenu", "dnd", "types", "state"],
                     'contextmenu' : {
-                        'items' : subtreeMenu, select_node : true
+                        'items' : customMenu, select_node : true
                     }
                     
                 }).bind("loaded.jstree", function (event, data) {
@@ -600,8 +525,6 @@ END PAGE HEADER-->
                     jsECTDtree = $('#jsECTDtree').jstree(true);
                     App.initSlimScroll("#jsECTDtree");
                     
-                }).bind("dblclick.jstree", function(event){
-                    dblclickEventHandler(event);
                 }).bind("hover_node.jstree", function(event, data){
                     $("#"+data.node.id).prop("title", data.node.text );
                     
@@ -613,6 +536,9 @@ END PAGE HEADER-->
                             jsECTDtree.delete_node(data.node.id);
                             $('#uploadFileTree').jstree(true).show_node(data.node.id);
                             angular.element("#FileUploadCtrl").scope().showUpfileNode(data.node.id);
+                            //$translate("WARNING_TAG").then(function(translation){
+                            //    toastr.warning(translation);                            
+                            //});
                             toastr.warning("One tag can't contain two files!"); return;
                         }
                         setTagNode(parentNode, data.node.text, data.original.id, jsECTDtree);                                   //console.log(parentNode);                                  
@@ -638,8 +564,7 @@ END PAGE HEADER-->
                         $('#uploadFileTree').jstree(true).show_node(data.node.id);
                         angular.element("#FileUploadCtrl").scope().showUpfileNode(data.node.id);
                     }  
-                }).on('move_node.jstree', function (e, data) {  
-                    
+                }).on('move_node.jstree', function (e, data) {                     
                     var parentNode = jsECTDtree.get_node(data.parent), old_parentNode = jsECTDtree.get_node(data.old_parent);;
                     if(parentNode.type=="tag"){ 
                         if(parentNode.children.length>1){
@@ -672,18 +597,14 @@ END PAGE HEADER-->
                         "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["file"] },
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },
-                    "plugins" : ["contextmenu", "dnd", "types", "state"],
-                    'contextmenu' : {
-                        'items' : uptreeMenu, select_node : true
-                    }
+                    "plugins" : [ "dnd", "types", "state"],
+                    
                 }).bind("loaded.jstree", function (event, data) {
                     //$(this).jstree("open_all");
                 }).bind("hover_node.jstree", function(event, data){
                     $("#"+data.node.id).prop("title",data.node.original.Description );//console.log(data.node.original.Description) 
                 }).on('changed.jstree', function (e, data) { 
                     $(this).jstree().open_node('up1');
-                }).bind("dblclick.jstree", function(event){
-                    dblclickEventHandler(event);
                 });
             },
             setUpTreeBorder(){

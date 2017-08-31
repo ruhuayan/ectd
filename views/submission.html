@@ -183,13 +183,13 @@
         var appID;
         if(appData){       
             appID = appData.appID;                                              //console.log(appData);
-            $scope.submitLabel = "Edit Application";
+            $scope.submitLabel = "EDITAPP";
             $scope.formData = angular.copy(appData);
             $scope.formData.action = "save";
             $scope.formData.appID = appID;
             $scope.uneditable = true;
         }else{
-            $scope.submitLabel = "Create Application"; 
+            $scope.submitLabel = "CREATEAPP"; 
             $scope.formData={"version": "0000"};
             $scope.formData.action = "create"; 
             $scope.formData.userID = JSON.parse($cookies.get("globals")).id;
