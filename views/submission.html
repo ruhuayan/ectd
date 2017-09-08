@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="portlet-body" >
-                <form class="form-horizontal" role="form" ng-submit="createApp();" name="subForm" ng-init="formData.version='0000'; isVersionNum=true;">
+                <form class="form-horizontal" role="form" ng-submit="createApp();" name="subForm">
                     <div class="form-body">
                         <div class="form-group first">
                             <label class="col-sm-3 bold">eCTD Template:</label>
@@ -100,17 +100,17 @@
                         <div class="form-group bg-primary text-white"><label class="col-sm-3"><span class="panel-title bold" translate>VERSION</span> </label></div>
                     
                                  
-                        <div class="form-group row" ng-class="{ 'has-error' : subForm.version.$invalid && subForm.version.$touched || !isVersionNum}">
+                        <div class="form-group row" ng-class="{ 'has-error' : subForm.version.$invalid && subForm.version.$touched }">
                             <label for="version" class="col-sm-3"><span class="form-label bold" translate>VERSION</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="version" id="version" ng-model="formData.version" 
-                                       minlength="4" maxlength="4" ng-change="isVersionNum = isStringNumberic(subForm.version.$viewValue)" ng-disabled="uneditable" required />
+                                       maxlength="4" ng-disabled="uneditable" required numberic-check="4" />
                                 <p ng-show="subForm.version.$touched && subForm.version.$error.required" class="help-block">Version is required.</p>
-                                <p ng-show="((subForm.version.$error.minlength ||subForm.version.$error.maxlength) || !isVersionNum)" class="help-block">Version should be 4 digits.</p>
+                                <p ng-show="subForm.version.$error.numberic" class="help-block">Version should be 4 digits.</p>
                             </div>
                         </div>
                                 <div class="form-group">
-                                    <label for="sequence" class="col-sm-3"><span class="form-label" translate>SEQUENCE</span><span class="form-label" translate>DESCRIPTION</span></label>
+                                    <label for="sequence" class="col-sm-3"><span class="form-label" translate>SEQUENCE</span>&nbsp;<span class="form-label" translate>DESCRIPTION</span></label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="sequence" id="sequence" ng-model="formData.sequence" placeholder="Sequence Description" ng-disabled="uneditable" />
                                         
@@ -179,7 +179,7 @@
     
     function SubmissionCtrl($rootScope, $scope, $state, $cookies){
         
-        var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):null;
+        var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};
         var appID;
         if(appData){       
             appID = appData.appID;                                              //console.log(appData);

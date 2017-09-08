@@ -215,6 +215,59 @@ MetronicApp.directive('dropzone', function() {
         }
     }
 });
+// to check password match
+MetronicApp.directive('passwordCheck', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {  
+            var me = attrs.ngModel;
+            var matchTo = attrs.passwordCheck, matchValue;                             //console.log(me, matchTo);
+            scope.$watch(matchTo, function(value){
+                matchValue = value;
+            });
+            scope.$watch( me, function(value){                                  //console.log(matchValue, value);
+                ngModel.$setValidity('match', value == matchValue );
+            });  
+      }
+    };
+});
+//password contain one number, one capital letter, one special charcter, length 6-16
+MetronicApp.directive('charCheck', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {  
+            var me = attrs.ngModel;
+            var reg = /^(?=.*\d)(?=.*[A-Z])(?=.*\W).{6,16}$/;
+            scope.$watch( me, function(value){                                  //console.log(value);
+                if(value!=undefined) ngModel.$setValidity('character', reg.test(value));
+                else ngModel.$setValidity('character', true);
+            });  
+        }
+    };
+});
+// to check if input is numberic and certain length
+MetronicApp.directive('numbericCheck', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {  
+            var me = attrs.ngModel;
+            var len = attrs.numbericCheck ? attrs.numbericCheck : null;                                      //console.log(len);
+            scope.$watch(me, function(value){                                   //console.log(value);
+                if(value!=undefined) {
+                    if(len) ngModel.$setValidity('numberic', isStringNumberic(value) && value.length == len );
+                    else ngModel.$setValidity('numberic', isStringNumberic(value));
+                }else ngModel.$setValidity('numberic', true);
+            });
+            var isStringNumberic = function(s){
+                    var x = + s;                                         
+                    return x === parseInt(s);
+            };
+        }
+    };
+});
 
 
 MetronicApp.filter('trustUrl', function($sce) {
@@ -281,6 +334,8 @@ MetronicApp.filter('merchantFilter', function() {
     }
 });
 
+
+//does not work;
 MetronicApp.filter('phonenumber', function() {
 	    /* 
 	    Format phonenumber as: c (xxx) xxx-xxxx

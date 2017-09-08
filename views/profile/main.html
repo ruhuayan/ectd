@@ -6,7 +6,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a ui-sref="profile.dashboard">User Profile</a>
+            <a>Profile</a>
         </li>
     </ul>
     <div class="page-toolbar">
@@ -16,37 +16,28 @@
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
                 <li>
-                    <a href="#">
-                        <i class="icon-user"></i> New User </a>
+                   <a ui-sref="profile.dashboard">
+                        <i class="icon-home"></i> Overview </a>
+                </li>
+                <li>
+                    <a ui-sref="profile.account">
+                        <i class="icon-settings"></i> Account Settings </a>
                 </li>
                 <li>
                     <a href="#">
-                        <i class="icon-present"></i> New Event
-                        <span class="badge badge-success">4</span>
-                    </a>
+                        <i class="icon-basket"></i> Tasks </a>
                 </li>
+                <!--<li class="divider"> </li>-->
                 <li>
-                    <a href="#">
-                        <i class="icon-basket"></i> New order </a>
+                    <a ui-sref="profile.help">
+                        <i class="icon-info"></i> Help </a>
                 </li>
-                <li class="divider"> </li>
-                <li>
-                    <a href="#">
-                        <i class="icon-flag"></i> Pending Orders
-                        <span class="badge badge-danger">4</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="icon-users"></i> Pending Users
-                        <span class="badge badge-warning">12</span>
-                    </a>
-                </li>
+                
             </ul>
         </div>
     </div>
 </div>
-<h3 class="page-title"> Profile </h3>
+<!--<h3 class="page-title"> Profile </h3>-->
 <!-- END PAGE HEADER-->
 <!-- BEGIN PAGE CONTENT-->
 <div class="row" ng-controller="UserProfileController">
@@ -61,8 +52,8 @@
                 <!-- END SIDEBAR USERPIC -->
                 <!-- SIDEBAR USER TITLE -->
                 <div class="profile-usertitle">
-                    <div class="profile-usertitle-name"> Marcus Doe </div>
-                    <div class="profile-usertitle-job"> Developer </div>
+                    <div class="profile-usertitle-name"> User Name </div>
+                    <div class="profile-usertitle-job"> Company Name </div>
                 </div>
                 <!-- END SIDEBAR USER TITLE -->
                 <!-- SIDEBAR BUTTONS -->
@@ -82,8 +73,9 @@
                             <a ui-sref="profile.account">
                                 <i class="icon-settings"></i> Account Settings </a>
                         </li>
-                        <li>
-                            <a href="#/todo">
+                        <li ng-class="{active: $state.includes('todo')}">
+                            
+                             <a ui-sref="todo">
                                 <i class="icon-check"></i> Tasks </a>
                         </li>
                         <li ng-class="{active: $state.includes('profile.help')}">
@@ -118,15 +110,15 @@
                     <span class="profile-desc-text"> Lorem ipsum dolor sit amet diam nonummy nibh dolore. </span>
                     <div class="margin-top-20 profile-desc-link">
                         <i class="fa fa-globe"></i>
-                        <a href="http://www.keenthemes.com">www.keenthemes.com</a>
+                        <a href="#">example@gmail.com</a>
                     </div>
                     <div class="margin-top-20 profile-desc-link">
                         <i class="fa fa-twitter"></i>
-                        <a href="http://www.twitter.com/keenthemes/">@keenthemes</a>
+                        <a href="#">@eCTD</a>
                     </div>
                     <div class="margin-top-20 profile-desc-link">
                         <i class="fa fa-facebook"></i>
-                        <a href="http://www.facebook.com/keenthemes/">keenthemes</a>
+                        <a href="#">eCTD</a>
                     </div>
                 </div>
             </div>

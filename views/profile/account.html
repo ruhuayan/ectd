@@ -5,13 +5,18 @@
                 <div class="caption caption-md">
                     <i class="icon-globe theme-font hide"></i>
                     <span class="caption-subject font-blue-madison bold uppercase">Profile Account</span>
+                    
                 </div>
+                <a class="btn btn-circle" ng-click="toggleEditable()" style="">
+                        <span class="glyphicon glyphicon-pencil" ng-show="uneditable" title="Editable"></span>
+                        <span class="glyphicon glyphicon-ban-circle" ng-hide="uneditable" title="Uneditable" style="color: red;"></span>
+                    </a>
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="#" data-target="#tab_1_1" data-toggle="tab">Personal Info</a>
                     </li>
                     <li>
-                        <a href="#" data-target="#tab_1_2" data-toggle="tab">Change Avatar</a>
+                        <a href="#" data-target="#tab_1_2" data-toggle="tab">Change Image</a>
                     </li>
                     <li>
                         <a href="#" data-target="#tab_1_3" data-toggle="tab">Change Password</a>
@@ -20,68 +25,141 @@
                         <a href="#" data-target="#tab_1_4" data-toggle="tab">Privacy Settings</a>
                     </li>
                 </ul>
+                
             </div>
             <div class="portlet-body">
                 <div class="tab-content">
                     <!-- PERSONAL INFO TAB -->
                     <div class="tab-pane active" id="tab_1_1">
-                        <form role="form" action="" ng-submit="userBasicSubmit()">
-                            <div class="form-group">
-                                <label class="control-label">User Name</label>
-                                <input type="text" ng-model="user.userName"  placeholder="User Name" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">First Name</label>
-                                <input type="text" ng-model="user.firstName" placeholder="First Name" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Last Name</label>
-                                <input type="text" ng-model="user.lastName" placeholder="Last Name" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Email</label>
-                                <input type="text" ng-model="user.email" placeholder="Email" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Phone 1</label>
-                                <input type="text" ng-model="user.phone1" placeholder="Phone 1" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Phone 2</label>
-                                <input type="text" ng-model="user.phone2" placeholder="Phone 2" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Address</label>
-                                <input type="text" ng-model="user.address" placeholder="Address" class="form-control" /> </div>
-                            <div class="form-group col-sm-12">
-                                <div class="col-sm-4">
-                                    <label class="control-label">City</label>
-                                    <input type="text" ng-model="user.city" placeholder="City" class="form-control" />
+                        <form class="form-horizontal" role="form" ng-submit="userBasicSubmit()" name="userForm" ng-init="uneditable = true;">
+                            <div class="form-body">         
+                                
+                                <div class="form-group" ng-class="{'has-error' : userForm.username.$touched && userForm.username.$invalid}">
+                                    <label for="username" class="col-sm-3"><span class="form-label bold"><span class="title" translate>USERNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="username" id="username" ng-model="userData.username" placeholder="user name"
+                                        maxlength="50"  required ng-disabled="uneditable" >
+                                        <p ng-show="userForm.username.$touched && userForm.username.$error.required" class="help-block">User name is required.</p>
+                                        <p ng-show="userForm.username.$error.maxlength" class="help-block">User name less than 50 characters.</p>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label">Country</label>
-                                    <select ng-model="selectCountry" ng-options="country.name for country in countires"
-                                            ng-change="selectedCountry()" class="form-control"/>
+                                
+                                <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>PERSONAL</span> </label></div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.firstname.$touched && userForm.firstname.$invalid}">
+                                    <label for="firstname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>FIRSTNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="firstname" id="firstname" ng-model="userData.firstname" placeholder="first name"
+                                        maxlength="50"  required ng-disabled="uneditable" >
+                                        <p ng-show="userForm.firstname.$touched && userForm.firstname.$error.required" class="help-block">First name is required.</p>
+                                        <p ng-show="userForm.firstname.$error.maxlength" class="help-block">First name less than 50 characters.</p>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label">Province</label>
-                                    <select ng-model="selectProvince" ng-options="province.name for province in provinces"
-                                            ng-change="selectedProvince()" class="form-control"/>
+                                <div class="form-group" ng-class="{'has-error' : userForm.lastname.$touched && userForm.lastname.$invalid}">
+                                    <label for="lastname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>LASTNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="lastname" id="lastname" ng-model="userData.lastname" placeholder="last name"
+                                        maxlength="50"  required ng-disabled="uneditable" >
+                                        <p ng-show="userForm.lastname.$touched && userForm.lastname.$error.required" class="help-block">Last name is required.</p>
+                                        <p ng-show="userForm.lastname.$error.maxlength" class="help-block">Last name less than 50 characters.</p>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label">PostCode</label>
-                                    <input type="text" ng-model="user.zip" placeholder="Post Code" class="form-control" />
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && userForm.email.$touched }">
+                                    <label for="email" class="col-sm-3"><span class="form-label bold" translate>EMAIL</span> </label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control input-sm" name="email" id="email" ng-model="userData.email" 
+                                               placeholder="sample@ectd.com" required ng-disabled="uneditable">
+                                        <p ng-show="userForm.email.$touched && userForm.email.$invalid" class="help-block">Email is invalid.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="margiv-top-10">
-                                <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn green-haze">
-                                    Save Changes
-                                </button>
-                                <a class="btn default"> Cancel </a>
+                                <div class="form-group" ng-class="{'has-error' : userForm.phone.$touched && userForm.phone.$invalid}">
+                                    <label for="phone" class="col-sm-3"><span class="form-label bold" translate>PHONE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="userData.phone" placeholder="514-000-0000" 
+                                               maxlength="10" ng-required="true" ng-disabled="uneditable" numberic-check="10" />
+                                        <!--<p>{{formData.phone | phonenumber}}</p>-->
+                                        <p ng-show="userForm.phone.$touched && userForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
+                                        <p ng-show="userForm.phone.$error.numberic" class="help-block">Telephone number should be 10 digits.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>COMPANY</span> </label></div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.companyName.$invalid && userForm.companyName.$touched }">
+                                    <label for="companyName" class="col-sm-3"><span class="form-label bold" translate>COMPANYNAME</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="userData.companyName" 
+                                               placeholder="Company Name" required ng-disabled="uneditable">
+                                        <p ng-show=" userForm.companyName.$touched && userForm.companyName.$invalid" class="help-block">Company Name is required.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" ng-class="{'has-error' : userForm.companyphone.$touched && userForm.companyphone.$invalid }">
+                                    <label for="companyphone" class="col-sm-3"><span class="form-label bold" translate>COMPANYPHONE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control input-sm" name="companyphone" id="companyphone" ng-model="userData.comphone" placeholder="514-000-0000" 
+                                                maxlength="10" ng-required="true" ng-disabled="uneditable" numberic-check="10" />
+                                        <!--<p>{{formData.phone | phonenumber}}</p>-->
+                                        <p ng-show="userForm.companyphone.$touched && userForm.companyphone.$error.required" class="help-block">Compnay phone Number is required.</p>
+                                        <p ng-show="userForm.companyPhone.$error.required" class="help-block">Company phone number should be 10 digits.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.address.$invalid && userForm.address.$touched }">
+                                    <label for="companyAddress" class="col-sm-3"><span class="form-label bold" translate>ADDRESS</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="companyAddress" id="companyAddress" ng-model="userData.address" 
+                                               placeholder="Company Address" required ng-disabled="uneditable">
+                                        <p ng-show=" userForm.address.$touched && userForm.address.$invalid" class="help-block">Company Address is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.city.$invalid && userForm.city.$touched }">
+                                    <label for="city" class="col-sm-3"><span class="form-label bold" translate>CITY</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="city" id="city" ng-model="userData.city" 
+                                               placeholder="city" required ng-disabled="uneditable">
+                                        <p ng-show=" userForm.city.$touched && userForm.city.$invalid" class="help-block">City is required.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.country.$invalid && userForm.country.$touched }">
+                                    <label for="country" class="col-sm-3"><span class="form-label bold" translate>COUNTRY</span></label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control input-sm" name="country" id="country" ng-model="country" ng-change="selectedCountry()"
+                                                ng-options="country.name for country in countires" ng-disabled="uneditable" required>
+                                        </select>
+                                        <p ng-show="userForm.country.$touched && userForm.country.$invalid" class="help-block">country is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.province.$invalid && userForm.province.$touched }">
+                                    <label for="province" class="col-sm-3"><span class="form-label bold" translate>PROVINCE</span></label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control input-sm" name="province" id="province" ng-model="userData.province" ng-change="selectedProvince()"
+                                                ng-options="province for province in provinces" ng-disabled="uneditable" required>
+                                        </select>
+                                        <p ng-show="userForm.province.$touched && userForm.province.$invalid" class="help-block">Province is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.code.$invalid && userForm.code.$touched }">
+                                    <label for="code" class="col-sm-3"><span class="form-label bold" translate>CODE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="code" id="code" ng-model="userData.code" 
+                                               placeholder="" required ng-disabled="uneditable">
+                                        <p ng-show=" userForm.code.$touched && userForm.code.$invalid" class="help-block">Postal Code is required.</p>
+                                    </div>
+                                </div>
+                                <div class="margiv-top-10">
+                                    <div class="row">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="submit" class="btn green-haze" ng-disabled="userForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
+                                            <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelInfo()"><span class="title" translate>CANCEL</span></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
                     <!-- END PERSONAL INFO TAB -->
                     <!-- CHANGE AVATAR TAB -->
                     <div class="tab-pane" id="tab_1_2">
-                        <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. </p>
-                        <form action="#"
-                            role="form">
+                        <p>Attach Image</p>
+                        <form action="#" role="form">
                             <div class="form-group">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
@@ -109,19 +187,33 @@
                     <!-- END CHANGE AVATAR TAB -->
                     <!-- CHANGE PASSWORD TAB -->
                     <div class="tab-pane" id="tab_1_3">
-                        <form action="#">
-                            <div class="form-group">
-                                <label class="control-label">Current Password</label>
-                                <input type="password" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">New Password</label>
-                                <input type="password" class="form-control" /> </div>
-                            <div class="form-group">
-                                <label class="control-label">Re-type New Password</label>
-                                <input type="password" class="form-control" /> </div>
+                        <form class="form-horizontal" role="form" ng-submit="submitPass()" name="passForm" >
+                            <div class="form-group" ng-class="{ 'has-error' : passForm.currentPass.$invalid && passForm.currentPass.$touched }">
+                                <label for="currentPass"><span class="form-label bold" translate>Current Password</span></label>
+                                <input type="password" name="currentPass" id="currentPass" class="form-control" ng-model="passData.currentPassword" required /> 
+                                <p ng-show="passForm.currentPass.$touched && passForm.currentPass.$error.required" class="help-block">Current Password is required</p>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error' : passForm.pass.$touched && passForm.pass.$invalid}">
+                                    <label for="pass"><span class="form-label bold" translate>PW</span></label>
+                                    <div>
+                                        <input type="password" name="pass" id="pass" class="form-control" ng-model="passData.password" required char-check />
+                                        <p ng-show="passForm.pass.$touched && passForm.pass.$error.required" class="help-block">Password is required</p>
+                                        <p ng-show="passForm.pass.$error.character" class="help-block">Password must contain at least one number,one capital letter, one special character, length 6-16.</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" ng-class="{'has-error' : passForm.repass.$touched && passForm.repass.$invalid}">
+                                    <label for="repass"><span class="form-label bold" translate>REPW</span></label>
+                                    <div>
+                                        <input type="password" name="repass" id="repass" class="form-control" ng-model="passData.repassword" password-check='passData.password' required />
+                                        <p ng-show="passForm.repass.$touched && passForm.repass.$error.required" class="help-block">Retyping password is required</p>
+                                        <p ng-show='passForm.repass.$error.match' class="help-block">Passwords don't match.</p>
+                                    </div>
+                                </div>
                             <div class="margin-top-10">
-                                <a href="#" class="btn green-haze"> Change Password </a>
-                                <a href="#" class="btn default"> Cancel </a>
+                                <button type="submit" class="btn green-haze" ng-disabled="passForm.$invalid"><span class="title" translate>Change Password</span></button>
+                                <button type="button" class="btn default" ng-click="cancelPass()"><span class="title" translate>CANCEL</span></button>
+                              
                             </div>
                         </form>
                     </div>
@@ -131,7 +223,7 @@
                         <form action="#">
                             <table class="table table-light table-hover">
                                 <tr>
-                                    <td> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus.. </td>
+                                    <td> Keep my data for 7 days </td>
                                     <td>
                                         <label class="uniform-inline">
                                             <input type="radio" name="optionsRadios1" value="option1" /> Yes </label>
@@ -140,26 +232,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
+                                    <td> I wish to receive our daily update </td>
                                     <td>
                                         <label class="uniform-inline">
                                             <input type="checkbox" value="" /> Yes </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
+                                    <td> Allow other people to see me </td>
                                     <td>
                                         <label class="uniform-inline">
                                             <input type="checkbox" value="" /> Yes </label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
-                                    <td>
-                                        <label class="uniform-inline">
-                                            <input type="checkbox" value="" /> Yes </label>
-                                    </td>
-                                </tr>
+                                
                             </table>
                             <!--end profile-settings-->
                             <div class="margin-top-10">

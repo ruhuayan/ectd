@@ -19,26 +19,59 @@
         function signin(username, password, callback) {
             //console.log(username);
             /*$.post('php/login.php', {userName: username, pass: password}, function(response){
-                if(response) callback(response);
+                if(response)  return callback(response);
             });*/
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password);
-
-            $http({
+            
+            //$http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password);
+            //$header = 'Authorization: Basic bGlzYS5rOjEyMzQ1Ng==' + Base64.encode64( username + ':' + password )
+            /*$http({
+                async: true,
+                crossDomain: true,
                 method: 'POST',
                 url: 'http://192.168.88.187:8080/ectd/f/login',
+                headers:{
+                    "content-type": "application/x-www-form-urlencoded",
+                    "Authorization": "Basic " +Base64.encode( username + ':' + password )
+                },
+                data: {
+                    grant_type: "password",
+                    username: "lisa.k", 
+                    password: "Basic " +Base64.encode( username + ':' + password )
+                }
+                
             }).success(function successCallback(response) {
                 //console.log(response);
                 callback(response);
 
             }).error(function errorCallback(response) {
                 //   $exceptionHandler('An error has occurred.\nHTTP error: ' + response.status + '(' + response.statusText + ')');
-
                 // Some error occurred
                 toastr.error('Login Failed');
                 $log.error(response);
                 console.log("! Login fail cause " + response);
+            });*/
+            $.ajax({
+                async: true,
+                crossDomain: true,
+                method: "POST",
+                url: "http://192.168.88.187:8080/ectd/f/login",
+                
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                    "authorization": "Basic " + Base64.encode( username + ':' + password )
+                },
+                data: {
+                    grant_type: "password", 
+                    username: username, 
+                    password: "Basic " +Base64.encode( username + ':' + password )
+                }
+                
+            }).done(function (response){                                        console.log(response);
+                var response = JSON.parse(response);
+                    if(response.uid) callback(response);
+                    else toastr.error('Login Failed');
+                    
             });
-
         }
 
         function SetCredentials(data) {

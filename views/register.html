@@ -1,0 +1,233 @@
+<style>
+    body{
+        background: #fff;
+    }
+</style>
+    <div class="bg-primary" style="font-weight: bold; color: #fff; font-size: 30px;width: 100%; text-align: center; height: 50px;">ECTD Register</div>
+    <div class="container" ng-controller="RegisterCtrl" style="width: 50%;">
+        
+                        <form class="form-horizontal" role="form" ng-submit="userBasicSubmit()" name="userForm">
+                            <div class="form-body">         
+                                <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>Username & Password</span> </label></div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.username.$touched && userForm.username.$invalid}">
+                                    <label for="username" class="col-sm-3"><span class="form-label bold"><span class="title" translate>USERNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="username" id="username" ng-model="userData.username" placeholder="user name"
+                                        minlength="6" maxlength="50"  required >
+                                        <p ng-show="userForm.username.$touched && userForm.username.$error.required" class="help-block">User name is required.</p>
+                                        <p ng-show="userForm.username.$error.minlength || userForm.username.$error.maxlength" class="help-block">User name must be between 6 - 50 characters.</p>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.pass.$touched && userForm.pass.$invalid}">
+                                    <label for="pass" class="col-sm-3"><span class="form-label bold" translate>PW</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="password" name="pass" id="pass" class="form-control" ng-model="userData.password" required char-check />
+                                        <span ng-show="userForm.pass.$touched && userForm.pass.$error.required" class="help-block">Password is required</span>
+                                        <p ng-show="userForm.pass.$error.character" class="help-block">Password must contain at least one number,one capital letter, one special character, length 6-16.</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" ng-class="{'has-error' : userForm.repass.$touched && userForm.repass.$invalid}">
+                                    <label for="repass" class="col-sm-3"><span class="form-label bold" translate>REPW</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="password" name="repass" id="repass" class="form-control" ng-model="userData.repassword" password-check='userData.password' required />
+                                        <span ng-show="userForm.repass.$touched && userForm.repass.$error.required" class="help-block">Retyping password is required</span>
+                                        <span ng-show='userForm.repass.$error.match' class="help-block">Passwords don't match.</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>PERSONAL</span> </label></div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.firstname.$touched && userForm.firstname.$invalid}">
+                                    <label for="firstname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>FIRSTNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="firstname" id="firstname" ng-model="userData.firstname" placeholder="first name"
+                                        maxlength="50"  required >
+                                        <p ng-show="userForm.firstname.$touched && userForm.firstname.$error.required" class="help-block">First name is required.</p>
+                                        <p ng-show="userForm.firstname.$error.maxlength" class="help-block">First name less than 50 characters.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.lastname.$touched && userForm.lastname.$invalid}">
+                                    <label for="lastname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>LASTNAME</span></span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="lastname" id="lastname" ng-model="userData.lastname" placeholder="last name"
+                                        maxlength="50"  required >
+                                        <p ng-show="userForm.lastname.$touched && userForm.lastname.$error.required" class="help-block">Last name is required.</p>
+                                        <p ng-show="userForm.lastname.$error.maxlength" class="help-block">Last name less than 50 characters.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && userForm.email.$touched }">
+                                    <label for="email" class="col-sm-3"><span class="form-label bold" translate>EMAIL</span> </label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control input-sm" name="email" id="email" ng-model="userData.email" 
+                                               placeholder="sample@ectd.com" required >
+                                        <p ng-show="userForm.email.$touched && userForm.email.$invalid" class="help-block">Email is invalid.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error' : userForm.phone.$touched && userForm.phone.$invalid}">
+                                    <label for="phone" class="col-sm-3"><span class="form-label bold" translate>PHONE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="userData.phone" placeholder="514-000-0000" 
+                                               maxlength="10" ng-required="true" numberic-check="10">
+                                        <!--<p>{{formData.phone | phonenumber}}</p>-->
+                                        <p ng-show="userForm.phone.$touched && userForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
+                                        <p ng-show="userForm.phone.$error.numberic" class="help-block">Telephone number should be 10 digits.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>COMPANY</span> </label></div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.companyName.$invalid && userForm.companyName.$touched }">
+                                    <label for="companyName" class="col-sm-3"><span class="form-label bold" translate>COMPANYNAME</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="userData.companyName" 
+                                               placeholder="Company Name" required >
+                                        <p ng-show=" userForm.companyName.$touched && userForm.companyName.$invalid" class="help-block">Company Name is required.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" ng-class="{'has-error' : userForm.companyphone.$touched && userForm.companyphone.$invalid}">
+                                    <label for="companyphone" class="col-sm-3"><span class="form-label bold" translate>COMPANYPHONE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control input-sm" name="companyphone" id="companyphone" ng-model="userData.comphone" placeholder="514-000-0000" 
+                                               maxlength="10" ng-required="true" numberic-check="10">
+                                        
+                                        <p ng-show="userForm.companyphone.$touched && userForm.companyphone.$error.required" class="help-block">Compnay phone Number is required.</p>
+                                        <p ng-show="userForm.companyphone.$error.numberic" class="help-block">Company phone number should be 10 digits.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.address.$invalid && userForm.address.$touched }">
+                                    <label for="companyAddress" class="col-sm-3"><span class="form-label bold" translate>ADDRESS</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="companyAddress" id="companyAddress" ng-model="userData.address" 
+                                               placeholder="Company Address" required >
+                                        <p ng-show=" userForm.address.$touched && userForm.address.$invalid" class="help-block">Company Address is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.city.$invalid && userForm.city.$touched }">
+                                    <label for="city" class="col-sm-3"><span class="form-label bold" translate>CITY</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="city" id="city" ng-model="userData.city" 
+                                               placeholder="city" required >
+                                        <p ng-show=" userForm.city.$touched && userForm.city.$invalid" class="help-block">City is required.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.country.$invalid && userForm.country.$touched }">
+                                    <label for="country" class="col-sm-3"><span class="form-label bold" translate>COUNTRY</span></label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control input-sm" name="country" id="country" ng-model="country" ng-change="selectedCountry()"
+                                                ng-options="country.name for country in countires" required>
+                                        </select>
+                                        <p ng-show="userForm.country.$touched && userForm.country.$invalid" class="help-block">country is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.province.$invalid && userForm.province.$touched }">
+                                    <label for="province" class="col-sm-3"><span class="form-label bold" translate>PROVINCE</span></label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control input-sm" name="province" id="province" ng-model="userData.province" ng-change="selectedProvince()"
+                                                ng-options="province for province in provinces" required>
+                                        </select>
+                                        <p ng-show="userForm.province.$touched && userForm.province.$invalid" class="help-block">Province is required.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : userForm.code.$invalid && userForm.code.$touched }">
+                                    <label for="code" class="col-sm-3"><span class="form-label bold" translate>CODE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="code" id="code" ng-model="userData.code" 
+                                               placeholder="" required >
+                                        <p ng-show=" userForm.code.$touched && userForm.code.$invalid" class="help-block">Postal Code is required.</p>
+                                    </div>
+                                </div>
+                                <div class="margiv-top-10">
+                                    <div class="row">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="submit" class="btn green-haze" ng-disabled="userForm.$invalid"><span class="title" translate>REGISTER</span></button>
+                                            <button type="button" class="btn default" ng-click="cancelInfo()"><span class="title" translate>CANCEL</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+               
+           
+        </div>
+<script>
+function RegisterCtrl($rootScope, $scope, $state, $cookies){
+    
+    var provinces ={"CN": ["北京市", "上海市","天津市", "重庆市", "河北省", "山西省", "內蒙古自治区", "辽宁省", "吉林省", "黑龙江省",  "江苏省", "浙江省", "安徽省", "福建省", "江西省","山东省", "河南省", "湖北省", "湖南省", 
+        "广东省", "广西壮族自治区", "海南省", "四川省", "贵州省", "云南省", "西藏自治区", "陕西省", "甘肃省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区", "台湾省", "香港特别行政区", "澳门特别行政区"],
+        "USA": ["California", "Florida", "New Jersey", "New York", "Texas", "Washington"],
+        "CA": ["Quebc", "Ontario", "British Columbia"]
+        };
+    var cities = {};
+    $scope.countires = [{
+            "id": 1,
+            "code": "CN",
+            "name": "China",
+            "name_CN": "中国"
+            
+        },{
+            "id": 2,
+            "code": "USA",
+            "name": "USA",
+            "name_CN": "美国"
+        },{
+            "id": 3,
+            "code": "CA",
+            "name": "Canada",
+            "name_CN": "加拿大",
+            "tax": 0.05,
+            "taxName": "GST"
+        }];
+    //$scope.userData = {};
+    $scope.selectedCountry = function(){                                        //console.log($scope.userData.country)
+        var countryCode =  $scope.country.code;
+        if(countryCode == null){
+            countryCode = 'CN';
+        }
+        $scope.provinces = provinces[countryCode];
+        $scope.userData.country = $scope.country.code;
+        /*$http({
+            method: 'GET',
+            url: 'http://192.168.88.187:8080/ecvcms/a/addresses/provinceList/'+countryCode+'?uid=' + uid + "&apptoken=" + appToken
+            //data: $scope.userData,
+        }).success(function (data, status) {
+            if(status == 200 && data!=null){
+                $scope.provinces = data;
+            }
+        }).error(function (data, status) {
+            // Some error occurred
+            $scope.error = "Get province list fail cause: " + data.exception.message;
+        });*/
+    };
+
+    $scope.selectedProvince = function(){
+        //$scope.provinceCode = $scope.selectProvince.code;
+    };
+
+    $scope.userBasicSubmit = function () {
+        
+        var jsonData =JSON.stringify($scope.userData);                          console.log("userData", jsonData);
+        /*$http({
+            method: 'POST',
+            url: 'http://192.168.88.187:8080/ecvcms/a/users/myAccount/update?uid=' + uid + "&apptoken=" + appToken,
+            data: userData,
+        }).success(function (data, status) {
+            if(status == 200){
+               
+            }
+        }).error(function (data, status) {
+            // Some error occurred
+            $scope.error = status + "!Submit user profile fail cause: " + data;
+            console.log(status + "! Submit user profile fail cause " + $scope.error);
+        });*/
+    };
+
+    $scope.cancelInfo = function(){
+        $scope.userData ={}; 
+        $scope.userForm.$setPristine();
+        $scope.userForm.$setUntouched();
+        $scope.userForm.$setValidity();
+    };   
+}
+</script>
+      

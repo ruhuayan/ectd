@@ -33,6 +33,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         SETTINGS: "Settings",
         LOGOUT: "Logout",
         
+        INBOX: "Inbox",
+        
         /* DASHBOARD*/
         SUBMISSION: "Submission",
         HOME: 'Home',
@@ -45,7 +47,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         VIEW: "View",
         VIEWALL: "View All Submissions", 
         CREATENEW: "Create a New Application", 
-        
+        NEWSUB: "New Submission",
         /* SUBMISSION */
         PLANNEDSUB: "planned submission",
         DOCUMENT: "Document",
@@ -84,8 +86,9 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         UPLOADALL: "Upload all",
         CANCELALL: "Cancel all",
         REMOVEALL: "Remove all",
-        SAVE: 'Save',
-        WARNING_NOAPP: "You need to create an application to upload/save files!",
+        REPLACE: "Replace",
+        SAVE: 'Save Changes',
+        WARNING_NOAPP: "You need to create an application to...",
         WARNING_FILES: "Maximum 10 files", 
         WARNING_SIZE: "Maximum file size 6mb",
         WARNING_FILE: "Not a pdf file",
@@ -95,9 +98,16 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         WARNING_RENAME: "Can not rename eCTD structure folder!!!",
         WARNING_DELETE: "Can not delete eCTD structure folder!!!",
         WARNING_NOFILE: "There is no file to save",
+        WARNING_SPACE: "File name can't contain space",
+        WARNING_EXISTS: " already exists, it will be replaced?",
         INFO_WAIT: "It may take a minute or two to save the ECTD structure files.",
         WARNING_TAG: "One tag can't contain two files!",
-        
+        SUCCESS_REPLACED: " File replaced", 
+        NO_FILE: "There is no file to save", 
+        DELETE: "Delete",
+        CLOSE: "Close", 
+        D_TITLE: "Delete Item",
+        D_CONTENT: "Are you sure to delete the item ?",
         
         /* EDIT INFO */
         ADMINISTRATION: "Administration Information",
@@ -118,17 +128,44 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         NO: "No", 
         
         PRICE: 'Price',
-         CONTACTUS: 'Contact us',
+        CONTACTUS: 'Contact us',
          //header
         LANGUAGE: 'Language',
         USER: 'User',
         MYPROFILE: 'My Profile',
         UPGRADE: 'Purchase Power',
        
-        //sidebar
-      
+        //Edit LINK
+        REACT: "react",
+        SELECT: "select",
+        LINK: "link",
+        NOTE: "note", 
+        BACKWARD: "backward",
+        FORWARD: "forward",
+        FAVORITE: "favorite",
+        BOOKMARK: "bookmark",
+        ALIGN: "align",
+        COLOR: "color",
+        FONT: "font",
+        CHECK: "check",
+        DOWNLOAD: "download",
+        
         ORDERS: 'My Orders',
         TRANSACTIONS: 'Payouts',
+        
+        //profile
+        FIRSTNAME: "First Name",
+        LASTNAME: "Last Name",
+        PHONE: "Telephone",
+        COMPANYPHONE: "Telephone",
+        ADDRESS:"Address",
+        CITY: "City",
+        COUNTRY: "Country",
+        PROVINCE: "Province", 
+        PERSONAL: "Personal Informatin",
+        COMPANY: "Comapny Information",
+        CODE: "Postal Code", 
+        
         //dashboard
         HASHRATE: 'Hash Rate',
         UNPAIDBAL: 'Unpaid Balance',
@@ -163,7 +200,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         SETUP: 'Set up Wallet here',
         CURPW: 'Current Password',
         NEWPW: 'New Password',
-        REPW: 'Re-type New Password',
+        REPW: 'Re-type Password',
         
         
         //Upgrade page
@@ -199,6 +236,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         USER: '用户',
         MYPROFILE: '用户设置',
         
+        INBOX: "邮箱",
+        
         SUBMISSION: "申请档",
         HOME: '主页',
        
@@ -226,6 +265,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CREATEAPP: "建立申请表",
         EDITAPP: "修改申请表", 
         OBJECT:"目标",
+        NEWSUB: "新的 申请档",
         
         LOGINTO: "进入",
         SYSTEM: "系统",
@@ -249,6 +289,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         UPLOADALL: "上传所有",
         CANCELALL: "取消所有",
         REMOVEALL: "删除所有",
+        REPLACE: "覆盖原文件",
         SAVE:'保存信息',
         WARNING_NOAPP: "请先建立申请表",
         WARNING_FILES: "不超过10个文件", 
@@ -260,10 +301,18 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         WARNING_RENAME: "不能更改eCTD 架构文件夹名字!!!",
         WARNING_DELETE: "不能删除 eCTD 架构文件夹!!!",
         WARNING_NOFILE: "没有文件",
+        WARNING_EXISTS: " 已经存在，将会被取代",
+        SUCCESS_REPLACED: " 文件被取代",
         WARNING_TAG: "一个tag 不能有2个文件",
+        WARNING_SPACE: "文件名不能有空格",
         INFO_WAIT: "保存文件可能需要1 - 2分钟",
+        NO_FILE: "没有文件", 
+        DELETE: "删除",
+        CLOSE: "关闭", 
+        D_TITLE: "删除文件",
+        D_CONTENT: "确定要删除这个文件？",
         
-        /* EDIT LINK */
+        /* EDIT INFO */
         ADMINISTRATION: "管理者信息",
         APPLICATION: "申请",
         COMPANYNAME: "公司名字",
@@ -274,15 +323,43 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CONT_TYPE: "联系类型",
         CONT_NAME:"联系人名字",
         TELEPHONE: "电话号码",
-        EMAIL:'邮编',
+        EMAIL:'电 邮',
         SUP_EFF: "副有效日期类型", 
         USA: "美国 (V3.3)", 
         CROSS_REF: "外部参考", 
         YES: "是", 
         NO: "否", 
-        //sidebar
+        
+        /*EDIT LINK*/
+        REACT: "打开链接",
+        SELECT: "选择链接",
+        LINK: "链接",
+        NOTE: "注解", 
+        BACKWARD: "向后",
+        FORWARD: "向前",
+        FAVORITE: "偏好",
+        BOOKMARK: "书签",
+        ALIGN: "对齐",
+        COLOR: "颜色",
+        FONT: "字体",
+        CHECK: "检查",
+        DOWNLOAD: "下载",
+        //sideba
         ORDERS: '我的订单',
         TRANSACTIONS: '收款',
+        
+        //profile
+        FIRSTNAME: "姓",
+        LASTNAME: "名",
+        PHONE: "电 话",
+        COMPANYPHONE: "公司电话",
+        ADDRESS:"地 址",
+        CITY: "城 市",
+        COUNTRY: "国 家",
+        PROVINCE: "省 份",
+        PERSONAL: "个人资料",
+        COMPANY: "公司资料",
+        CODE: "邮 编", 
         //dashboard
         HASHRATE: '算力',
         UNPAIDBAL: '未支付金额',
@@ -309,7 +386,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         FNAME:'名',
         LNAME: '姓',
         MOBILE:'手机号码',
-        EMAIL:'电子邮箱',
+        //EMAIL:'电子邮箱',
         PROFILE:'我的账户',
         PERSONALINFO: '个人信息',
         WALLET: '钱包',
@@ -448,7 +525,7 @@ MetronicApp.controller('HeaderController', ['$scope', '$rootScope', '$location',
             Layout.initHeader();
         });
         var userData = JSON.parse($cookies.get('globals'));
-        $scope.admin = userData.userName; //console.log('user Data: ', userData);
+        $scope.username = "test";//userData.uid; //console.log('user Data: ', userData);
     }
 ]);
 
@@ -513,6 +590,23 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 });
             }]
         }
+    }).state("register", {
+        url: "/register",
+        templateUrl: "views/register.html",
+        data: { pageTitle: 'Register' },
+        controller: "",
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'MetronicApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
+                        
+                        'js/angular-base64.js'
+                    ]
+                });
+            }]
+        }
     })
     // Dashboard
     .state('dashboard', {
@@ -526,32 +620,13 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
-                        /*'../assets/global/plugins/morris/morris.css',
-                        '../assets/global/plugins/morris/morris.min.js',
-                        '../assets/global/plugins/morris/raphael-min.js',
-                        '../assets/global/plugins/jquery.sparkline.min.js',
+                        /*'assets/global/plugins/morris/morris.css',
+                        'assets/global/plugins/morris/morris.min.js',
+                        'assets/global/plugins/morris/raphael-min.js',
+                        'assets/global/plugins/jquery.sparkline.min.js',
 
-                        '../assets/pages/scripts/dashboard.min.js',*/
-                        'js/controllers/DashboardController.js',
-                    ]
-                });
-            }]
-        }
-    }).state('editfile', {
-        url: '/edit.html',
-        templateUrl: "views/edit.html",
-        data: {pageTitle: 'Edit PDF file'},
-        controller: '',
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'css/edit.css',
-                        "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
-                        'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js"
+                        'assets/pages/scripts/dashboard.min.js',*/
+                        'js/controllers/DashboardController.js'
                     ]
                 });
             }]
@@ -845,7 +920,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             }]
         }
     })
-*/
+
     // Blank Page
     .state('blank', {
         url: "/blank",
@@ -932,8 +1007,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }]);
             }]
         }
-    })
-
+    })*/
+/*
     // Form Tools
     .state('formtools', {
         url: "/form-tools",
@@ -1086,7 +1161,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             }]
         }
     })
-
+*/
     // User Profile
     .state("profile", {
         url: "/profile",
@@ -1099,13 +1174,13 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                     files: [
-                        '../assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
-                        '../assets/pages/css/profile.css',
+                        'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                        'assets/pages/css/profile.css',
 
-                        '../assets/global/plugins/jquery.sparkline.min.js',
-                        '../assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
+                        'assets/global/plugins/jquery.sparkline.min.js',
+                        'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
 
-                        '../assets/pages/scripts/profile.min.js',
+                        'assets/pages/scripts/profile.min.js',
 
                         'js/controllers/UserProfileController.js'
                     ]
@@ -1131,7 +1206,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
                     name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    insertBefore: '#ng_load_plugins_before', 
                     files: [
                         'js/controllers/UserAccountController.js'
                     ]
@@ -1159,23 +1234,23 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                     files: [
-                        '../assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
-                        '../assets/apps/css/todo-2.css',
-                        '../assets/global/plugins/select2/css/select2.min.css',
-                        '../assets/global/plugins/select2/css/select2-bootstrap.min.css',
+                        'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
+                        'assets/apps/css/todo-2.css',
+                        'assets/global/plugins/select2/css/select2.min.css',
+                        'assets/global/plugins/select2/css/select2-bootstrap.min.css',
 
-                        '../assets/global/plugins/select2/js/select2.full.min.js',
+                        'assets/global/plugins/select2/js/select2.full.min.js',
 
-                        '../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
+                        'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
 
-                        '../assets/apps/scripts/todo-2.min.js',
+                        'assets/apps/scripts/todo-2.min.js',
 
                         'js/controllers/TodoController.js'
                     ]
                 });
             }]
         }
-    })
+    });
 
 }]);
 

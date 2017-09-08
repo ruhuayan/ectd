@@ -103,25 +103,25 @@ END PAGE HEADER-->
                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body" >
                         
-                        <form class="form-horizontal" role="form" ng-submit="submitAdinfo();" name="adminForm" ng-init="isAppIDNum=true; isSubIDNum=true; isSubnumNum=true;">
+                        <form class="form-horizontal" role="form" ng-submit="submitAdinfo();" name="adminForm">
                             <div class="form-body">         
                        
-                                <div class="form-group first" ng-class="{'has-error' : adminForm.applicationID.$touched && adminForm.applicationID.$invalid || !isAppIDNum}">
-                            <label for="applicationID" class="col-sm-3"><span class="form-label bold"><span class="title" translate>APPLICATION</span> ID(D-U-N-SO)</span></label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" name="applicationID" id="applicationID" ng-model="adminData.applicationID" placeholder="000000000"
-                                       minlength="9" maxlength="9"  required ng-disabled="uneditable" ng-change="isAppIDNum = isStringNumberic(adminForm.applicationID.$viewValue)">
-                                <p ng-show="adminForm.applicationID.$touched && adminForm.applicationID.$error.required" class="help-block">Application ID is required.</p>
-                                <p ng-show="((adminForm.applicationID.$error.minlength ||adminForm.applicationID.$error.maxlength) || !isAppIDNum)" class="help-block">Application ID should be 9 digits.</p>
-                            </div>
-                        </div>
+                                <div class="form-group first" ng-class="{'has-error' : adminForm.applicationID.$touched && adminForm.applicationID.$invalid }">
+                                    <label for="applicationID" class="col-sm-3"><span class="form-label bold"><span class="title" translate>APPLICATION</span> ID(D-U-N-SO)</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="applicationID" id="applicationID" ng-model="adminData.applicationID" placeholder="000000000"
+                                            maxlength="9" required ng-disabled="uneditable" numberic-check="9">
+                                        <p ng-show="adminForm.applicationID.$touched && adminForm.applicationID.$error.required" class="help-block">Application ID is required.</p>
+                                        <p ng-show="adminForm.applicationID.$error.numberic" class="help-block">Application ID should be 9 digits.</p>
+                                    </div>
+                                </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.companyName.$invalid && adminForm.companyName.$touched }">
                                     <label for="companyName" class="col-sm-3"><span class="form-label bold" translate>COMPANYNAME</span></label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="adminData.companyName" placeholder="Enter Company Name" required ng-disabled="uneditable">
-                                <p ng-show=" adminForm.companyName.$touched && adminForm.companyName.$invalid" class="help-block">Company Name is required.</p>
-                            </div>
-                        </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="adminData.companyName" placeholder="Enter Company Name" required ng-disabled="uneditable">
+                                        <p ng-show=" adminForm.companyName.$touched && adminForm.companyName.$invalid" class="help-block">Company Name is required.</p>
+                                    </div>
+                                </div>
                            
                                 <div class="form-group">
                                     <label for="description" class="col-sm-3"><span class="form-label" translate>SUBMISSION</span>&nbsp;<span class="form-label" translate>DESCRIPTION</span></label>
@@ -135,10 +135,12 @@ END PAGE HEADER-->
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.appNumber.$invalid && adminForm.appNumber.$touched }">
                                     <label for="appNumber" class="col-sm-3"><span class="form-label bold" translate>APPLICATION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span> </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="appNumber" id="appNumber" ng-model="adminData.appNumber" placeholder="Enter Application Number" ng-disabled="uneditable" required>
-                                        <p ng-show=" adminForm.appNumber.$touched && adminForm.appNumber.$invalid" class="help-block">Application Number is required.</p>
+                                        <input type="text" class="form-control input-sm" name="appNumber" id="appNumber" ng-model="adminData.appNumber" placeholder="Application Number" 
+                                               ng-disabled="uneditable" required numberic-check />
+                                        <p ng-show="adminForm.appNumber.$touched && adminForm.appNumber.$error.required" class="help-block">Application Number is required.</p>
+                                        <p ng-show="adminForm.appNumber.$error.numberic" class="help-block">Application Number should consist only digits.</p>
                                     </div>
-                        </div>
+                                </div>
                        
                                 <div class="form-group"  ng-class="{ 'has-error' : adminForm.appType.$invalid && adminForm.appType.$touched }">
                                     <label for="appType" class="col-sm-3"><span class="form-label bold" translate>APPLICATION</span> &nbsp;<span class="form-label bold" translate>TYPE</span>
@@ -149,16 +151,16 @@ END PAGE HEADER-->
                                         </select>
                                         <p ng-show=" adminForm.appType.$touched && adminForm.appType.$invalid" class="help-block">Application Type is required.</p>
                                     </div>
-                        </div>
+                                </div>
                         
                         
-                                <div class="form-group row" ng-class="{ 'has-error' : adminForm.subID.$invalid && adminForm.subID.$touched ||!isSubIDNum }">
+                                <div class="form-group row" ng-class="{ 'has-error' : adminForm.subID.$invalid && adminForm.subID.$touched }">
                                     <label for="subID" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span>&nbsp; ID</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="subID" id="subID" ng-model="adminData.subID" placeholder="0000" 
-                                       minlength="4" maxlength="4" ng-change="isSubIDNum = isStringNumberic(adminForm.subID.$viewValue)" ng-disabled="uneditable" ng-required="true">
+                                       maxlength="4" ng-disabled="uneditable" ng-required="true" numberic-check="4" />
                                 <p ng-show=" adminForm.subID.$touched && adminForm.subID.$error.required" class="help-block">Submission ID is required.</p>
-                                <p ng-show="((adminForm.subID.$error.minlength ||adminForm.subID.$error.maxlength) || !isSubIDNum)" class="help-block">Submission ID should be 4 digits.</p>
+                                <p ng-show="adminForm.subID.$error.numberic" class="help-block">Submission ID should be 4 digits.</p>
                             </div>
                         </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.subType.$invalid && adminForm.subType.$touched }">
@@ -182,16 +184,16 @@ END PAGE HEADER-->
                             </div>
                         </div>
                                 
-                                <div class="form-group row" ng-class="{'has-error': adminForm.subnum.$touched && adminForm.subnum.$invalid||!isSubnumNum}">
-                            <label for="subnum" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" name="subnum" id="subnum" ng-model="formData.subnum" placeholder="0000" 
-                                       minlength="4" maxlength="4" ng-change="isSubnumNum = isStringNumberic(adminForm.subnum.$viewValue)" ng-disabled="uneditable" ng-required="true">
-                                <p ng-show=" adminForm.subnum.$touched && adminForm.subnum.$error.required" class="help-block">Submission ID is required.</p>
-                                <p ng-show="adminForm.subnum.$viewValue.length && ((adminForm.subnum.$error.minlength ||adminForm.subnum.$error.maxlength) || !isSubnumNum)" class="help-block">Submission Number should be 4 digits.</p>
-                            </div>
-                        </div>
+                                <div class="form-group row" ng-class="{'has-error': adminForm.subnum.$touched && adminForm.subnum.$invalid}">
+                                    <label for="subnum" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control input-sm" name="subnum" id="subnum" ng-model="formData.subnum" placeholder="0000" 
+                                            maxlength="4" ng-disabled="uneditable" ng-required="true" numberic-check="4" />
+                                        <p ng-show=" adminForm.subnum.$touched && adminForm.subnum.$error.required" class="help-block">Submission ID is required.</p>
+                                        <p ng-show="adminForm.subnum.$error.numberic" class="help-block">Submission Number should be 4 digits.</p>
+                                    </div>
+                                </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.subSubType.$invalid && adminForm.subSubType.$touched }">
                             <label for="subSubType" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>SUBTYPE</span> 
                             </label>
@@ -223,7 +225,7 @@ END PAGE HEADER-->
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body">
                         
-                        <form class="form-horizontal" role="form" ng-submit="submitContact();" name="contactForm" ng-init="isPhoneNum=true;">
+                        <form class="form-horizontal" role="form" ng-submit="submitContact();" name="contactForm">
                             <div class="form-body">    
                                 
                                 <div class="form-group first"  ng-class="{ 'has-error' : contactForm.contactType.$invalid && contactForm.contactType.$touched }">
@@ -242,14 +244,14 @@ END PAGE HEADER-->
                                 <p ng-show="contactForm.contactName.$touched && contactForm.contactName.$invalid" class="help-block">Contact Name is required.</p>
                             </div>
                         </div>
-                        <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid || !isPhoneNum}">
+                        <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid}">
                             <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span></label>
                             <div class="col-sm-9">
-                                <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" minlength="10" maxlength="10"
-                                       ng-required="true" ng-disabled="uneditable" ng-change="isPhoneNum = isStringNumberic(contactForm.phone.$viewValue)">
+                                <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" maxlength="10"
+                                       ng-required="true" ng-disabled="uneditable" numberic-check="10" />
                                 <!--<p>{{formData.phone | phonenumber}}</p>-->
                                 <p ng-show="contactForm.phone.$touched && contactForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
-                                <p ng-show="((contactForm.phone.$error.minlength ||contactForm.phone.$error.maxlength) || !isPhoneNum)" class="help-block">Telephone should be 10 digits.</p>
+                                <p ng-show="contactForm.phone.$error.numberic" class="help-block">Telephone should be 10 digits.</p>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{ 'has-error' : contactForm.email.$invalid && contactForm.email.$touched }">
@@ -578,7 +580,7 @@ END PAGE HEADER-->
         };
         
      }
-    function AdinfoCtrl($rootScope, $scope, $state, $cookies){
+    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate ){
         
         var appData, appID;
         if($cookies.get("appData")) {
@@ -587,7 +589,10 @@ END PAGE HEADER-->
             //$scope.appCreated = true; 
         }else {
             $state.go("submission");
-            toastr.warning("You need to create an application to edit Aministration information!");
+            $translate("WARNING_NOAPP").then(function(translation){
+                toastr.warning(translation);
+            })
+            //toastr.warning("You need to create an application to edit Aministration information!");
         }
         
         var adminData = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
@@ -620,9 +625,7 @@ END PAGE HEADER-->
             //if(node) angular.element('#TagCtrl').scope().setTagTitle(node.original.sNumber, node.text, false);
         };
         $scope.submitAdinfo = function(){                                       
-            /*if(!$scope.isStringNumberic($scope.adminForm.applicationID.$viewValue)||!$scope.isStringNumberic($scope.adminForm.subID.$viewValue)){
-                return;                                    
-            }*/
+            
             if($scope.adminForm.$valid){
                 $scope.adminData.appID = appID;
                 var jsonData =JSON.stringify( $scope.adminData);                                 //console.log(jsonData);
@@ -644,9 +647,9 @@ END PAGE HEADER-->
         }; 
         $scope.submitContact = function(){ 
             //if(!$scope.isStringNumberic($scope.contactForm.phone.$viewValue)) return;
-            $scope.contactData.appID = appID;
+            $scope.contactData.appID = appID;                                        console.log(JSON.stringify($scope.contactData));
             if($scope.contactForm.$valid){
-                var jsonData =JSON.stringify($scope.contactData);                                 //console.log(jsonData);
+                var jsonData =JSON.stringify($scope.contactData);                                 console.log(jsonData);
                 $.post('php/adinfo.php', {'appData': jsonData}, function(result){
                     if(result) {
                         toastr.success('Contact information Saved');
@@ -668,20 +671,23 @@ END PAGE HEADER-->
                 });
             }   
         };
-        $scope.cancelContact = function(){    console.log(contact);
+        $scope.cancelContact = function(){                                          //console.log(contact);
             $scope.contactData = angular.copy(contact);
             $scope.contactForm.$setPristine();
             $scope.contactForm.$setUntouched();
             $scope.contactForm.$setValidity();
         };
         $scope.updateContact = function(){                                      
-            if(contacts.length>=1){                                             console.log(contacts);
+            if(contacts.length>=1){                                             //console.log(contacts);
                 contact = {"contactType": $scope.contactForm.contactType.$viewValue};
                 for(var i=0; i<contacts.length; i++ ){                          //console.log(contacts[i].contactType);               
                     if(contacts[i].contactType == $scope.contactForm.contactType.$viewValue) {contact = contacts[i];}
                 }; 
                 $scope.contactData = angular.copy(contact);
             }
+            //$scope.contactForm.$setPristine();
+            $scope.contactForm.$setUntouched();
+            //$scope.contactForm.$setValidity();
         };
         $scope.submitReference = function(){
             if($scope.referenceForm.$valid){
@@ -850,7 +856,7 @@ END PAGE HEADER-->
             },
             openFrame: function(filename){                                      //console.log(filename);
                 $('.study-frame').find('iframe').remove();
-                var frame = $('<iframe src=pdfFiles/'+filename+' width="100%" height="'+800+'"></iframe>');
+                var frame = $('<iframe src='+filename+' width="100%" height="'+700+'"></iframe>');
                 $('.study-frame').append(frame);
             },
             togglePanel: function(el, x){                                          //console.log($(el))
@@ -879,7 +885,7 @@ END PAGE HEADER-->
 <script>
     var JsTree = function (){
         
-        function customMenu(node) {
+        /*function customMenu(node) {
             var items = {
                 'open':{
                     'label': 'Open',
@@ -890,6 +896,13 @@ END PAGE HEADER-->
                 }
             };
             return items;
+        }*/
+         function dblclickEventHandler(event){
+            var nodeId = $(event.target).closest("li")[0].id;
+            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);             //console.log(node); 
+            var filename =node.original.name;//"/pdf/pdfFiles/"+node.text;
+            if($(".study-frame").is(":visible")) Portlet.openFrame(filename);
+            else window.open(filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);
         }
         return {
             initTree: function(json){
@@ -908,11 +921,10 @@ END PAGE HEADER-->
                         "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },
-                    "plugins" : ["contextmenu", "types", "state"],
-                    'contextmenu' : {
+                    "plugins" : ["types", "state"]
+                    /*'contextmenu' : {
                         'items' : customMenu, select_node : true
-                    }
-                    
+                    }*/
                 }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
                     $("#"+data.node.id).prop("title",data.node.original.text );
                 }).bind("loaded.jstree", function (event, data) {
@@ -921,6 +933,8 @@ END PAGE HEADER-->
                     App.initSlimScroll("#jsECTDtree");
                 }).bind("select_node.jstree", function (e, data) { 
                     JsTree.getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id); 
+                }).bind("dblclick.jstree", function(event){
+                    dblclickEventHandler(event);
                 });
             },
            toggle: function(open){

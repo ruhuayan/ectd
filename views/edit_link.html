@@ -4,24 +4,24 @@
     <!--<div class="navbar-header"> <a class="navbar-brand" href="#">Tools</a></div>-->
                 <ul class="nav navbar-nav navbar-tools tools-menu edit-menu" id="tools-menu">
                     <!--<li><a href="#"><i class="fa fa-arrows-alt"></i> <div>Full Screen</div></a></li>-->
-                    <li><a href="#" title="Open Link" data-tool="react"><i class="fa fa-openid"></i><div>react</div></a></li>
-                    <li><a href="#" title="Select Text to Link" data-tool="select"><i class="fa fa-square-o"></i><div>select</div></a></li>
-                    <li><a href="#" title="Add Link" data-tool="link"><i class="fa fa-link" aria-hidden="true"></i><div>link</div></a></li>
-                    <li><a href="#" data-tool="text" title="Add new text"><i class="fa fa-file-text-o " aria-hidden="true"></i><div>note</div></a></li>
-                    <li><a href="#" title="Ctrl+Z" data-tool="backward"><i class="fa fa-backward " aria-hidden="true"></i><div>backward</div></a></li>
-                    <li><a href="#" title="Ctrl+Y" data-tool="forward"><i class="fa fa-forward" aria-hidden="true"></i><div>forward</div></a></li>
-                    <li><a href="#" title="Refresh" data-tool="refresh"><i class="fa fa-refresh" aria-hidden="true"></i><div>refresh</div></a></li>
-                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i><div>favorite</div></a></li>
+                    <li><a href="#" title="Open Link" data-tool="react"><i class="fa fa-openid"></i><div translate>REACT</div></a></li>
+                    <li><a href="#" title="Select Text to Link" data-tool="select"><i class="fa fa-square-o"></i><div translate>SELECT</div></a></li>
+                    <li><a href="#" title="Add Link" data-tool="link"><i class="fa fa-link" aria-hidden="true"></i><div translate>LINK</div></a></li>
+                    <li><a href="#" data-tool="text" title="Add new text"><i class="fa fa-file-text-o " aria-hidden="true"></i><div translate>NOTE</div></a></li>
+                    <li><a href="#" title="Ctrl+Z" data-tool="backward"><i class="fa fa-backward " aria-hidden="true"></i><div translate>BACKWARD</div></a></li>
+                    <li><a href="#" title="Ctrl+Y" data-tool="forward"><i class="fa fa-forward" aria-hidden="true"></i><div translate>FORWARD</div></a></li>
+                    <!--<li><a href="#" title="Refresh" data-tool="refresh"><i class="fa fa-refresh" aria-hidden="true"></i><div>refresh</div></a></li>-->
+                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i><div translate>FAVORITE</div></a></li>
                     
                     <!--<li><a href="#" data-tool="delete" title="Delete current page"><i class="fa fa-window-close" aria-hidden="true"></i><div>delete</div></a></li>
                     <li><a href="#"><i class="fa fa-files-o" aria-hidden="true"></i><div>duplicate</div></a></li>-->
-                    <li><a href="#"><i class="fa fa-bookmark-o" aria-hidden="true"></i><div>bookmark</div></a></li>
-                    <li><a href="#"><i class="fa fa-align-left" aria-hidden="true"></i><div>align</div></a></li>
-                    <li><a href="#"><i class="fa fa-square" aria-hidden="true"></i><div>color</div></a></li>
-                    <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div>font</div></a></li>
-                    <li><a href="#" title="check" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div>check</div></a></li>
-                    <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div>save</div></a></li>
-                    <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download" aria-hidden="true"></i><div>download</div></a></li>
+                    <li><a href="#"><i class="fa fa-bookmark-o" aria-hidden="true"></i><div translate>BOOKMARK</div></a></li>
+                    <li><a href="#"><i class="fa fa-align-left" aria-hidden="true"></i><div translate>ALIGN</div></a></li>
+                    <li><a href="#"><i class="fa fa-square" aria-hidden="true"></i><div translate>COLOR</div></a></li>
+                    <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div translate>FONT</div></a></li>
+                    <li><a href="#" title="check" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>
+                    <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div translate>SAVE</div></a></li>
+                    <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download" aria-hidden="true"></i><div translate>DOWNLOAD</div></a></li>
                     <!--<li><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><div>Edit Info</div></a></li>
                     <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
                     <li class="pull-right"><a href="#" title="Download file" id=""><i class="fa fa-arrows-alt" aria-hidden="true"></i> <div>Full Screen</div></a></li>-->
@@ -34,7 +34,7 @@
 <div class="rightPanel" >
         <div class="row" >
            
-            <div class="col-sm-3 sidebar" ng-controller="JstreeCtrl">
+            <div class="col-sm-3 sidebar" ng-controller="JstreeCtrl" id="JstreeCtrl">
                 <div class="caption font-green-sharp" style="font-size:14px; margin: 15px 0px 10px 10px;">
                     <span class="caption-subject bold uppercase">Application</span>
                     <a class="btn-circle" ng-click="toggleTree()">
@@ -57,6 +57,7 @@
                           <select class="pageList" title="page number"></select>
                           <a href="#" class="nextPage" title="Next Page"><i class="fa fa-forward"></i>
                           </a>
+                          <input type="text" class="pageNum" placeholder="page" maxlength="4" size="4"/>
                       </span>
                     </nav>
                     <div class="drop-file-zone">
@@ -78,6 +79,7 @@
                           <select class="pageList" title="page number"></select>
                           <a href="#" class="nextPage" title="Next Page"><i class="fa fa-forward"></i>
                           </a>
+                          <input type="text" class="pageNum" placeholder="page" maxlength="4" size="4" />
                         </span>
                     </nav>
                     <div class="drop-file-zone">
@@ -259,7 +261,7 @@
 <script> 
     //"use strict";
     var appID; 
-    function JstreeCtrl($rootScope, $scope, $state, $cookies){
+    function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate){
         
         var appData;
         if($cookies.get("appData")) {
@@ -267,27 +269,38 @@
             appID = appData.appID;
         }else {
             $state.go("submission");
-            toastr.warning("You need to create an application to edit Link!");
+            $translate("WARNING_NOAPP").then(function(translation){
+                toastr.warning(translation); 
+            });
+            //toastr.warning("You need to create an application to edit Link!");
         }
         
          if(!$rootScope.subFiles){
            JsTree.initTree(fileTree);;
         }else{
-            var fileJson = fileTree.concat($rootScope.subFiles);
+            var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
             JsTree.initTree(fileJson);
-            JsTree.setSelectList(fileJson);
+            JsTree.setSelectList($rootScope.subFiles);
+            JsTree.upFiles = $rootScope.subFiles;
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
             $rootScope.open = ! $rootScope.open; 
         };
+       
         JsTree.closeSidebar();
         //$rootScope.settings.layout.pageSidebarClosed = true;
      }
 </script>
 <script>
      var JsTree = function (){
+         function dblclickEventHandler(event){
+            var nodeId = $(event.target).closest("li")[0].id;
+            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node);                       
+            window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+        }
         return {
+            upFiles: [],
             initTree: function(json){
                 $('#jsECTDtree').jstree({
                     "core" : {
@@ -299,8 +312,9 @@
                     },
                     "types" : { "#" : {"max_children" : 8, "max_depth" :8, "valid_children" : ["root"]},
                         "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["default"] },
-                        "default" : {"valid_children" : ["default", "folder", "file"]},
+                        "default" : {"valid_children" : ["default", "folder", "tag", "file"]},
                         "folder": { "valid_children" : ["folder","file"]},
+                        "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
                         "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
                     },
                     "plugins" : ["dnd", "types", "state"]
@@ -310,6 +324,8 @@
                     $('#jsECTDtree').css('height', _EH);
                     //$(this).jstree('open_all');
                     App.initSlimScroll("#jsECTDtree");
+                }).bind("dblclick.jstree", function(event){
+                    dblclickEventHandler(event);
                 });
             },
             closeSidebar: function(){
@@ -332,6 +348,15 @@
                     }   
                     //else  $('select.fileList').append('<optgroup label="'+node['text']+'" id="'+node['id']+'"></optgroup>');
                 } 
+            },
+            getPathById: function(fileId){
+                var path; 
+                if(JsTree.upFiles.length){
+                    $.each(JsTree.upFiles, function(index, value){
+                        if(value.id == fileId) {path = value.name;}         
+                    });
+                }
+                return path;
             }
         };   
     }();
@@ -358,14 +383,14 @@
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
             if(t.parents('div.pdf-frame').length && t.parents('div.pdf-frame').attr('data-loaded')=='false')
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
-            }).on('dnd_stop.vakata', function (e, data) {                               // console.log(data.element.text);
-                var fileName = $.trim(data.element.text), fileId = data.data.nodes[0];            //console.log(data);
+        }).on('dnd_stop.vakata', function (e, data) {                                // console.log(data.element.text);
+                var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
                 var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
                 if(fileName.indexOf('.pdf')>0) {                                                
                     if(t.parents('div.pdf-editor').length && pdfEditor.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfEditor);
                     else if(t.parents('div.pdf-frame').length && pdfFrame.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfFrame);
                 }   
-            });  
+       });  
     /*function openFile(file, fileId, panel){                                          //console.log('panel: ',panel[0].id);          
         if(!panel) {                                                          
             if(pdfEditor.attr('data-loaded')=='false') openPanel(file, fileId, pdfEditor);       
@@ -380,7 +405,7 @@
         } 
     }*/
     
-    function openPanel(file, fileId, panel){                                            //console.log(fileZone.parent());
+    function openPanel(file, fileId, panel){                                    
         panel.find('.drop-file-zone').hide();
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
@@ -397,8 +422,9 @@
                     pdf2html(file, cacheOb.pdf, panel);
                 return;
             }else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
-        }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             // path = getPathByfileId(fileId);
-            PDFJS.getDocument({url: '/pdf/pdfFiles/'+ file}, null, null, function(progress){
+        }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             
+        var path = JsTree.getPathById(fileId);
+            PDFJS.getDocument({url: path}, null, null, function(progress){
                                                                                      //console.log((progress.loaded/progress.total)*100);
                 panel.find('div.load-process').show();
                 panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
@@ -636,6 +662,24 @@
             panel.find(".right-tabs select.pageList").val(pageNum);
         }
     });
+    $(".pageNum").keydown(function(event){
+        if(event.keyCode==13){
+            var pageNum = parseInt($(this).val()), pdf, panel;            //alert(pageNum);
+            if(!pageNum){ toastr.warning("Not a number !"); return;} 
+            if($(this).parents("div.pdf-editor").length){
+                panel = $(this).parents('div.pdf-editor');
+                pdf = pdfFile['pdf-editor'].pdf;
+            }else{
+                panel = $(this).parents('div.pdf-frame');
+                pdf = pdfFile['pdf-frame'].pdf;
+            }
+            if(pageNum < pdf.numPages){ 
+                render(pdf, panel.find(".fileZone"), pageNum);
+                panel.find(".right-tabs select.pageList").val(pageNum);
+            }
+        }
+    });
+    
     (function getScrollbarWidth() {
         var div, body, W = window.browserScrollbarWidth;
         if (W === undefined) {
@@ -860,10 +904,10 @@
             // Analytics.trackEvent("pdf-editor-usage", "select-tool", "pressed"),
         if(pdfFrame.attr('data-loaded')=='true' && pdfFile['pdf-frame']) toggleTool("select");
     });
-    toolsMenu.find("[data-tool=delete]").click(function(){
+    /*toolsMenu.find("[data-tool=delete]").click(function(){
         // Analytics.trackEvent("pdf-editor-usage", "delete-tool", "pressed"),
         removeTool('delete');                                                   //console.log(window.currentPage());
-    });
+    });*/
     $(".link-editable-menu .delete-opts").click(function() {
             //Analytics.trackEvent("pdf-editor-usage", "link-tool", "delete");
             var t = $(this),
@@ -921,32 +965,6 @@
         $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr("data-target-page", sOption.text()); 
        
     });
-   /* $(".link-editable-menu input[type=text]").on("input", function() {               // you can get e.position + e.dimension of link                                                                                            
-        var t = $(this),
-            e = $("#" + t.parents(".link-editable-menu").attr("data-target-id"));                    //console.log(e);
-        e.attr("data-uri", t.val());
-    });
-    function insertPage(btn){                                                // $('.page-between a').click()
-        //Analytics.trackEvent("pdf-editor-usage", "insert-page");
-        removeOperationCache();
-        var pc = $(btn).parents('.pdf-page-container'); var canvas = pdfEditor.find('canvas.page').first();                              console.log(canvas);
-        var w = canvas.width(), h= canvas.height(), scale=pdfEditor.find('.page-wrap').first().attr('data-scale');
-        var pageContainer = $('<div class="pdf-page-container" data-new-page="true"></div>');
-        var pageBetween = '<div class="page-between"><a onclick="insertPage(this)" class="btn btn-light btn-xs">Insert page here</a></div>';
-        var pageWrap = '<div class="page-wrap rendered" data-scale="'+scale+'"><canvas class="page" width='+w+' height='+h+'></canvas></div>';
-        pageContainer.append(pageBetween).append(pageWrap).addClass('operation_'+ ++operationCount).attr('id', 'page-'+operationCount).insertBefore(pc);
-        //$('<div class="page-container" data-new-page="true"><div class="page-between"><a onclick="insertPage(this)" class="btn btn-light btn-xs">Insert page here</a></div><div class="page-wrap rendered" data-scale="'+scale+'"><canvas class="page" width='+w+' height='+h+'></canvas></div></div').addClass('operation_'+ ++operationCount).attr('id', 'page-'+operationCount).insertBefore(pc);
-        resetPageNum();                              
-    }function resetPageNum(){
-        var t = 1;
-        pdfEditor.find(".pdf-page-container").each(function() {
-            var e = $(this),
-                a = e.find(".page-wrap");                                       
-            a.attr("data-page-num", t),
-                e.find(".page-number-label").text(t),
-                t++
-        })
-    }*/
     // selection for link
     (function() {
             var el, x1 = 0,  x2 = 0,                // el - element $(this)
@@ -1085,6 +1103,7 @@
                     $(this).attr('selected' ,'selected'); sText = $(this).text();
                 }else $(this).removeAttr('selected');
             });
+            
             fileListSelect.removeAttr('disabled').val(sText);
             pageList.hide();
         } //else{ fileListSelect.val( pdfFile['pdf-frame'].name).attr('disabled', 'disabled'); }
@@ -1146,7 +1165,8 @@
         }
         var ob = pdfFile['pdf-editor'];
         $.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appID": appID}, function(result){
-            if(result && result.indexOf('.pdf')){ ob.tempname = result; ob.lastOp = operationCount;
+            if(result && result.indexOf('.pdf')){ 
+                ob.tempname = result; ob.lastOp = operationCount;
                 pdfFrame.find('iframe').remove();
                 pdfFrame.find('.drop-file-zone').fadeOut(300);
                 var fileZone = pdfFrame.find('.fileZone');
@@ -1154,8 +1174,9 @@
                 pdfFrame.attr('data-loaded', 'true');
                 //toggleSplitter(false);
                 pdfFrame.find('.pdfTab').html(result+'<i class="fa fa-times" aria-hidden="true" style="margin-left: 1em; margin-right: 1em;" onclick="closeFile(this)"></i>');
-                var frame = $('<iframe src=pdfFiles/'+result+' width="100%" height="'+_EH+'" class="resultFrame"></iframe>');
+                var frame = $('<iframe src=/pdf/pdfFiles/'+result+' width="100%" height="'+_EH+'" class="resultFrame"></iframe>');
                 pdfFrame.append(frame);
+                //window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
                 //openFile(result.trim(), pdfFrame);
             }        
             //if(result) document.write(result);

@@ -5,7 +5,7 @@ angular.module('MetronicApp').controller('UserProfileController', function($root
     });
 
     // set sidebar closed and body solid layout mode
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = true;
+    //$rootScope.settings.layout.pageBodySolid = true;
+    //$rootScope.settings.layout.pageSidebarClosed = true;
 
 }); 
