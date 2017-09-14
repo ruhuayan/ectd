@@ -742,10 +742,10 @@ END PAGE HEADER-->
                 $('#uploadFileTree').css("border-top", "solid 1px #999").jstree(true).settings.core.data = fileJson;
                 $('#uploadFileTree').jstree(true).refresh();
             } ,
-            refreshSubTree: function(fileJson){
+            /*refreshSubTree: function(fileJson){
                 $('#jsECTDtree').jstree(true).settings.core.data = fileJson;
                 $('#jsECTDtree').jstree(true).refresh();
-            },
+            },*/
             get_fileJson: function(){
                 var json = $('#jsECTDtree').jstree(true).get_json('#', {flat:true});
                 var fileArray=[];

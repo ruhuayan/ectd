@@ -11,8 +11,7 @@
                     <li><a href="#" title="Ctrl+Z" data-tool="backward"><i class="fa fa-backward " aria-hidden="true"></i><div translate>BACKWARD</div></a></li>
                     <li><a href="#" title="Ctrl+Y" data-tool="forward"><i class="fa fa-forward" aria-hidden="true"></i><div translate>FORWARD</div></a></li>
                     <!--<li><a href="#" title="Refresh" data-tool="refresh"><i class="fa fa-refresh" aria-hidden="true"></i><div>refresh</div></a></li>-->
-                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i><div translate>FAVORITE</div></a></li>
-                    
+                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i><div translate>FAVORITE</div></a></li>          
                     <!--<li><a href="#" data-tool="delete" title="Delete current page"><i class="fa fa-window-close" aria-hidden="true"></i><div>delete</div></a></li>
                     <li><a href="#"><i class="fa fa-files-o" aria-hidden="true"></i><div>duplicate</div></a></li>-->
                     <li><a href="#"><i class="fa fa-bookmark-o" aria-hidden="true"></i><div translate>BOOKMARK</div></a></li>
@@ -245,7 +244,7 @@
                             <div class="modal-header">
                                 <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
                                 <div class="modal-title">
-                                    There are some unused text edits. (the default <i>Text here</i>)<br> Should we remove them before continuing?
+                                    There are some unused text edits. (the default <i>www.sample.com</i>)<br> Should we remove them before continuing?
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -275,8 +274,8 @@
             //toastr.warning("You need to create an application to edit Link!");
         }
         
-         if(!$rootScope.subFiles){
-           JsTree.initTree(fileTree);;
+        if(!$rootScope.subFiles){
+           JsTree.initTree(fileTree);
         }else{
             var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
             JsTree.initTree(fileJson);
@@ -294,10 +293,11 @@
 </script>
 <script>
      var JsTree = function (){
-         function dblclickEventHandler(event){
+        function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node);                       
-            window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node); 
+            if(node.type=="file")
+                window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
         }
         return {
             upFiles: [],
@@ -421,10 +421,10 @@
                 panel.find('div.load-process').fadeOut(1000); 
                     pdf2html(file, cacheOb.pdf, panel);
                 return;
-            }else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
+            }//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
         }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             
         var path = JsTree.getPathById(fileId);
-            PDFJS.getDocument({url: path}, null, null, function(progress){
+            PDFJS.getDocument({url: path+"?nc="+Math.random()}, null, null, function(progress){
                                                                                      //console.log((progress.loaded/progress.total)*100);
                 panel.find('div.load-process').show();
                 panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
@@ -957,8 +957,9 @@
     });
     $(".link-editable-menu select.fileList").on('change', function(){
         var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
-        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": sOption.text(), "data-target-fid":sOption.attr('id') }); 
-       
+        //$("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": sOption.text(), "data-target-fid":sOption.attr('id') }); 
+        var filePath= JsTree.getPathById(sOption.attr('id'));                   console.log(filePath);
+        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": filePath, "data-target-fid":sOption.attr('id') }); 
     });
     $(".link-editable-menu select.pageList").on('change', function(){
         var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
@@ -1136,7 +1137,7 @@
     //              Saving PDF file
     ///////////////////////////////////////////////////////////////////////////
     //var opList = {};
-    var operations = ["appendTextOperations", "insertPageOperations", "highlightTextOperations", "linkOperations", "formValues"];
+    var operations = ["textOperations", "linkOperations"];
     $("#check-pdf-btn").click(function(t) {
         if(!pdfFile['pdf-editor']) {alert('file not opened!!!'); return;}       //console.log(hasValidOP(operationCount));
         if(!hasValidOP(operationCount)) {alert('file not edited!!!'); return;}
@@ -1167,7 +1168,7 @@
         $.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appID": appID}, function(result){
             if(result && result.indexOf('.pdf')){ 
                 ob.tempname = result; ob.lastOp = operationCount;
-                pdfFrame.find('iframe').remove();
+                /*pdfFrame.find('iframe').remove();
                 pdfFrame.find('.drop-file-zone').fadeOut(300);
                 var fileZone = pdfFrame.find('.fileZone');
                 pdfFrame.attr('data-loaded')=='true' && fileZone.is(":visible") && fileZone.remove()&& $('<div class="fileZone"></div>').insertAfter(pdfFrame.find('.drop-file-zone'));;
@@ -1175,8 +1176,8 @@
                 //toggleSplitter(false);
                 pdfFrame.find('.pdfTab').html(result+'<i class="fa fa-times" aria-hidden="true" style="margin-left: 1em; margin-right: 1em;" onclick="closeFile(this)"></i>');
                 var frame = $('<iframe src=/pdf/pdfFiles/'+result+' width="100%" height="'+_EH+'" class="resultFrame"></iframe>');
-                pdfFrame.append(frame);
-                //window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+                pdfFrame.append(frame);*/
+                window.open("/pdf/pdfFiles/"+result+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
                 //openFile(result.trim(), pdfFrame);
             }        
             //if(result) document.write(result);
@@ -1261,7 +1262,7 @@
                             },  
                             page: a.attr("data-page-num"),
                         };
-                    "" != f.text.trim() && t.appendTextOperations.push(f)
+                    "" != f.text.trim() && t.textOperations.push(f)
                 //}
             })),
         pdfEditor.find(".target-editable").each(applyFun(".target-editable", function(){       //console.log('inside at function - target', new Big(1, 5));
@@ -1286,20 +1287,11 @@
                     pw: parseInt(a.attr('data-pw')),
                     page: a.attr("data-page-num"),
                     tfid: $(this).attr('data-target-fid'),         // target-fid
-                    uri:  $(this).attr("data-uri"),           //$(this).attr('data-fid');
+                    uri:  $(this).attr("data-uri"),           //$(this).attr('data-fid');               no need in real application because of tfid
                     tpage: $(this).attr("data-target-page")?$(this).attr("data-target-page"):1
                 };
                 p.id /*&& p.uri*/ && t.linkOperations.push(p);                    //console.log(c); to JSON.stringify(p) before sending to server
             }));
-            /*$(".pdf-page-container[data-new-page=true]").each(function() {
-                var e = $(this),
-                    a = e.find('.page-wrap').attr("data-page-num");
-                t.insertPageOperations.push({
-                    id: $(this)[0].id,
-                    page: a
-                });
-            });*/
-            
             return t;
     }
     
@@ -1316,28 +1308,6 @@
         return t.replace(kt, "").replace(/\u3000/g, " ").replace(/\u2003/g, " ").replace(/\u2002/g, " ").replace(/\u2005/g, " ").replace(/\u2006/g, " ").replace(/\u2000/g, " ").replace(/\u202F/g, " ").replace(/\u0009/g, "").replace(/\u200B/g, "").replace(/\u2028/g, "")
     }
    
-   /* $('form.task-form').submit(function(e) {
-        e.preventDefault();
-        var formData =JSON.stringify( $(this).serializeArray() );                console.log(formData);
-                  
-    });function it(t) {
-        var e = $(".task-form");
-        operations.forEach(function(a) {
-            e.find('[name="' + a + '[]"]').remove(),
-                t[a].forEach(function(t) {
-                    e.append($('<input type="hidden" name="' + a + '[]">').val(t))
-                })
-        });
-        //var a = Date.now() - St;
-        //e.find('[name="elapsedTime"]').val(Math.floor(a / 1e3)),
-        e.submit();
-    }
-    function isListEmpty(opList){
-        for (var op in opList){
-            if(opList[op].length>0) return false;
-        }
-        return true;
-    }*/
     function hasValidOP(op){
         if(op===0) return false;
         for(var i=op; i>=1; i--){

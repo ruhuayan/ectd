@@ -900,6 +900,8 @@ END PAGE HEADER-->
          function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);             //console.log(node); 
+            if(node.type!="file") return; 
+            
             var filename =node.original.name;//"/pdf/pdfFiles/"+node.text;
             if($(".study-frame").is(":visible")) Portlet.openFrame(filename);
             else window.open(filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);

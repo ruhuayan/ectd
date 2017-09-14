@@ -70,7 +70,7 @@ for($i =1; $i<=$pageNum; $i++){
                    //$pdf->Rect($box['left']*$scale, $box['top']*$scale, $box['width']*$scale, $box['height']*$scale, 'D' );
                    //$url = $linkEdit['uri'];
                    $url = $linkEdit['tpage']>1 ? ($linkEdit['uri'].'#page='.$linkEdit['tpage']) : $linkEdit['uri'];
-                   $link = "http://localhost/pdfEditor/pdfFiles/".$url; 
+                   $link = $url; 
                    $pdf->SetFont('Times');
                    $pdf->Cell($box['width']*$scale, $box['height']*$scale, '               ', 1, 0, 'R', false, $link);
                    //$pdf.Write(8, $linkEdit['uri']);
