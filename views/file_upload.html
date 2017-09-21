@@ -439,7 +439,7 @@ END PAGE HEADER-->
         if(!$rootScope.open) $rootScope.open = false;
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
-            $rootScope.open = ! $rootScope.open; // ? false : true;
+            $rootScope.open = ! $rootScope.open; 
         };
         
         $scope.hideUpfileNode = function(id){                                     
@@ -511,8 +511,9 @@ END PAGE HEADER-->
         }
         function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#uploadFileTree').jstree(true).get_node(nodeId);                        
-            window.open(node.original.path,'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
+            var node = $('#uploadFileTree').jstree(true).get_node(nodeId);          
+           
+            if(node&&node.original.path) window.open(node.original.path,'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
         }
         function subtreeMenu(node) {
             var items = {
@@ -618,7 +619,7 @@ END PAGE HEADER-->
         return {
             initSubTree: function(json){
                 var jsECTDtree; 
-               $('#jsECTDtree').css("height", $(window).height()-250).jstree({
+                $('#jsECTDtree').css("height", $(window).height()-250).jstree({
                     "core" : {
                         //"animation" : 0,
                         "check_callback" : function(op, node, node_parent, node_position, more) {
@@ -707,6 +708,7 @@ END PAGE HEADER-->
                     
                     jsECTDtree.open_node(data.parent);
                     
+                }).on('open_node.jstree', function (event, data) { 
                 });
             },
             initUploadTree: function(fileJson){
@@ -766,7 +768,9 @@ END PAGE HEADER-->
                 if (open)
                     $('#jsECTDtree').jstree(true).close_node(["m1", "m2", "m3", "m4", "m5"]); 
                 else
-                    $('#jsECTDtree').jstree("open_all");
+                    //$('#jsECTDtree').jstree("open_all");
+                    JsTree.openChildren("sub1");
+
             }, 
             showWarningModal: function(title, body, btn, callback){
                 //$("#myModal").find(".modal-title").html(title);
@@ -776,6 +780,18 @@ END PAGE HEADER-->
                     $("#myModal").modal("hide");
                     callback(); 
                 });
+            },
+            openChildren: function(id){
+                var node = $('#jsECTDtree').jstree(true).get_node(id);          //console.log(node);
+                var children = node.children; 
+                if(children.length==0) return;
+                
+                for(var i =0; i<children.length; i++){
+                    var childNode = $('#jsECTDtree').jstree(true).get_node(children[i]);
+                    if (!node.state.opened && childNode.type!=="tag" &&childNode.type!=="file") $('#jsECTDtree').jstree(true).open_node(id) 
+                    if(childNode.children.length>1) JsTree.openChildren(children[i]);
+                }
+
             }
         }   
     }(); 

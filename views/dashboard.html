@@ -37,17 +37,18 @@
                     <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
                         <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
                 <td>{{submission.folder}}</td>
-                <td>{{submission.uploadDate}}</td>
+                <td>{{submission.updatedAt}}</td>
                 <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
-                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.appID)"><span class="title" translate>EDIT</span></button></span>
-                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.appID)"><span class="title" translate>VIEW</span></button></td></span></td>
+                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
+                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></td></span></td>
             </tr>
             </tbody>
         </table> 
     </div>
-    <div class="row" style="text-align: center; margin-bottom: 20px;"><button type="button" class="btn btn-primary btn-md" ng-click="viewall()"><span class="title" translate>VIEWALL</span></button>
+    <div class="row" style="text-align: center; margin-bottom: 20px;">
+        <button type="button" class="btn btn-primary btn-md" ng-click="viewall()" ng-show="submissions.length>=5"><span class="title" translate>VIEWALL</span></button>
         <button type="button" class="btn btn-primary btn-md" ng-click="create()"><span class="title" translate>CREATENEW</span></button></div>
-    <div class="row">
+    <div class="row" id="panel">
         <div class="col-md-6 col-sm-12">
             <h3><span class="title" translate>UPLOAD</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
             <div style="text-align: center; height: 360px; border: 1px solid #06b6ef; color:#06b6ef; line-height: 360px; font-size: 30px;">
@@ -71,6 +72,7 @@
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS & CSS -->
 <script>
+    
     //Dashboard.init();
 </script>
 <!-- BEGIN MAIN JS & CSS -->

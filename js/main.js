@@ -85,7 +85,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         STATUS: "Status",
         UPLOADALL: "Upload all",
         CANCELALL: "Cancel all",
-        REMOVEALL: "Remove all",
+        REMOVEALL: "Remove file",
         REPLACE: "Replace",
         SAVE: 'Save Changes',
         WARNING_NOAPP: "You need to create an application to...",
@@ -288,7 +288,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         STATUS: '状态',
         UPLOADALL: "上传所有",
         CANCELALL: "取消所有",
-        REMOVEALL: "删除所有",
+        REMOVEALL: "删除文件",
         REPLACE: "覆盖原文件",
         SAVE:'保存信息',
         WARNING_NOAPP: "请先建立申请表",
@@ -623,9 +623,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'assets/global/plugins/morris/morris.min.js',
                         'assets/global/plugins/morris/raphael-min.js',
                         'assets/global/plugins/jquery.sparkline.min.js',
-
                         'assets/pages/scripts/dashboard.min.js',*/
-                        'js/controllers/DashboardController.js'
+                        'js/controllers/DashboardController.js',
+                        'js/services/applicationApiService.js'
                     ]
                 });
             }]
@@ -641,7 +641,10 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [ 
-                        'css/edit.css'
+                        'css/edit.css',
+                        'js/services/templateApiService.js',
+                        'js/services/applicationApiService.js'
+                         
                         //'js/controllers/GeneralPageController.js'
                         //"//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
                         //'dist/themes/default/style.min.css'
