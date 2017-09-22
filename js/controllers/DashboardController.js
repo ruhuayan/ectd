@@ -1,4 +1,4 @@
-angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', '$scope', '$cookies', '$state', "ApplicationApiService",
+angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', '$scope', '$cookies', '$state', "ApplicationApiService", 
     function( $rootScope, $scope, $cookies, $state, ApplicationApiService) {
     $scope.$on('$viewContentLoaded', function() {
         // initialize core components
@@ -35,7 +35,7 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
                 //$("#panel").show();
             }else{
                 $("#panel").hide();
-                getUserAppList(1, 10, null);
+                getUserAppList(1, 100, null);
             }
             
             $scope.showMore = !$scope.showMore; 
@@ -56,6 +56,7 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
             //console.log(result);
         });*/
         ApplicationApiService.GetClientAppList(userData, startNo, endNo).then(function(data){                         // console.log("api service", data); 
+            
             $scope.submissions = data.list;
             if(callback) callback();
         });  

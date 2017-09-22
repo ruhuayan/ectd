@@ -22,7 +22,7 @@
 <!-- BEGIN MAIN CONTENT -->
 <div ng-controller="DashboardController">
     <div class="row-fluid">
-        <table class="table table-striped">
+        <table class="table table-striped" datatable="ng">
             <thead>
                 <tr>
                     <th><span class="title" translate>DESCRIPTION</span></th>
@@ -33,15 +33,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="submission in submissions">
-                    <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
+              <tr ng-repeat="submission in submissions">
+                    
+                <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
                         <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
                 <td>{{submission.folder}}</td>
                 <td>{{submission.updatedAt}}</td>
                 <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
                 <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
-                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></td></span></td>
-            </tr>
+                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
+              </tr>
             </tbody>
         </table> 
     </div>

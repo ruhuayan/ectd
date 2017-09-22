@@ -75,9 +75,15 @@
                         <div class="form-group first" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
                             <label class="col-sm-3 bold">eCTD Template:</label>
                             <div class="col-sm-9">
-                                <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="formData.template">
-                                    <option value="{'id': 1}">US: eCTD v3.2 US v3.3</option>
+                                <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-show="template.id"
+                                         ng-disabled="uneditable || template.id" required>
+                                    <option  value="{{template}}" selected>{{template.name}}</option> 
                                 </select>
+                                <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-hide="template.id"
+                                         ng-disabled="uneditable" ng-change="selectTemplate()" required>
+                                    <option  ng-repeat="t in templates" value="{{t}}" >{{t.name}}</option> 
+                                </select>
+                                
                                  <p ng-show="subForm.template.$touched && subForm.template.$invalid" class="help-block">template is required.</p>
                             </div>
                         </div>
@@ -182,39 +188,58 @@
         
         var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          //console.log('app data:', appData.version);
         var userData = JSON.parse($cookies.get('globals')); 
-        getTemplateList();
         
-        var appUid;
-        if(appData.appUid){       
-            appUid = appData.appUid;                                            //console.log('app data:', appData);
+        
+        if(appData.appUid){ 
+                                                      //console.log('app data:', appData);
             $scope.submitLabel = "EDITAPP";
             $scope.formData = angular.copy(appData);
-            //$scope.formData.action = "save";
-            $scope.formData.appUid = appUid;
+            $scope.template = $scope.formData.template;                    //console.log("template", $scope.template);
+            
             $scope.uneditable = true;
         }else{
+            getTemplateList();                         // to create templates
             $scope.submitLabel = "CREATEAPP"; 
             $scope.formData={"version": "0000"};
             //$scope.formData.action = "create"; 
-            $scope.formData.userID = JSON.parse($cookies.get("globals")).id;
             $scope.uneditable = false;
         }
         
         $scope.toggleEditable = function(){
             $scope.uneditable =!$scope.uneditable;
         };
-        
+        $scope.selectTemplate = function(t){
+            //console.log($scope.template)
+        }
         $scope.createApp = function(){                                          
             if($scope.subForm.$valid){
-                var jsonData = JSON.stringify($scope.formData);                 console.log(JSON.stringify($scope.formData));
+                var tid = $scope.template.id ? $scope.template.id : JSON.parse($scope.template).id
+                $scope.formData.template = {'id': tid};                         console.log("template", tid);
+                var jsonData = $scope.formData;                                 //console.log(JSON.stringify($scope.formData));
                 var userData = JSON.parse($cookies.get('globals'));
-                if(appUid){
-                    ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){
-                        console.log(result);
+                if(appData.appUid){
+                    // for update to work, i have to get rid of unnecessary field
+                    jsonData ={"id": jsonData.id, "appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description, 
+                        "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
+                    
+                    ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){                    //console.log(result);
+                        if(result.id){
+                            toastr.success("Create Application id: " + result.id);
+                            var cookieExp = new Date();
+                            cookieExp.setDate(cookieExp.getDate() + 1);
+                            $cookies.putObject('appData', result, { expires: cookieExp}); console.log(                 $cookies.get("appData"));
+                            $state.go("fileupload").then(function() {}); 
+                        }
                     })
                 }else{
-                    ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){    // res.success ==false
-                        console.log(result);      
+                    ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){                      //console.log(result);      // res.success ==false
+                        if(result.id){
+                            toastr.success("Save Application id: " + result.id);
+                            var cookieExp = new Date();
+                            cookieExp.setDate(cookieExp.getDate() + 1);
+                            $cookies.putObject('appData', result, { expires: cookieExp}); console.log(                 $cookies.get("appData"));
+                            $state.go("fileupload").then(function() {}); 
+                        } 
                     })
                 }
                 /*$.post('php/submission.php', {'appData': jsonData}, function(res){
@@ -245,7 +270,7 @@
             $state.go("dashboard").then(function() {   });
         };
         function getTemplateList(){
-            TemplateApiService.GetTemplateList(userData).then(function(result){             console.log(result)
+            TemplateApiService.GetTemplateList(userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
             });
         }

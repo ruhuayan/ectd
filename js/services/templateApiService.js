@@ -24,18 +24,7 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting Templates'));
         }
 
-       /*function SetDomain(userData,domainId) {
-          
-             var Url ='http://192.168.88.187:8080/ecvcms/a/users/current_user/update_current_domain.json?uid=' + userData.uid +
-                "&apptoken=" + userData.appToken;
-         
-               var fd = new FormData();
-               fd.append('domain_id', domainId);
-
-            return $http.post(Url, fd,{ transformRequest: angular.identity,headers: { 'Content-Type': undefined}
-               }).then(handleSuccess, handleError('Error getting user by username'));
-
-        }*/
+       
         function GetOneTemplate(templateId, userData) {
             return $http.get(Base_URL + '/a/eCTDTemplate/getById/'+ templateId +'.json'+ '?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting one Template'));
