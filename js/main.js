@@ -40,7 +40,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         HOME: 'Home',
         DESCRIPTION: "Description", 
         TITLE: "Title",
-        UPLOADDATE: "Upload Date",
+        UPDATEDATE: "Last update",
+        CREATEDATE: "Created Date",
         SUBMITDATE: "Submit Date", 
         ACTION: "Action", 
         EDIT: "Edit",
@@ -243,8 +244,9 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
        
         DESCRIPTION: "简介", 
         TITLE: "名目",
-        UPLOADDATE: "上传时间",
+        UPDATEDATE: "上传时间",
         SUBMITDATE: "提交时间", 
+        CREATEDATE: "建立时间",
         ACTION: "操作", 
         EDIT: "编辑",
         VIEW: "查看",
@@ -624,8 +626,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'assets/global/plugins/morris/raphael-min.js',
                         'assets/global/plugins/jquery.sparkline.min.js',
                         'assets/pages/scripts/dashboard.min.js',*/
-                        'assets/global/plugins/datatables/datatables.all.min.js',
-                        'assets/pages/scripts/angular-datatables.js',
+                        //'assets/global/plugins/datatables/datatables.min.css',
+                        //'assets/global/plugins/datatables/datatables.all.min.js',
+                        //'assets/pages/scripts/angular-datatables.js',
                         'js/controllers/DashboardController.js',
                         'js/services/applicationApiService.js'
                         
@@ -644,6 +647,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [ 
+                        'assets/global/plugins/datatables/datatables.all.min.js',
+                        'assets/pages/scripts/angular-datatables.js',
                         'css/edit.css',
                         'js/services/templateApiService.js',
                         'js/services/applicationApiService.js'
@@ -700,6 +705,12 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load([{
+                    name: 'MetronicApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
+                        'js/services/fileApiService.js'
+                    ]   
+                },{
                     name: 'angularFileUpload',
                     files: [
                         'assets/global/plugins/angularjs/plugins/angular-file-upload/angular-file-upload.min.js'

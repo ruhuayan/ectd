@@ -7,40 +7,31 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     
     var userData = JSON.parse($cookies.get('globals'));                         //console.log(userData);
     
-    getUserAppList(1, 5, null);                                             
+    getUserAppList(1, 50, null);                                             
     
     $scope.edit = function(id){
         toastr.success('Application ID: '+id);
         var submission = getSubById(id);                                        //console.log(getSubById(id))
         if(submission){
+            var appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
+           
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 1);
-            $cookies.putObject('appData', submission, { expires: cookieExp}); 
+            $cookies.putObject('appData', appData, { expires: cookieExp});     console.log(appData); 
             $state.go("fileupload").then(function() {});
         }         
     };
     $scope.view = function(id){
-        toastr.success('View Application ID: '+id);
-        //$state.go("fileupload").then(function() {});
-                
+        toastr.success('View Application ID: '+ id);
+        //$state.go("fileupload").then(function() {});      
     };
     $scope.create = function(){
         if($cookies.get("appData")) $cookies.remove("appData");
         $state.go("submission").then(function() {});
     };
+    //var table; 
     $scope.viewall = function(){                                                //console.log($scope.submissions.length)
-        if($scope.submissions.length>=5){
-            if($scope.showMore){
-                getUserAppList(1, 5, function(){$("#panel").show();}); 
-                //$("#panel").show();
-            }else{
-                $("#panel").hide();
-                getUserAppList(1, 100, null);
-            }
-            
-            $scope.showMore = !$scope.showMore; 
-        }
-        
+        $state.go("submission").then(function() {}); 
     };
 
     function getSubById(id){
@@ -52,12 +43,10 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     }
 
     function getUserAppList(startNo, endNo, callback) {                         //console.log(callback);
-        /*$.get(baseURL + "/a/eCTDTemplate/list?uid=" +userData.uid+"&apptoken="+userData.access_token, function(result){
-            //console.log(result);
-        });*/
-        ApplicationApiService.GetClientAppList(userData, startNo, endNo).then(function(data){                         // console.log("api service", data); 
-            
-            $scope.submissions = data.list;
+       
+        ApplicationApiService.GetClientAppList(userData, startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
+            $rootScope.applications = data.list;
+            $scope.submissions = data.list.slice(0,5);
             if(callback) callback();
         });  
     }

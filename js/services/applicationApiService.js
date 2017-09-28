@@ -19,6 +19,7 @@
         service.ApplicationCreate = ApplicationCreate;
         service.ApplicationUpdate = ApplicationUpdate;
         service.DeleteApplication = DeleteApplication;
+        service.ExtractApp = ExtractApp;
 
         return service;
 
@@ -49,6 +50,11 @@
         function DeleteApplication(appUid, userData) {
             /*return $http.post(Base_URL + '/a/content/post/delete/' + appUid + '.json?uid=' + userData.uid +
                 "&apptoken=" + userData.appToken).then(handleSuccess, handleError('Error in deleting an Application'));*/
+        }
+        function ExtractApp(app){ 
+            return {"id": app.id, "appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,
+                          "sequence": app.sequence, "createdAt": app.createdAt, "updatedAt": app.updatedAt,
+                          "template": {"id": app.template.id, "name": app.template.name}};
         }
 
         function handleSuccess(res) {

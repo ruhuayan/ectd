@@ -201,19 +201,22 @@ END PAGE HEADER-->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script>
-    function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader){
+    function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader, FileApiService){
         
-        var appData, appID, toasts = {};
+        var appData, appUid, toasts = {};
+        var userData = JSON.parse($cookies.get('globals'));  console.log(userData.uid)
+        
         if($cookies.get("appData")) {
             appData = JSON.parse($cookies.get("appData"));
-            appID = appData.appID;
+            appUid = appData.appUid;
             $scope.appCreated = true; 
         }else $translate("WARNING_NOAPP").then(function(translation){
             toastr.warning(translation);                            //"You need to create an application to upload files!"
         });
         
         var uploader = $scope.uploader = new FileUploader({
-            url: 'php/upload.php?appID='+appID,
+            url: "http://192.168.88.187:8080/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
+            //url: 'php/upload.php?appUid='+appUid+'&uid=' + userData.uid + "&apptoken=" + userData.access_token,
             removeAfterUpload: true
         }); 
         // FILTERS
@@ -294,7 +297,7 @@ END PAGE HEADER-->
        
         uploader.onCompleteItem = function(fileItem, res, status, headers){
             toastr.remove();
-            if(res){                                                             
+            if(res){                                                            console.log(res)                                                        
                 //if(removeFile($rootScope.uploadFiles, fileItem, 0)) {fileItem.remove(); return; }            //to make sure that no duplicate file name
                 var upFiles = $rootScope.uploadFiles;
                 if(upFiles.length>1){                    //console.log(upFiles)                           
@@ -308,7 +311,8 @@ END PAGE HEADER-->
                         }
                     }
                 } 
-                var treeNode = {'id': res.fid, 'parent': 'up1', 'text': res.filename, 'type': 'file', 'Description': 'File ID: '+res.fid, "path": res.path};
+                //var treeNode = {'id': res.fid, 'parent': 'up1', 'text': res.filename, 'type': 'file', 'Description': 'File ID: '+res.fid, "path": res.path};
+                var treeNode = {'id': res.id, 'parent': 'up1', 'text': res.name, 'type': 'file', 'Description': 'File ID: '+res.uuid, "path": res.path};
                 upFiles.push(treeNode);                                                                              
             };
         };
@@ -317,8 +321,13 @@ END PAGE HEADER-->
             JsTree.refreshUploadTree($rootScope.uploadFiles);
             $scope.showHint = false;
         };
-        
+        if(appUid) getAppFileList();
         //console.log('user data', $cookies.get('uploadFiles'));
+        function getAppFileList(){
+            FileApiService.GetAppFileList(userData, appUid).then(function(result){             console.log(result)
+                //$rootScope.uploadFiles = result; 
+            });
+        }
         if(!$rootScope.uploadFiles){ 
             $scope.showHint = true; 
             JsTree.initUploadTree();
@@ -347,7 +356,7 @@ END PAGE HEADER-->
             toastr.remove();
         };
         $scope.savetree = function(){
-            if(!appID){ 
+            if(!appUid){ 
                 $translate("WARNING_NOAPP").then(function(translation){
                     toastr.warning(translation);                            //"You need to create an application to upload/SAVE files!"
                 });
@@ -387,54 +396,7 @@ END PAGE HEADER-->
                 return; 
             }
         };
-        /*$scope.canceltree = function(){
-            //$translate("WARNING_REMOVE").then(function(translation){
-            //        toastr.warning(translation);                            //"REMOVE ALL ADDED FILE!"
-            //});
-            JsTree.showWarningModal("Remove Nodes", "Are you sure to remove added nodes ?", " Remove", function(){
-                $rootScope.subFiles = []; 
-                JsTree.refreshSubTree(fileTree.concat(tags));
-                restoreUpfileNode();
-                JsTree.refreshUploadTree($rootScope.uploadFiles);
-            });
-        };*/
-        /*$scope.removeQueue = function(queue){                                   //console.log(queue[0].file.name)
-            var removed = false; 
-            if($rootScope.uploadFiles.length>1)
-                $.each(queue, function(index, value){                           //console.log(value);
-                    removed = removeFile($rootScope.uploadFiles, value, 1); 
-                })  
-   
-            uploader.clearQueue();                                                  
-            if(removed) JsTree.refreshUploadTree($rootScope.uploadFiles);        //if any node reomved, refresh tree
-        }
-        $scope.removeUpFile = function(item){
-            if(removeFile($rootScope.uploadFiles, item, 1)){ 
-                JsTree.refreshUploadTree($rootScope.uploadFiles);
-                item.remove();
-            }
-        };
-         function removeFile(upFiles, fileItem, op){
-            //var upFiles = $rootScope.uploadFiles;
-            if(upFiles.length>1){                                               
-              for(var i=1; i<upFiles.length; i++){
-                if(upFiles[i].text===fileItem.file.name ){
-                    if(op && upFiles[i].state.hidden){
-                        toastr.warning(fileItem.file.name+" has been placed in eCTD. It can't be removed"); 
-                        return false;
-                    }
-                    if(op) {
-                        upFiles.splice(i, 1);
-                        toastr.warning(fileItem.file.name + ' removed !');
-                    }else
-                        toastr.warning(fileItem.file.name + ' already uploaded !'); 
-                    //fileItem.remove();
-                    return true;
-                }
-              }
-          }                                                                      //console.log('upload files:',$rootScope.uploadFiles);
-          return false;
-        }*/
+      
         
         if(!$rootScope.open) $rootScope.open = false;
         $scope.toggleTree = function(){
@@ -796,7 +758,7 @@ END PAGE HEADER-->
         }   
     }(); 
 </script>
-<script>
+<!--<script>
     var tags = [ { "id" : "m11.1", "parent" : "m11", "text" : "1.1.1 FDA 1571: Investigational New Drug Application (IND)", "sNumber": "1.1.1", "type": "tag"},
         { "id" : "m11.2", "parent" : "m11", "text" : "1.1.2 FDA 365h: Application to Market a New Drug, Biologic, or an antibiotic Drug for Human Use", "sNumber": "1.1.2", "type": "tag"},
         { "id" : "m11.3", "parent" : "m11", "text" : "1.1.3 FDA 3397: User Fee Cover Sheet", "sNumber": "1.1.3", "type": "tag"},
@@ -827,4 +789,4 @@ END PAGE HEADER-->
         { "id" : "m23P8", "parent" : "m23P", "text" : "2.3.P.8 Stability", "sNumber": "2.3.P.8", "type": "tag"}
         /* end of  2.3.S drug product*/
     ];
-</script>
+</script>-->

@@ -7,8 +7,8 @@ if ( !empty( $_FILES ) ) {
     $uploadPath = "/pdf/pdfFiles/". $_FILES[ 'file' ][ 'name' ];
     
     move_uploaded_file( $tempPath, $_SERVER['DOCUMENT_ROOT'] . $uploadPath );
-
-    $answer = array('fid'=>rand(), 'filename'=> $_FILES[ 'file' ][ 'name' ], 'path' => $uploadPath, "appID"=>$_GET['appID']);
+    //insert file into database to generate file uuid, takes 0.01so
+    $answer = array('fid'=>rand(), 'filename'=> $_FILES[ 'file' ][ 'name' ], 'path' => $uploadPath, "appUid"=>$_GET['appUid']);
     $json = json_encode( $answer );
 
     echo $json;

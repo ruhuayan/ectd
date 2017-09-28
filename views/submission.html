@@ -75,12 +75,14 @@
                         <div class="form-group first" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
                             <label class="col-sm-3 bold">eCTD Template:</label>
                             <div class="col-sm-9">
-                                <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-show="template.id"
+                                <input type="text" class="form-control" name="template" id="template" ng-model="template.name" ng-disabled="uneditable || template.id"
+                                       ng-show="template.id" required />
+                                <!--<select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-show="template.id"
                                          ng-disabled="uneditable || template.id" required>
                                     <option  value="{{template}}" selected>{{template.name}}</option> 
-                                </select>
+                                </select>-->
                                 <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-hide="template.id"
-                                         ng-disabled="uneditable" ng-change="selectTemplate()" required>
+                                         ng-disabled="uneditable" required>
                                     <option  ng-repeat="t in templates" value="{{t}}" >{{t.name}}</option> 
                                 </select>
                                 
@@ -176,7 +178,36 @@
                 </div>
               
             </div>
-            <div class="portlet-body portlet-submitted" ></div>
+            <div class="portlet-body portlet-submitted" >
+                
+        <table class="table table-striped" id="appTable" datatable="ng" dt-options="dtOptions">
+            <thead>
+                <tr>
+                    <th><span class="title" translate>DESCRIPTION</span></th>
+                    <th><span class="title" translate>TITLE</span></th>
+                    <th><span class="title" translate>CREATEDATE</span></th>
+                    <th><span class="title" translate>SUBMITDATE</span></th>
+                    <th><span class="title" translate>ACTION</span></th>
+                </tr>
+            </thead>
+            <tbody ng-if="submissions.length > 0">
+              <tr ng-repeat="submission in submissions">
+                    
+                <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
+                        <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
+                <td>{{submission.folder}}</td>
+                <td>{{submission.createdAt}}</td>
+                <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
+                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
+                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
+              </tr>
+            </tbody>
+            <tbody ng-if=" !submissions || submissions.length <=0 ">
+                <tr><td colspan="5">You has not created any application yet. Create a new application now</td>
+            </tbody>
+        </table> 
+                
+            </div>
         </div>
      </div>
 </div>
@@ -184,60 +215,65 @@
 <!-- BEGIN MAIN JS-->
 <script>
     
-    function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiService, TemplateApiService){
+    function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiService, TemplateApiService, DTOptionsBuilder){
         
         var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          //console.log('app data:', appData.version);
         var userData = JSON.parse($cookies.get('globals')); 
-        
-        
+        $scope.submissions = [{}];                    // to make sure data-table has json data
+        if($rootScope.applications)                                             
+            $scope.submissions = $rootScope.applications;     
+        else 
+            $state.go("dashboard").then(function() {});                              //console.log('applications', $rootScope.applications)
+                                                                                
+        $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [1, 'asc']).withOption('lengthMenu', [5,10]);
+           
+        //var table = $("#appTable").DataTable();
         if(appData.appUid){ 
                                                       //console.log('app data:', appData);
             $scope.submitLabel = "EDITAPP";
             $scope.formData = angular.copy(appData);
-            $scope.template = $scope.formData.template;                    //console.log("template", $scope.template);
-            
+            $scope.template = $scope.formData.template;                         //console.log("template", $scope.template);
             $scope.uneditable = true;
         }else{
             getTemplateList();                         // to create templates
             $scope.submitLabel = "CREATEAPP"; 
             $scope.formData={"version": "0000"};
-            //$scope.formData.action = "create"; 
             $scope.uneditable = false;
         }
         
         $scope.toggleEditable = function(){
             $scope.uneditable =!$scope.uneditable;
         };
-        $scope.selectTemplate = function(t){
-            //console.log($scope.template)
-        }
+        
         $scope.createApp = function(){                                          
             if($scope.subForm.$valid){
-                var tid = $scope.template.id ? $scope.template.id : JSON.parse($scope.template).id
+                var tid =  $scope.template.id || JSON.parse($scope.template).id
                 $scope.formData.template = {'id': tid};                         console.log("template", tid);
                 var jsonData = $scope.formData;                                 //console.log(JSON.stringify($scope.formData));
                 var userData = JSON.parse($cookies.get('globals'));
-                if(appData.appUid){
+                if(appData.id){
                     // for update to work, i have to get rid of unnecessary field
                     jsonData ={"id": jsonData.id, "appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description, 
                         "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
                     
                     ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){                    //console.log(result);
                         if(result.id){
+                            var sub = ApplicationApiService.ExtractApp(result);
                             toastr.success("Create Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', result, { expires: cookieExp}); console.log(                 $cookies.get("appData"));
+                            $cookies.putObject('appData', sub, { expires: cookieExp});          console.log( $cookies.get("appData"));
                             $state.go("fileupload").then(function() {}); 
                         }
                     })
                 }else{
                     ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){                      //console.log(result);      // res.success ==false
                         if(result.id){
+                            var sub = ApplicationApiService.ExtractApp(result);
                             toastr.success("Save Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', result, { expires: cookieExp}); console.log(                 $cookies.get("appData"));
+                            $cookies.putObject('appData', sub, { expires: cookieExp});          console.log($cookies.get("appData"));
                             $state.go("fileupload").then(function() {}); 
                         } 
                     })
@@ -259,21 +295,60 @@
           }   
         };
         $scope.cancelApp = function(){ 
-             $scope.formData= appData? angular.copy(appData): {"version": "0000"};
-             $scope.subForm.$setPristine();
-             $scope.subForm.$setValidity();
-             $scope.subForm.$setUntouched();
+            $scope.formData= appData? angular.copy(appData): {"version": "0000"};
+            $scope.subForm.$setPristine();
+            $scope.subForm.$setValidity();
+            $scope.subForm.$setUntouched();
         };
          
         $scope.exitApp = function(){
             $cookies.remove("appData");
-            $state.go("dashboard").then(function() {   });
+            appData = {};
+            $scope.formData= {"version": "0000"};
+            $scope.template= {};
+            if(!$scope.templates) getTemplateList();
+            $scope.subForm.$setPristine();
+            $scope.subForm.$setValidity();
+            $scope.subForm.$setUntouched();
+            $scope.uneditable = false;
+            //$state.go("dashboard").then(function() {   });
         };
+        
+        $scope.view = function(id){
+            toastr.success('View Application ID: '+id);
+            //$state.go("fileupload").then(function() {});    
+        };
+        $scope.edit = function(id){
+            toastr.success('Application ID: '+id);
+            var submission = getSubById(id);                                                                   
+            if(submission){
+                appData = ApplicationApiService.ExtractApp(submission);
+                $scope.submitLabel = "EDITAPP";
+                var cookieExp = new Date();
+                cookieExp.setDate(cookieExp.getDate() + 1);
+                $cookies.putObject('appData', appData, { expires: cookieExp});                               console.log(submission) 
+                $scope.formData = angular.copy(submission);
+                $scope.template = submission.template;                          // console.log($scope.template)   
+                $scope.uneditable = true;
+                //$state.go("fileupload").then(function() {});
+            }         
+        };
+        function getSubById(id){
+            var submission;
+            angular.forEach($scope.submissions, function(value, key){ 
+            if(value.id ===id) {submission=value; }
+            });
+            return submission;
+        }
+        
         function getTemplateList(){
             TemplateApiService.GetTemplateList(userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
             });
         }
     }
+</script>
+<script>
+    //var table = $("#appTable").DataTable();
 </script>
 <!-- BEGIN MAIN JS -->
