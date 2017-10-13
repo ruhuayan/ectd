@@ -11,14 +11,16 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     
     $scope.edit = function(id){
         toastr.success('Application ID: '+id);
-        var submission = getSubById(id);                                        //console.log(getSubById(id))
+        var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
         if(submission){
             var appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
-           
+            //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 1);
-            $cookies.putObject('appData', appData, { expires: cookieExp});     console.log(appData); 
+            $cookies.putObject('appData', appData, { expires: cookieExp});     //console.log(appData); 
+            if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
             $state.go("fileupload").then(function() {});
+            
         }         
     };
     $scope.view = function(id){
@@ -34,19 +36,19 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
         $state.go("submission").then(function() {}); 
     };
 
-    function getSubById(id){
+    /*function getSubById(id){
         var submission;
         angular.forEach($scope.submissions, function(value, key){ 
            if(value.id ===id) {submission=value; }
         });
         return submission;
-    }
+    }*/
 
-    function getUserAppList(startNo, endNo, callback) {                         //console.log(callback);
+    function getUserAppList(startNo, endNo, callback) {                        
        
         ApplicationApiService.GetClientAppList(userData, startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
-            $rootScope.applications = data.list;
-            $scope.submissions = data.list.slice(0,5);
+            $rootScope.applications = data.list;                                //console.log($rootScope.applications)
+            if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
             if(callback) callback();
         });  
     }

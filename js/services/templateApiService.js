@@ -5,9 +5,9 @@
         .module('MetronicApp')
         .factory('TemplateApiService', TemplateApiService);
 
-    TemplateApiService.$inject = ['$http', '$cookies', '$rootScope'];
+    TemplateApiService.$inject = ['$http', '$rootScope'];
 
-    function TemplateApiService($http, $cookies, $rootScope) {
+    function TemplateApiService($http, $rootScope) {
          var Base_URL = "http://192.168.88.187:8080/ectd";
 
         var service = {};

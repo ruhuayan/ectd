@@ -34,33 +34,33 @@
                         <form class="form-horizontal" role="form" ng-submit="userBasicSubmit()" name="userForm" ng-init="uneditable = true;">
                             <div class="form-body">         
                                 
-                                <div class="form-group" ng-class="{'has-error' : userForm.username.$touched && userForm.username.$invalid}">
-                                    <label for="username" class="col-sm-3"><span class="form-label bold"><span class="title" translate>USERNAME</span></span></label>
+                                <div class="form-group" ng-class="{'has-error' : userForm.userName.$touched && userForm.userName.$invalid}">
+                                    <label for="userName" class="col-sm-3"><span class="form-label bold"><span class="title" translate>USERNAME</span></span></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="username" id="username" ng-model="userData.username" placeholder="user name"
+                                        <input type="text" class="form-control input-sm" name="userName" id="userName" ng-model="userData.userName" placeholder="user name"
                                         maxlength="50"  required ng-disabled="uneditable" >
-                                        <p ng-show="userForm.username.$touched && userForm.username.$error.required" class="help-block">User name is required.</p>
-                                        <p ng-show="userForm.username.$error.maxlength" class="help-block">User name less than 50 characters.</p>
+                                        <p ng-show="userForm.userName.$touched && userForm.userName.$error.required" class="help-block">User name is required.</p>
+                                        <p ng-show="userForm.userName.$error.maxlength" class="help-block">User name less than 50 characters.</p>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>PERSONAL</span> </label></div>
-                                <div class="form-group" ng-class="{'has-error' : userForm.firstname.$touched && userForm.firstname.$invalid}">
-                                    <label for="firstname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>FIRSTNAME</span></span></label>
+                                <div class="form-group" ng-class="{'has-error' : userForm.firstName.$touched && userForm.firstName.$invalid}">
+                                    <label for="firstName" class="col-sm-3"><span class="form-label bold"><span class="title" translate>FIRSTNAME</span></span></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="firstname" id="firstname" ng-model="userData.firstname" placeholder="first name"
+                                        <input type="text" class="form-control input-sm" name="firstName" id="firstName" ng-model="userData.firstName" placeholder="first name"
                                         maxlength="50"  required ng-disabled="uneditable" >
-                                        <p ng-show="userForm.firstname.$touched && userForm.firstname.$error.required" class="help-block">First name is required.</p>
-                                        <p ng-show="userForm.firstname.$error.maxlength" class="help-block">First name less than 50 characters.</p>
+                                        <p ng-show="userForm.firstName.$touched && userForm.firstName.$error.required" class="help-block">First name is required.</p>
+                                        <p ng-show="userForm.firstName.$error.maxlength" class="help-block">First name less than 50 characters.</p>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-class="{'has-error' : userForm.lastname.$touched && userForm.lastname.$invalid}">
-                                    <label for="lastname" class="col-sm-3"><span class="form-label bold"><span class="title" translate>LASTNAME</span></span></label>
+                                <div class="form-group" ng-class="{'has-error' : userForm.lastName.$touched && userForm.lastName.$invalid}">
+                                    <label for="lastName" class="col-sm-3"><span class="form-label bold"><span class="title" translate>LASTNAME</span></span></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="lastname" id="lastname" ng-model="userData.lastname" placeholder="last name"
+                                        <input type="text" class="form-control input-sm" name="lastName" id="lastName" ng-model="userData.lastName" placeholder="last name"
                                         maxlength="50"  required ng-disabled="uneditable" >
-                                        <p ng-show="userForm.lastname.$touched && userForm.lastname.$error.required" class="help-block">Last name is required.</p>
-                                        <p ng-show="userForm.lastname.$error.maxlength" class="help-block">Last name less than 50 characters.</p>
+                                        <p ng-show="userForm.lastName.$touched && userForm.lastName.$error.required" class="help-block">Last name is required.</p>
+                                        <p ng-show="userForm.lastName.$error.maxlength" class="help-block">Last name less than 50 characters.</p>
                                     </div>
                                 </div>
                                 <div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && userForm.email.$touched }">
@@ -159,7 +159,7 @@
                     <!-- CHANGE AVATAR TAB -->
                     <div class="tab-pane" id="tab_1_2">
                         <p>Attach Image</p>
-                        <form action="#" role="form">
+                        <form action="#" role="form" name="thumbForm" enctype="multipart/form-data">
                             <div class="form-group">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
@@ -169,8 +169,10 @@
                                         <span class="btn default btn-file">
                                             <span class="fileinput-new"> Select image </span>
                                             <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="..."> </span>
+                                            <input id="fileinput-id" type="file" name="userThumb" class="file" ng-model="thumb" required> 
+                                        </span>
                                         <a href="#" class="btn default fileinput-exists" data-dismiss="fileinput"> Remove </a>
+                                        <!--<p ng-show="thumbForm.userThumb.$touched && thumbForm.userThumb.$error.required" class="help-block">No image file is selected</p>-->
                                     </div>
                                 </div>
                                 <div class="clearfix margin-top-10">
@@ -179,7 +181,7 @@
                                 </div>
                             </div>
                             <div class="margin-top-10">
-                                <a href="#" class="btn green-haze"> Submit </a>
+                                <a href="#" class="btn green-haze" ng-click="submitThumb()"> Submit </a>
                                 <a href="#" class="btn default"> Cancel </a>
                             </div>
                         </form>

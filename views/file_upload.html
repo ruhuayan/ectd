@@ -201,10 +201,15 @@ END PAGE HEADER-->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script>
-    function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader, FileApiService){
+    /*MetronicApp.controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state', '$cookies', '$translate', 'FileUploader','FileApiService'
+    function($scope, $rootScope, $state, $cookies, $translate, FileUploader, FileApiService ) {
+        
+    }]);*/
+
+    function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader, FileApiService, $http){
         
         var appData, appUid, toasts = {};
-        var userData = JSON.parse($cookies.get('globals'));  console.log(userData.uid)
+        var userData = JSON.parse($cookies.get('globals'));  //console.log(userData.uid)
         
         if($cookies.get("appData")) {
             appData = JSON.parse($cookies.get("appData"));
@@ -228,6 +233,7 @@ END PAGE HEADER-->
             }
         });                     //uploader.queueLimit = 10;
         uploader.filters.push({
+            
             name: 'pdfFilter',
             message: "WARNING_FILE",  // "Not a pdf file",
             fn: function(item /*{File|FileLikeObject}*/, options){
@@ -247,9 +253,12 @@ END PAGE HEADER-->
             fn: function(item, options){
                 if(!uploader.queue.length) return true;
                 var valid=1;
-                $.each(uploader.queue, function(index, value){                                          
+                /*$.each(uploader.queue, function(index, value){                                          
                     if( value.file.name == item.name) valid =0;
-                });                            
+                }); */
+                angular.forEach(uploader.queue, function(value, key){
+                    if(value.file.name == item.name) valid =0;
+                })
                 return valid;
             }
         });
@@ -276,9 +285,9 @@ END PAGE HEADER-->
             //toastr.warning(item.name+" loading failed", filter.message);
         };
         uploader.onAfterAddingFile = function(fileItem){                       // console.log(uploader.queue);
-            var upFiles = $rootScope.uploadFiles;
-            if(upFiles.length>1){                                               
-                for(var i=1; i<upFiles.length; i++){
+            var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];
+            if(upFiles && upFiles.length>0){                                               
+                for(var i=0; i<upFiles.length; i++){
                     var fileName = fileItem.file.name; 
                     if(upFiles[i].text===fileName ){  
                        
@@ -297,10 +306,10 @@ END PAGE HEADER-->
        
         uploader.onCompleteItem = function(fileItem, res, status, headers){
             toastr.remove();
-            if(res){                                                            console.log(res)                                                        
+            if(res.fileId){                                                            //console.log(res)                                                        
                 //if(removeFile($rootScope.uploadFiles, fileItem, 0)) {fileItem.remove(); return; }            //to make sure that no duplicate file name
-                var upFiles = $rootScope.uploadFiles;
-                if(upFiles.length>1){                    //console.log(upFiles)                           
+                var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];
+                if(upFiles && upFiles.length>0){                    //console.log(upFiles)                           
                     for(var i=1; i<upFiles.length; i++){ 
                         if(upFiles[i].text===res.filename ){                     
                             $translate("SUCCESS_REPLACED").then(function(translation){
@@ -311,32 +320,46 @@ END PAGE HEADER-->
                         }
                     }
                 } 
-                //var treeNode = {'id': res.fid, 'parent': 'up1', 'text': res.filename, 'type': 'file', 'Description': 'File ID: '+res.fid, "path": res.path};
-                var treeNode = {'id': res.id, 'parent': 'up1', 'text': res.name, 'type': 'file', 'Description': 'File ID: '+res.uuid, "path": res.path};
-                upFiles.push(treeNode);                                                                              
-            };
+               
+                var treeNode = {'id': res.uuid, 'parent': 'up1', 'text': res.name, 'type': 'file', 'fileId': res.fileId, "path": res.path};
+                upFiles.push(treeNode);             console.log("on complete", upFiles)                                                                 
+            }else console.log(res);
         };
         uploader.onCompleteAll = function(){
-            //$cookies.putObject('uploadFiles': $rootScope.uploadFiles); //
-            JsTree.refreshUploadTree($rootScope.uploadFiles);
+            JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));
             $scope.showHint = false;
         };
-        if(appUid) getAppFileList();
-        //console.log('user data', $cookies.get('uploadFiles'));
-        function getAppFileList(){
-            FileApiService.GetAppFileList(userData, appUid).then(function(result){             console.log(result)
-                //$rootScope.uploadFiles = result; 
+        /************getting uploaded files******************************************/
+       
+        var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
+        
+        function getAppFileList(userData, appUid){
+            FileApiService.GetAppFileList(userData, appUid).then(function(result){             //console.log("result", result)
+                if(result && result.length>0){ 
+                    //$rootScope.uploadFiles = result; 
+                    $scope.showHint = false;
+                    setFileNodes(result);                                  //console.log("upfiles");
+                    restoreUpfileNode($rootScope.subFiles);
+                    JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+                    JsTree.setUpTreeBorder()
+                }else{
+                     $scope.showHint = true; 
+                    JsTree.initUploadTree();
+                    //$rootScope.uploadFiles = [];
+                }
             });
         }
-        if(!$rootScope.uploadFiles){ 
-            $scope.showHint = true; 
-            JsTree.initUploadTree();
-            $rootScope.uploadFiles = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "Description": "Uploaded files"}];
+        
+        if(!$rootScope.uploadFiles ){ 
+            $rootScope.uploadFiles = [];
+            if(appUid) getAppFileList(userData, appUid);
+            //$rootScope.uploadFiles = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "uuid": "Uploaded files"}];
         }else{
             $scope.showHint = false;
+            //setFileNodes($rootScope.uploadFiles);                                  console.log("upfiles", $rootScope.uploadFiles);
+            restoreUpfileNode($rootScope.subFiles);
             
-            restoreUpfileNode($rootScope.subFiles)
-            JsTree.initUploadTree($rootScope.uploadFiles);
+            JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
             JsTree.setUpTreeBorder()
         }                                                                       // console.log('upload files',  $rootScope.uploadFiles)
        
@@ -364,7 +387,7 @@ END PAGE HEADER-->
             }
             var json = JsTree.get_fileJson();
             if(json){
-                $rootScope.subFiles = json;                                     
+                $rootScope.subFiles = json;                                     console.log("save files: ", json)                             
                 $translate("INFO_WAIT").then(function(translation){
                     toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
                 });
@@ -376,11 +399,10 @@ END PAGE HEADER-->
                     //animate: true,
                     overlayColor: "#999"//'#d9534f'
                 });
-                $.post('php/savestructure.php', {'appData': JSON.stringify(json), "appID": appID}, function(result){
+                $.post('php/savestructure.php', {'appData': JSON.stringify(json), "appUid": appUid}, function(result){
                      if(result){
                         toastr.remove();
-                       
-                        //toastr.success(result);
+
                         App.unblockUI($("#FileUploadCtrl"));
                         $state.go("editinfo").then(function() {
                             //toastr.success("Stucture save in app ID: "+appID);
@@ -417,14 +439,14 @@ END PAGE HEADER-->
         };
         $scope.duplicateNode = function(obj){
             var newID = obj.id + "_" + Math.ceil(Math.random()*100000);
-            var treeNode = {'id': newID, 'parent': 'up1', 'text': obj.text, 'type': 'file', 'Description': 'File ID: '+newID, "path": obj.original.path};
+            var treeNode = {'id': newID, 'parent': 'up1', 'text': obj.text, 'type': 'file', 'fileId': newID, "path": obj.original.path};
             $rootScope.uploadFiles.push(treeNode);
             JsTree.refreshUploadTree($rootScope.uploadFiles);
         }
         function getUpfileNodeById(id){
             var upFiles = $rootScope.uploadFiles;
-            if(upFiles.length>1){                                               
-              for(var i=1; i<upFiles.length; i++){
+            if(upFiles.length>0){                                               
+              for(var i=0; i<upFiles.length; i++){
                 if(upFiles[i].id==id){       return upFiles[i];                                      
                    // upFiles[i].state =  { "hidden" : true };
                 }
@@ -436,11 +458,11 @@ END PAGE HEADER-->
             var upFiles = $rootScope.uploadFiles;                               //console.log('subFiles ',subFiles); console.log('upfiles ', upFiles)
             if(upFiles.length>1){ 
 
-                for(var i=1; i<upFiles.length; i++){
+                for(var i=0; i<upFiles.length; i++){
                         upFiles[i].state = { "hidden" : false };
                  }
                 if(subFiles && subFiles.length>=1){
-                    for(var i=1; i<upFiles.length; i++){                             
+                    for(var i=0; i<upFiles.length; i++){                             
                         for(var j=0; j<subFiles.length; j++){
                             if(upFiles[i].id==subFiles[j].id)  {                //console.log('upid: ', upFiles[i].id);               
                                 upFiles[i].state = { "hidden" : true };
@@ -454,6 +476,19 @@ END PAGE HEADER-->
             $translate(msg).then(function(translation){
                 toastr.warning(translation);
             });
+        }
+        /*$scope.downloadFile = function(uuid){ console.log(uuid, userData)
+            $http.get('http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid + "&apptoken=" + userData.access_token).then(function(res){
+                    console.log(res);
+                })
+        }*/
+        $scope.getUserData = function(){
+            return userData;
+        };
+        function setFileNodes(upFiles){
+           for(var i=0; i<upFiles.length; i++){
+               $rootScope.uploadFiles.push({'id': upFiles[i].uuid, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file', 'fileId': upFiles[i].fileId, "path": upFiles[i].path});
+           }
         }
     };
     
@@ -471,11 +506,35 @@ END PAGE HEADER-->
             node.original.name = name;
             node.original.fileId= fileId;        
         }
+        function Bounce(w) {
+            window.blur();
+            w.focus();
+        }
         function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#uploadFileTree').jstree(true).get_node(nodeId);          
-           
-            if(node&&node.original.path) window.open(node.original.path,'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
+            var node = $('#uploadFileTree').jstree(true).get_node(nodeId);        //console.log("node: ", node);        
+            if(node && node.type=="file"){ 
+                var uuid = node.id;                                   
+                var userData = angular.element("#FileUploadCtrl").scope().getUserData();  console.log("UUID: ",uuid, userData );
+                
+                var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'blob';
+               
+                xhr.onload = function(e) {
+                    if (this.status == 200) {
+                        var blob = new Blob([this.response], {type: 'application/pdf'}),
+                        file = URL.createObjectURL(blob);           console.log(file);
+                       
+                        var newWin = window.open(file, 'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
+                        //setTimeout(newWin.focus, 100);
+                    }
+                };
+                xhr.send();
+               
+            }
+            //if(node&&node.original.path) window.open(node.original.path,'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
         }
         function subtreeMenu(node) {
             var items = {
@@ -692,7 +751,7 @@ END PAGE HEADER-->
                 }).bind("loaded.jstree", function (event, data) {
                     //$(this).jstree("open_all");
                 }).bind("hover_node.jstree", function(event, data){
-                    $("#"+data.node.id).prop("title",data.node.original.Description );//console.log(data.node.original.Description) 
+                    $("#"+data.node.id).prop("title",data.node.original.fileId );//console.log(data.node.original.uuid) 
                 }).on('changed.jstree', function (e, data) { 
                     $(this).jstree().open_node('up1');
                 }).bind("dblclick.jstree", function(event){
@@ -725,6 +784,10 @@ END PAGE HEADER-->
                 }
                 if(fileArray.length>0) return fileArray;
                 else return false;
+            },
+            getNodes: function(){
+                var nodes = $('#jsECTDtree').jstree(true).get_json('#', {flat:true});
+                return nodes;
             },
             toggle: function(open){
                 if (open)

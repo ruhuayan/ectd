@@ -5,16 +5,16 @@
         .module('MetronicApp')
         .factory('TagApiService', TagApiService);
 
-    TagApiService.$inject = ['$http', '$cookies', '$rootScope'];
+    TagApiService.$inject = ['$http', '$rootScope'];
 
-    function TagApiService($http, $cookies, $rootScope) {
+    function TagApiService($http, $rootScope) {
 
         var Base_URL = 'http://192.168.88.187:8080/ectd';
         var service = {};
 
         service.GetTagsList = GetTagsList;
-        service.GetOneTag = GetOneTag;
-        service.TagCreate = TagCreate;
+        service.GetTagByNid = GetTagByNid;
+        service.CreateTag = CreateTag;
         service.SearchTagsList = SearchTagsList;
 
         return service;
@@ -24,21 +24,20 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all taglist'));
         }
 
-        function GetOneTag(tagId, userData) {
-            return $http.get(Base_URL + '/a/content/tag/' + tagId + '.json?uid=' + userData.uid +
+        function GetTagByNid(nid, userData) {
+            return $http.get(Base_URL + '/a/content/tag/' + nid + '.json?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting tag by id'));
         }
 
-        function TagCreate(userData, tagData) {
-            return $http.post(Base_URL + '/a/content/tag/create?uid=' + userData.uid +
+        function CreateTag(userData, nid, tagData) {
+            return $http.post(Base_URL + '/a/content/'+ nid +'/create?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token, tagData).then(handleSuccess, handleError('Error in creating tag'));
         }
 
         function SearchTagsList(tag_name, userData) {
-            return $http.get('http://192.168.88.187:8080/ecvcms/a/content/tag/search?name=' + tag_name + '&uid=' + userData.uid +
+            return $http.get(Base_URL + '/a/content/tag/search?name=' + tag_name + '&uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in search tag'));
         }
-
 
         // private functions
 

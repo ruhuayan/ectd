@@ -338,12 +338,12 @@ MetronicApp.directive('phoneInput', function($filter, $browser) {
     return {
         require: 'ngModel',
         link: function($scope, $element, $attrs, ngModelCtrl) {
-            var len = parseInt($attrs.phoneInput) || 10; 
-            $scope.$watch($attrs.ngModel, function(value){                                   //console.log(value);
+            var len = parseInt($attrs.phoneInput) || 11; 
+            /*$scope.$watch($attrs.ngModel, function(value){                                   //console.log(value);
                 if(value!=undefined) {
                     if(len) ngModelCtrl.$setValidity('numberic', value.length == len );
                 }else ngModelCtrl.$setValidity('numberic', true);
-            });
+            });*/
             
             var listener = function() {
                 var value = $element.val().replace(/[^0-9]/g, '');
@@ -355,7 +355,7 @@ MetronicApp.directive('phoneInput', function($filter, $browser) {
             ngModelCtrl.$parsers.push(function(viewValue) {
                 return viewValue.replace(/[^0-9]/g, '').slice(0,len);
             });
-
+            
             // This runs when the model gets updated on the scope directly and keeps our view in sync
             ngModelCtrl.$render = function() {
                 $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
@@ -406,7 +406,7 @@ MetronicApp.filter('tel', function () {
 
         if(number){
             if(number.length>3){
-                number = number.slice(0, 3) + '-' + number.slice(3,7);
+                number = number.slice(0, 4) + '-' + number.slice(4,8);
             }
             else{
                 number = number;

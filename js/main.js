@@ -455,7 +455,8 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         },
         assetsPath: 'assets',
         globalPath: 'assets/global',
-        layoutPath: 'assets/layouts/layout'
+        layoutPath: 'assets/layouts/layout',
+        Base_URL: "http://192.168.88.187:8080/ectd"
     };
 
     $rootScope.settings = settings;
@@ -691,7 +692,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
                         'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js"
+                        "dist/jstree.min.js", 
+                        'js/services/genInfoApiService.js',
+                        'js/services/tagApiService.js'
                     ]
                 });
             }]
@@ -1224,6 +1227,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', 
                     files: [
+                        'js/services/userApiService.js',
                         'js/controllers/UserAccountController.js'
                     ]
                 });

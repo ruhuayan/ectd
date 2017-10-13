@@ -5,10 +5,10 @@
         .module('MetronicApp')
         .factory('FileApiService', FileApiService);
 
-    FileApiService.$inject = ['$http', '$cookies', '$rootScope'];
+    FileApiService.$inject = ['$http', '$rootScope'];
 
-    function FileApiService($http, $cookies, $rootScope) {
-        var Base_URL = "http://192.168.88.187:8080/ectd";
+    function FileApiService($http, $rootScope) {
+        var Base_URL = "http://192.168.88.187:8080/ectd"; 
 
         var service = {};
 
@@ -19,6 +19,7 @@
         service.FileCreate = FileCreate;
         service.FileUpdate = FileUpdate;
         service.FileDelete = FileDelete;
+        service.DownloadFileByUuid = DownloadFileByUuid;
 
 
         return service;
@@ -27,8 +28,8 @@
             return $http.get(Base_URL + 'list.json?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file list'));
         }
-        function GetAppFileList(userData, appUid){
-            return $http.get(Base_URL +"/a/application/file/getByAppUid/"+ appUid +'/&uid=' + userData.uid +
+        function GetAppFileList(userData, appUid){                              // get file list by appUid
+            return $http.get(Base_URL +"/a/application/file/getByAppUid/"+ appUid +'/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting application file list'));
         }
         function GetClientFileList(userData, pageno, pagesize){
@@ -54,6 +55,10 @@
         function FileDelete(fid, userData) {
             return $http.get(Base_URL + '/a/application/file/delete/' + fid + '.json?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting file info'));
+        }
+        function DownloadFileByUuid(uuid, userData){
+            return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
         }
 
         function handleSuccess(res) {

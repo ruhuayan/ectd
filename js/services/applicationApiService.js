@@ -5,11 +5,11 @@
         .module('MetronicApp')
         .factory('ApplicationApiService', ApplicationApiService);
 
-    ApplicationApiService.$inject = ['$http', '$cookies', '$rootScope'];
+    ApplicationApiService.$inject = ['$http', '$rootScope'];
 
-    function ApplicationApiService($http, $cookies, $rootScope) {
+    function ApplicationApiService($http, $rootScope) {
 
-        var Base_URL = "http://192.168.88.187:8080/ectd";
+        var Base_URL = $rootScope.settings.Base_URL;                            //"http://192.168.88.187:8080/ectd";
 
         var service = {};
 
@@ -20,6 +20,7 @@
         service.ApplicationUpdate = ApplicationUpdate;
         service.DeleteApplication = DeleteApplication;
         service.ExtractApp = ExtractApp;
+        service.GetApplicationById = GetApplicationById;
 
         return service;
 
@@ -55,6 +56,13 @@
             return {"id": app.id, "appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,
                           "sequence": app.sequence, "createdAt": app.createdAt, "updatedAt": app.updatedAt,
                           "template": {"id": app.template.id, "name": app.template.name}};
+        }
+        function GetApplicationById(applications, id){
+            var application;
+            angular.forEach(applications, function(value, key){ 
+                if(value.id ===id) {application=value; }
+            });
+            return application;
         }
 
         function handleSuccess(res) {

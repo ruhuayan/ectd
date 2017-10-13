@@ -75,8 +75,8 @@
                         <div class="form-group first" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
                             <label class="col-sm-3 bold">eCTD Template:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="template" id="template" ng-model="template.name" ng-disabled="uneditable || template.id"
-                                       ng-show="template.id" required />
+                                <input type="text" class="form-control" name="template" id="template" ng-model="template.name" disabled
+                                       ng-show="template.id" />
                                 <!--<select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-show="template.id"
                                          ng-disabled="uneditable || template.id" required>
                                     <option  value="{{template}}" selected>{{template.name}}</option> 
@@ -180,32 +180,32 @@
             </div>
             <div class="portlet-body portlet-submitted" >
                 
-        <table class="table table-striped" id="appTable" datatable="ng" dt-options="dtOptions">
-            <thead>
-                <tr>
-                    <th><span class="title" translate>DESCRIPTION</span></th>
-                    <th><span class="title" translate>TITLE</span></th>
-                    <th><span class="title" translate>CREATEDATE</span></th>
-                    <th><span class="title" translate>SUBMITDATE</span></th>
-                    <th><span class="title" translate>ACTION</span></th>
-                </tr>
-            </thead>
-            <tbody ng-if="submissions.length > 0">
-              <tr ng-repeat="submission in submissions">
-                    
-                <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
-                        <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
-                <td>{{submission.folder}}</td>
-                <td>{{submission.createdAt}}</td>
-                <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
-                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
-                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
-              </tr>
-            </tbody>
-            <tbody ng-if=" !submissions || submissions.length <=0 ">
-                <tr><td colspan="5">You has not created any application yet. Create a new application now</td>
-            </tbody>
-        </table> 
+                <table class="table table-striped" id="appTable" datatable="ng" dt-options="dtOptions">
+                    <thead>
+                        <tr>
+                            <th><span class="title" translate>DESCRIPTION</span></th>
+                            <th><span class="title" translate>TITLE</span></th>
+                            <th><span class="title" translate>CREATEDATE</span></th>
+                            <th><span class="title" translate>SUBMITDATE</span></th>
+                            <th><span class="title" translate>ACTION</span></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="submissions.length > 0">
+                      <tr ng-repeat="submission in submissions">
+
+                        <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
+                                <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
+                        <td>{{submission.folder}}</td>
+                        <td>{{submission.createdAt}}</td>
+                        <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
+                        <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
+                            <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
+                      </tr>
+                    </tbody>
+                    <!--<tbody ng-if=" !submissions || submissions.length <=0 ">
+                        <tr><td colspan="5">You has not created any application yet. Create a new application now</td>
+                    </tbody>-->
+                </table> 
                 
             </div>
         </div>
@@ -225,7 +225,10 @@
         else 
             $state.go("dashboard").then(function() {});                              //console.log('applications', $rootScope.applications)
                                                                                 
-        $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [1, 'asc']).withOption('lengthMenu', [5,10]);
+        $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('order', [1, 'asc'])
+                .withOption('lengthMenu', [5,10])
+                .withLanguage({"sEmptyTable":"Empty"});
            
         //var table = $("#appTable").DataTable();
         if(appData.appUid){ 
@@ -256,24 +259,24 @@
                     jsonData ={"id": jsonData.id, "appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description, 
                         "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
                     
-                    ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){                    //console.log(result);
+                    ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){                    console.log(result);
                         if(result.id){
                             var sub = ApplicationApiService.ExtractApp(result);
                             toastr.success("Create Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', sub, { expires: cookieExp});          console.log( $cookies.get("appData"));
+                            $cookies.putObject('appData', sub, { expires: cookieExp});          
                             $state.go("fileupload").then(function() {}); 
                         }
                     })
                 }else{
-                    ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){                      //console.log(result);      // res.success ==false
+                    ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){                      console.log(result);      // res.success ==false
                         if(result.id){
                             var sub = ApplicationApiService.ExtractApp(result);
                             toastr.success("Save Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', sub, { expires: cookieExp});          console.log($cookies.get("appData"));
+                            $cookies.putObject('appData', sub, { expires: cookieExp});          
                             $state.go("fileupload").then(function() {}); 
                         } 
                     })
@@ -305,6 +308,7 @@
             $cookies.remove("appData");
             appData = {};
             $scope.formData= {"version": "0000"};
+            $scope.submitLabel = "CREATEAPP"; 
             $scope.template= {};
             if(!$scope.templates) getTemplateList();
             $scope.subForm.$setPristine();
@@ -320,9 +324,10 @@
         };
         $scope.edit = function(id){
             toastr.success('Application ID: '+id);
-            var submission = getSubById(id);                                                                   
+            var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
             if(submission){
                 appData = ApplicationApiService.ExtractApp(submission);
+                //$rootScope.uploadFiles = submission.ectdFileList;               console.log($rootScope.uploadFiles);
                 $scope.submitLabel = "EDITAPP";
                 var cookieExp = new Date();
                 cookieExp.setDate(cookieExp.getDate() + 1);
@@ -330,16 +335,17 @@
                 $scope.formData = angular.copy(submission);
                 $scope.template = submission.template;                          // console.log($scope.template)   
                 $scope.uneditable = true;
+                if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
                 //$state.go("fileupload").then(function() {});
             }         
         };
-        function getSubById(id){
+        /*function getSubById(id){
             var submission;
             angular.forEach($scope.submissions, function(value, key){ 
             if(value.id ===id) {submission=value; }
             });
             return submission;
-        }
+        }*/
         
         function getTemplateList(){
             TemplateApiService.GetTemplateList(userData).then(function(result){             //console.log(result)

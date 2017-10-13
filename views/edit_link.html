@@ -259,13 +259,13 @@
 <script src="dist/jsECTDtree.js"></script>
 <script> 
     //"use strict";
-    var appID; 
+    var appUid; 
     function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate){
         
         var appData;
         if($cookies.get("appData")) {
             appData = JSON.parse($cookies.get("appData"));
-            appID = appData.appID;
+            appUid = appData.appUid;
         }else {
             $state.go("submission");
             $translate("WARNING_NOAPP").then(function(translation){
@@ -297,7 +297,7 @@
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node); 
             if(node.type=="file")
-                window.open(node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+                window.open("http://192.168.88.187:8080/ectd"+node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
         }
         return {
             upFiles: [],
@@ -383,7 +383,7 @@
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
             if(t.parents('div.pdf-frame').length && t.parents('div.pdf-frame').attr('data-loaded')=='false')
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
-        }).on('dnd_stop.vakata', function (e, data) {                                // console.log(data.element.text);
+        }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data.element);
                 var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
                 var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
                 if(fileName.indexOf('.pdf')>0) {                                                
@@ -405,7 +405,7 @@
         } 
     }*/
     
-    function openPanel(file, fileId, panel){                                    
+    function openPanel(file, fileId, panel){                                   console.log("file uuid", fileId);                               
         panel.find('.drop-file-zone').hide();
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
@@ -423,8 +423,21 @@
                 return;
             }//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
         }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             
-        var path = JsTree.getPathById(fileId);
-            PDFJS.getDocument({url: path+"?nc="+Math.random()}, null, null, function(progress){
+        var path = "http://192.168.88.187:8080/ectd"+JsTree.getPathById(fileId);
+        var loadingTask = PDFJS.getDocument(path+"?nc="+Math.random());
+        loadingTask.onProgress = function(progress){
+            panel.find('div.load-process').show();
+            panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
+        };
+        loadingTask.promise.then(function(pdf){
+            pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
+                pdfCache[fileId] = {'name': file, 'pdf': pdf};
+                panel.find('div.load-process').fadeOut(1000);  
+                pdf2html(file, pdf, panel);
+        }).catch(function(error){
+            alert(error);
+        });
+            /*PDFJS.getDocument({url: path+"?nc="+Math.random()}, null, null, function(progress){
                                                                                      //console.log((progress.loaded/progress.total)*100);
                 panel.find('div.load-process').show();
                 panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
@@ -437,7 +450,7 @@
                
             }).catch(function(error){
                 alert(error);
-            });
+            });*/
         
     }
     function setTab(panel, fileName){
@@ -1165,7 +1178,7 @@
             if(opl[op].length<=0) delete opl[op];
         }
         var ob = pdfFile['pdf-editor'];
-        $.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appID": appID}, function(result){
+        $.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appUid": appUid}, function(result){
             if(result && result.indexOf('.pdf')){ 
                 ob.tempname = result; ob.lastOp = operationCount;
                 /*pdfFrame.find('iframe').remove();

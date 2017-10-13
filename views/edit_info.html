@@ -106,13 +106,13 @@ END PAGE HEADER-->
                         <form class="form-horizontal" role="form" ng-submit="submitAdinfo();" name="adminForm">
                             <div class="form-body">         
                        
-                                <div class="form-group first" ng-class="{'has-error' : adminForm.applicationID.$touched && adminForm.applicationID.$invalid }">
-                                    <label for="applicationID" class="col-sm-3"><span class="form-label bold"><span class="title" translate>APPLICATION</span> ID(D-U-N-SO)</span></label>
+                                <div class="form-group first" ng-class="{'has-error' : adminForm.dunsNumber.$touched && adminForm.dunsNumber.$invalid }">
+                                    <label for="dunsNumber" class="col-sm-3"><span class="form-label bold"><span class="title" translate>APPLICATION</span> ID(D-U-N-SO)</span></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="applicationID" id="applicationID" ng-model="adminData.applicationID" placeholder="000000000"
+                                        <input type="text" class="form-control input-sm" name="dunsNumber" id="dunsNumber" ng-model="adminData.dunsNumber" placeholder="000000000"
                                             maxlength="9" required ng-disabled="uneditable" numberic-check="9">
-                                        <p ng-show="adminForm.applicationID.$touched && adminForm.applicationID.$error.required" class="help-block">Application ID is required.</p>
-                                        <p ng-show="adminForm.applicationID.$error.numberic" class="help-block">Application ID should be 9 digits.</p>
+                                        <p ng-show="adminForm.dunsNumber.$touched && adminForm.dunsNumber.$error.required" class="help-block">Application ID is required.</p>
+                                        <p ng-show="adminForm.dunsNumber.$error.numberic" class="help-block">Application ID should be 9 digits.</p>
                                     </div>
                                 </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.companyName.$invalid && adminForm.companyName.$touched }">
@@ -147,20 +147,20 @@ END PAGE HEADER-->
                                     </label>
                                     <div class="col-sm-9">
                                         <select class="form-control input-sm" name="appType" id="appType" ng-model="adminData.appType" required ng-disabled="uneditable">
-                                            <option  ng-repeat="x in appTypes">{{x}}</option>
+                                            <option  ng-repeat="x in appTypes" ng-selected="adminData.appType.substr(0,3)==x.substr(0,3)">{{x}}</option>
                                         </select>
                                         <p ng-show=" adminForm.appType.$touched && adminForm.appType.$invalid" class="help-block">Application Type is required.</p>
                                     </div>
                                 </div>
                         
                         
-                                <div class="form-group row" ng-class="{ 'has-error' : adminForm.subID.$invalid && adminForm.subID.$touched }">
-                                    <label for="subID" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span>&nbsp; ID</label>
+                                <div class="form-group row" ng-class="{ 'has-error' : adminForm.subId.$invalid && adminForm.subId.$touched }">
+                                    <label for="subId" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span>&nbsp; ID</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" name="subID" id="subID" ng-model="adminData.subID" placeholder="0000" 
+                                <input type="text" class="form-control input-sm" name="subId" id="subId" ng-model="adminData.subId" placeholder="0000" 
                                        maxlength="4" ng-disabled="uneditable" ng-required="true" numberic-check="4" />
-                                <p ng-show=" adminForm.subID.$touched && adminForm.subID.$error.required" class="help-block">Submission ID is required.</p>
-                                <p ng-show="adminForm.subID.$error.numberic" class="help-block">Submission ID should be 4 digits.</p>
+                                <p ng-show=" adminForm.subId.$touched && adminForm.subId.$error.required" class="help-block">Submission ID is required.</p>
+                                <p ng-show="adminForm.subId.$error.numberic" class="help-block">Submission ID should be 4 digits.</p>
                             </div>
                         </div>
                                 <div class="form-group" ng-class="{ 'has-error' : adminForm.subType.$invalid && adminForm.subType.$touched }">
@@ -188,7 +188,7 @@ END PAGE HEADER-->
                                     <label for="subnum" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span>
                                     </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" name="subnum" id="subnum" ng-model="formData.subnum" placeholder="0000" 
+                                        <input type="text" class="form-control input-sm" name="subnum" id="subnum" ng-model="adminData.subnum" placeholder="0000" 
                                             maxlength="4" ng-disabled="uneditable" ng-required="true" numberic-check="4" />
                                         <p ng-show=" adminForm.subnum.$touched && adminForm.subnum.$error.required" class="help-block">Submission ID is required.</p>
                                         <p ng-show="adminForm.subnum.$error.numberic" class="help-block">Submission Number should be 4 digits.</p>
@@ -240,36 +240,36 @@ END PAGE HEADER-->
                                 <div class="form-group" ng-class="{ 'has-error' : contactForm.contactName.$invalid && contactForm.contactName.$touched }">
                                     <label for="contactName" class="col-sm-3"><span class="form-label" translate>CONT_NAME</span> </label>
                                     <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" name="contactName" id="contactName" ng-model="contactData.contactName" placeholder="Contact Name" required ng-disabled="uneditable">
-                                <p ng-show="contactForm.contactName.$touched && contactForm.contactName.$invalid" class="help-block">Contact Name is required.</p>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid}">
-                            <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span></label>
-                            <div class="col-sm-9">
-                                <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" maxlength="10"
-                                       ng-required="true" ng-disabled="uneditable" numberic-check="10" />
-                                <!--<p>{{formData.phone | phonenumber}}</p>-->
-                                <p ng-show="contactForm.phone.$touched && contactForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
-                                <p ng-show="contactForm.phone.$error.numberic" class="help-block">Telephone should be 10 digits.</p>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : contactForm.email.$invalid && contactForm.email.$touched }">
-                            <label for="email" class="col-sm-3"><span class="form-label" translate>EMAIL</span> </label>
-                            <div class="col-sm-9">
-                                <input type="email" class="form-control input-sm" name="email" id="email" ng-model="contactData.email" placeholder="sample@ectd.com" required ng-disabled="uneditable">
-                                <p ng-show="contactForm.email.$touched && contactForm.email.$invalid" class="help-block">Email is invalid.</p>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-offset-2 col-md-10">
-                                    <button type="submit" class="btn green" ng-disabled="contactForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
-                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelContact()"><span class="title" translate>CANCEL</span></button>
+                                        <input type="text" class="form-control input-sm" name="contactName" id="contactName" ng-model="contactData.contactName" placeholder="Contact Name" required ng-disabled="uneditable">
+                                        <p ng-show="contactForm.contactName.$touched && contactForm.contactName.$invalid" class="help-block">Contact Name is required.</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                                <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid}">
+                                    <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span></label>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" maxlength="10"
+                                               ng-required="true" ng-disabled="uneditable" numberic-check="10" />
+                                        <!--<p>{{formData.phone | phonenumber}}</p>-->
+                                        <p ng-show="contactForm.phone.$touched && contactForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
+                                        <p ng-show="contactForm.phone.$error.numberic" class="help-block">Telephone should be 10 digits.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : contactForm.email.$invalid && contactForm.email.$touched }">
+                                    <label for="email" class="col-sm-3"><span class="form-label" translate>EMAIL</span> </label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control input-sm" name="email" id="email" ng-model="contactData.email" placeholder="sample@ectd.com" required ng-disabled="uneditable">
+                                        <p ng-show="contactForm.email.$touched && contactForm.email.$invalid" class="help-block">Email is invalid.</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="submit" class="btn green" ng-disabled="contactForm.$invalid || uneditable"><span class="title" translate>SAVE</span></button>
+                                            <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelContact()"><span class="title" translate>CANCEL</span></button>
+                                        </div>
+                                    </div>
+                                </div>
                                 
                             </div>
                         </form>
@@ -580,12 +580,12 @@ END PAGE HEADER-->
         };
         
      }
-    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate ){
+    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate, GenInfoApiService){
         
-        var appData, appID;
+        var appData, appUid;
         if($cookies.get("appData")) {
             appData = JSON.parse($cookies.get("appData"));
-            appID = appData.appID;
+            appUid = appData.appUid;
             //$scope.appCreated = true; 
         }else {
             $state.go("submission");
@@ -594,13 +594,27 @@ END PAGE HEADER-->
             })
             //toastr.warning("You need to create an application to edit Aministration information!");
         }
-        
-        var adminData = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        var userData = JSON.parse($cookies.get('globals')); 
+        var adminData ={};           // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        GenInfoApiService.GetGenInfo(appUid, userData).then(
+                function(result){ 
+                    if(result && result.id){
+                        adminData = result;                      
+                    }                          
+                    $scope.adminData = angular.copy(adminData);
+        });
         var contacts = [], contact={};
-        if($cookies.get("contactData")) {
+        GenInfoApiService.GetContacts(appUid, userData).then(
+                function(result){                                               //console.log("contact data: ", result);
+                    if(result){ contacts = result; 
+                        contact = contacts[0];
+                    } 
+                    $scope.contactData = angular.copy(contact); 
+                });
+        /*if($cookies.get("contactData")) {
             contacts = JSON.parse($cookies.get("contactData"));
             contact = contacts[0];
-        };
+        };*/
         var referenceData={};
         $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
         $scope.appTypes = ["New Drug application (NDA)", "abbreviated new drug application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)",
@@ -611,10 +625,10 @@ END PAGE HEADER-->
         $scope.subSubTypes = ["Original", "Presubmisssion", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
         
       
-        $scope.adminData = angular.copy(adminData);
-        $scope.contactData = angular.copy(contact);                         //console.log("initial contact", contacts[0]);
+        //$scope.adminData = angular.copy(adminData);
+        //$scope.contactData = angular.copy(contact);                         //console.log("initial contact", contacts[0]);
         $scope.referenceData = angular.copy(referenceData);
-        //}
+        
         $scope.toggleEditable = function(){
             $scope.uneditable =!$scope.uneditable;
         };
@@ -627,16 +641,23 @@ END PAGE HEADER-->
         $scope.submitAdinfo = function(){                                       
             
             if($scope.adminForm.$valid){
-                $scope.adminData.appID = appID;
-                var jsonData =JSON.stringify( $scope.adminData);                                 //console.log(jsonData);
-                $.post('php/adinfo.php', {'appData': jsonData}, function(result){
+                if($scope.adminData.createdAt) {
+                    delete $scope.adminData.createdAt; 
+                    delete $scope.adminData.updatedAt; 
+                }
+                var jsonData =JSON.stringify( $scope.adminData);                                 console.log("submit admin", jsonData);
+                GenInfoApiService.CreateGenInfo(appUid, userData, jsonData).then(function(result){
+                    if(result.id){
+                        toastr.success('Admin info Saved');
+                        $scope.uneditable = true;
+                    }
+                });
+                /*$.post('php/adinfo.php', {'appData': jsonData}, function(result){
                     if(result) {
                         toastr.success('Admin info Saved');
                         $cookies.putObject("adminData",$scope.adminData);
-                        //$scope.uneditable = true;
-                        //Portlet.write(result);
                     }
-                });
+                });*/
             }   
         };
         $scope.cancelAdinfo = function(){                                              //console.log(jsonx);
@@ -647,10 +668,21 @@ END PAGE HEADER-->
         }; 
         $scope.submitContact = function(){ 
             //if(!$scope.isStringNumberic($scope.contactForm.phone.$viewValue)) return;
-            $scope.contactData.appID = appID;                                        console.log(JSON.stringify($scope.contactData));
+            //$scope.contactData.appUid = appUid;                                        console.log(JSON.stringify($scope.contactData));
             if($scope.contactForm.$valid){
-                var jsonData =JSON.stringify($scope.contactData);                                 console.log(jsonData);
-                $.post('php/adinfo.php', {'appData': jsonData}, function(result){
+                if($scope.contactData.createdAt) {
+                    delete $scope.contactData.createdAt; 
+                    delete $scope.contactData.updatedAt; 
+                }
+                var jsonData =JSON.stringify($scope.contactData);               console.log("contact data: ", jsonData);                  
+                                                                       
+                GenInfoApiService.CreateContact(appUid, userData, jsonData).then(
+                        function(result){                                       console.log(result);
+                            if(result && result.id) contact = result;
+                            $scope.uneditable = true;
+                            updateContact(contact);
+                });
+                /*$.post('php/adinfo.php', {'appData': jsonData}, function(result){
                     if(result) {
                         toastr.success('Contact information Saved');
                         
@@ -668,7 +700,7 @@ END PAGE HEADER-->
                         $cookies.putObject("contactData", contacts);
                         //Portlet.write(result);                                  //console.log(contacts);
                     }
-                });
+                });*/
             }   
         };
         $scope.cancelContact = function(){                                          //console.log(contact);
@@ -689,6 +721,13 @@ END PAGE HEADER-->
             $scope.contactForm.$setUntouched();
             //$scope.contactForm.$setValidity();
         };
+        function updateContact(newContact){
+            var found = false; 
+            for(var i=0; i<contacts.length; i++ ){                          //console.log(contacts[i].contactType);               
+                if(contacts[i].contactType == newContact.contactType) {contacts[i] = newContact; found = true; } 
+            };
+            if(!found) contacts.push(newContact);
+        }
         $scope.submitReference = function(){
             if($scope.referenceForm.$valid){
                 var jsonData =JSON.stringify( $scope.referenceData);                                 //console.log(jsonData);
@@ -707,12 +746,9 @@ END PAGE HEADER-->
             $scope.referenceForm.$setUntouched();
             $scope.referenceForm.$setValidity();
         };
-        $scope.isStringNumberic = function(s){
-            var x = + s;                                         //console.log('x', x.toString() === s);
-            return x === parseInt(s);
-        };
+        
     }
-    function TagCtrl($rootScope, $scope, $state, $cookies){
+    function TagCtrl($rootScope, $scope, $state, $cookies, TagApiService){
         var tagData=[], jsonx= {}, nodeId;
         if($cookies.get("tagData")) {
             tagData = JSON.parse($cookies.get("tagData"));                      console.log(tagData);
@@ -810,11 +846,11 @@ END PAGE HEADER-->
        };
        function showTags(node){
            
-           if(node.id==="m32s"||node.id==="m23S"){
+           if(node.id==="m32S"||node.id==="m23S"){
                 $scope.substanceTag = true;
                 $scope.productTag = false;
                 $scope.stfTag = false;
-           }else if(node.id==="m32p"||node.id==="m23P"){
+           }else if(node.id==="m32P"||node.id==="m23P"){
                 $scope.productTag = true; 
                 $scope.stfTag = false;
                 $scope.substanceTag = false;
@@ -904,7 +940,7 @@ END PAGE HEADER-->
             
             var filename =node.original.name;//"/pdf/pdfFiles/"+node.text;
             if($(".study-frame").is(":visible")) Portlet.openFrame(filename);
-            else window.open(filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);
+            else window.open("http://192.168.88.187:8080/ectd"+filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);
         }
         return {
             initTree: function(json){
