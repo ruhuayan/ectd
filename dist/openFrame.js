@@ -9,7 +9,7 @@ function openFrame(portlet, height, url){
     $("#layer").click(function(){
         $(this).remove();
     });
-
+    var base_url = "http://52.4.14.123/ectd";
     //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);

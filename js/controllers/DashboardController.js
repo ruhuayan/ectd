@@ -38,6 +38,7 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     function getUserAppList(startNo, endNo, callback) {                        
        
         ApplicationApiService.GetClientAppList(userData, startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
+            if(!data.list) {$rootScope.applications=[]; return;} 
             $rootScope.applications = data.list;                                //console.log($rootScope.applications)
             if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
             if(callback) callback();
