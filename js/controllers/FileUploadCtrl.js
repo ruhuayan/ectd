@@ -18,7 +18,8 @@
         
        
         var uploader = $scope.uploader = new FileUploader({
-            url: "http://192.168.88.187:8080/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
+            //url: "http://192.168.88.187:8080/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
+            url: "http://52.4.14.123/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
             //url: 'php/upload.php?appUid='+appUid+'&uid=' + userData.uid + "&apptoken=" + userData.access_token,
             removeAfterUpload: true
         }); 

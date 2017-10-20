@@ -310,7 +310,8 @@
                 //var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
                 
                 var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
-                var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 openFrame(portlet, _EH, url);
             }
             //if(node.type=="file")
@@ -415,7 +416,8 @@
             }//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
         }
         
-        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
@@ -1390,7 +1392,8 @@
         return false;
     }
     $("#download-btn").click(function(){                                        console.log("downloading .....", appUid);
-        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
