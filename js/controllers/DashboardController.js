@@ -9,22 +9,21 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     
     getUserAppList(1, 50, null);                                             
     
-    $scope.edit = function(id){
-        toastr.success('Application ID: '+id);
-        var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
+    $scope.edit = function(submission){                                         console.log("submission: ", submission.id);
+        toastr.success('Application ID: '+ submission.id);
+        //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
         if(submission){
             var appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
             //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 1);
-            $cookies.putObject('appData', appData, { expires: cookieExp});     //console.log(appData); 
+            $cookies.putObject('appData', appData, { expires: cookieExp});     console.log('appData: ', appData); 
             if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
-            $state.go("fileupload").then(function() {});
-            
+            $state.go("fileupload").then(function() {}); 
         }         
     };
-    $scope.view = function(id){
-        toastr.success('View Application ID: '+ id);
+    $scope.view = function(submission){
+        toastr.success('View Application ID: '+ submission.id);
         //$state.go("fileupload").then(function() {});      
     };
     $scope.create = function(){
@@ -35,14 +34,6 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     $scope.viewall = function(){                                                //console.log($scope.submissions.length)
         $state.go("submission").then(function() {}); 
     };
-
-    /*function getSubById(id){
-        var submission;
-        angular.forEach($scope.submissions, function(value, key){ 
-           if(value.id ===id) {submission=value; }
-        });
-        return submission;
-    }*/
 
     function getUserAppList(startNo, endNo, callback) {                        
        

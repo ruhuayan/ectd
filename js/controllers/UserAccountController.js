@@ -9,7 +9,8 @@ angular.module('MetronicApp').controller('UserAccountController', function($root
     UserApiService.GetCurrentUser(loginUser).then(function(result){
         if(result && result.id) { 
             userData = result;                                                  console.log(result);
-            $scope.userData = angular.copy(userData);    
+            $scope.userData = angular.copy(userData);                           console.log(result.addressList[0].country);
+            $scope.userData.country = result.addressList[0].country;
         }
     });
     $scope.provinceCode = {};

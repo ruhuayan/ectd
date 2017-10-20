@@ -53,7 +53,7 @@ END PAGE HEADER-->
 </div>-->
 <div class="row">
     <div class="col-md-4"> 
-        <div class="portlet light bordered " ng-controller="JstreeCtrl">
+        <div class="portlet light bordered jstree-portlet" ng-controller="JstreeCtrl">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <!--<i class="icon-settings font-green-sharp"></i>-->
@@ -74,7 +74,7 @@ END PAGE HEADER-->
     </div>
     <div class="col-md-8">
         <!-- BEGIN: ACCORDION DEMO -->
-        <div class="portlet light bordered admin-portlet" ng-controller="AdinfoCtrl" ng-init="uneditable = true" ng-hide="tagEdit">
+        <div class="portlet light bordered admin-portlet" id="AdinfoCtrl" ng-controller="AdinfoCtrl" ng-init="uneditable = true" ng-hide="tagEdit">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <i class="icon-settings font-green-sharp"></i>
@@ -359,7 +359,7 @@ END PAGE HEADER-->
                             <div class="panel-body">
                                 
                                 
-                                <form class="form-horizontal" role="form" ng-submit="submitGenData();" name="genForm">
+                                <form class="form-horizontal" role="form" ng-submit="submitTag();" name="genForm">
                                     <div class="form-body" style=""> 
                                         
                                     <div class="form-group" ng-class="{'has-error': genForm.sNumber.$touched && genForm.sNumber.$invalid }">
@@ -569,10 +569,11 @@ END PAGE HEADER-->
 <script>
     function JstreeCtrl($rootScope, $scope, $state){                             //console.log("open",$rootScope.open);
         if(!$rootScope.subFiles){
-           JsTree.initTree(fileTree);
+           //JsTree.initTree(fileTree);
+            $state.go("fileupload").then(function() {}); 
         }else{
-            var fileJson = fileTree.concat($rootScope.subFiles);                //console.log('data', $rootScope.subFiles);  
-            JsTree.initTree(fileJson);
+            //var fileJson = fileTree.concat($rootScope.subFiles);                //console.log('data', $rootScope.subFiles);  
+            JsTree.initTree($rootScope.subFiles);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -594,7 +595,10 @@ END PAGE HEADER-->
             })
             //toastr.warning("You need to create an application to edit Aministration information!");
         }
-        var userData = JSON.parse($cookies.get('globals')); 
+        var userData = JSON.parse($cookies.get('globals'));
+        $scope.getUserData = function(){
+            return userData;
+        };
         var adminData ={};           // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
         GenInfoApiService.GetGenInfo(appUid, userData).then(
                 function(result){ 
@@ -749,10 +753,23 @@ END PAGE HEADER-->
         
     }
     function TagCtrl($rootScope, $scope, $state, $cookies, TagApiService){
+        var appData, appUid;
+        if($cookies.get("appData")) {
+            appData = JSON.parse($cookies.get("appData"));
+            appUid = appData.appUid;
+            //$scope.appCreated = true; 
+        }else {
+            $state.go("submission");
+            $translate("WARNING_NOAPP").then(function(translation){
+                toastr.warning(translation);
+            })
+            //toastr.warning("You need to create an application to edit Aministration information!");
+        }
+        var userData = JSON.parse($cookies.get('globals'));
         var tagData=[], jsonx= {}, nodeId;
-        if($cookies.get("tagData")) {
+        /*if($cookies.get("tagData")) {
             tagData = JSON.parse($cookies.get("tagData"));                      console.log(tagData);
-        };
+        };*/
         
         $scope.stfTypes = ["Pre-clinical study report", "Complete clinical study report", "2 Study Report Synopsis", "1,3-15 Study Report Body", "16.1.1 Protocol and/or Amendment", 
                 "16.1.2 Sample CRF", "16.1.3 IEC and IRB and Consent Form Listings", "16.1.4 Description of Investigators and Sites", 
@@ -779,14 +796,27 @@ END PAGE HEADER-->
             $rootScope.tagEdit = false;
         };
         
-        $scope.submitGenData = function(){
-            if($scope.genForm.$valid){
+        $scope.submitTag = function(){                                          console.log("tag data: " , $scope.genData);
+            if($scope.genForm.$valid){                                          
                 $scope.genData.nodeId = nodeId;
                 $scope.genData.tag = $scope.substanceTag? "substance" : $scope.productTag? "product" : $scope.stfTag ? "stf" : null; 
                 var genData = JSON.stringify($scope.genData);                                 //console.log('id',$scope.genData.nodeId)
-                $.post('php/tag.php', {'appData': genData}, function(result){
+                
+                TagApiService.CreateTag(userData, appUid, genData).then(function(result){           console.log(result)
+                     if(result.id){
+                        toastr.success('Tag info');
+                        if($scope.genData.nodeId=="m32s"||$scope.genData.nodeId=="m23S"){ 
+                            var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.substance+"]";
+                            JsTree.addNodeText($scope.genData.nodeId, addText);
+                        }else if($scope.genData.nodeId=="m32p"||$scope.genData.nodeId=="m23P"){
+                            var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.prodName+"]["+$scope.genData.dosage+"]";
+                            JsTree.addNodeText($scope.genData.nodeId, addText);
+                        }
+                     }
+                });
+                /*$.post('php/tag.php', {'appData': genData}, function(result){
                     if(result) {
-                        toastr.success('General info');
+                        toastr.success('Tag info');
                         //Portlet.write(result, true);                                       
                         
                         if($scope.genData.nodeId=="m32s"||$scope.genData.nodeId=="m23S"){ 
@@ -809,7 +839,7 @@ END PAGE HEADER-->
                         if(!findTag) tagData.push(angular.copy($scope.genData));
                         $cookies.putObject("tagData", tagData);
                     }
-                });
+                });*/
                 $scope.uneditable = true; 
                 //toastr.success('Stf done');
             }   
@@ -826,14 +856,27 @@ END PAGE HEADER-->
             nodeId = node.id;                                                                  //console.log('id',nodeId)
             var studyTag = showTags(node);
             var findTag = false;
-            if(tagData.length>=1){
+            /*if(tagData.length>=1){
                 for(var i=0; i<tagData.length; i++){
                     if(tagData[i].nodeId == nodeId){ 
                         jsonx = tagData[i]; findTag = true;
                     }
                 }
-            }
-            var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length);
+            }*/
+            
+            TagApiService.GetTagByNid(appUid, nodeId, userData).then(function(result){    //console.log("tag:", result);
+                if(result && result.id){
+                    jsonx = result;                                             console.log("result: ", jsonx);
+                    $scope.genData = angular.copy(jsonx);
+                }else{
+                    var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length);
+                    jsonx = studyTag? {"title": "Study Title", "eCode":"Study Report (STF 2.2)"} : {'sNumber': sNumber, 'title': title, 'eCode':node.text};
+                     $scope.genData = angular.copy(jsonx);
+                }
+                
+            });
+            
+            /*var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length);
             if(!findTag) jsonx = studyTag? {"title": "Study Title", "eCode":"Study Report (STF 2.2)"} : {'sNumber': sNumber, 'title': title, 'eCode':node.text};
             if(edit)
                 $scope.$apply(function(){
@@ -841,7 +884,7 @@ END PAGE HEADER-->
                     });
             else{
                 $scope.genData = angular.copy(jsonx);;
-            } 
+            } */
            
        };
        function showTags(node){
@@ -890,11 +933,11 @@ END PAGE HEADER-->
                 if(tag) $('.tag-portlet').find('.portlet-body').html(data);
                 else $('.admin-portlet').find('.portlet-body').html(data);
             },
-            openFrame: function(filename){                                      //console.log(filename);
+            /*openFrame: function(filename){                                      //console.log(filename);
                 $('.study-frame').find('iframe').remove();
                 var frame = $('<iframe src='+filename+' width="100%" height="'+700+'"></iframe>');
                 $('.study-frame').append(frame);
-            },
+            },*/
             togglePanel: function(el, x){                                          //console.log($(el))
                 var accordin = $(el).parents(".form-panels");
                 accordin.find(".panel").each(function(index){                    
@@ -936,11 +979,20 @@ END PAGE HEADER-->
          function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);             //console.log(node); 
-            if(node.type!="file") return; 
             
+            /*if(node.type!="file") return; 
             var filename =node.original.name;//"/pdf/pdfFiles/"+node.text;
             if($(".study-frame").is(":visible")) Portlet.openFrame(filename);
             else window.open("http://192.168.88.187:8080/ectd"+filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);
+            */
+            if(node && node.type=="file"){ 
+                var uuid = node.id;                                   
+                var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
+                
+                var portlet = $("div.admin-portlet");
+                var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                openFrame(portlet, $(".jstree-portlet").height(), url);
+            }
         }
         return {
             initTree: function(json){

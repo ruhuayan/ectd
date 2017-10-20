@@ -194,8 +194,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         LNAME: 'Last Name',
         MOBILE:'Mobile Number',
         
-        PROFILE:'Profile account',
-        PERSONALINFO: 'Personal Info',
+        PROFILE:'Profile',
+        
         WALLET: 'Wallet',
         CHANGEPW: 'Change Password',
         SETUP: 'Set up Wallet here',
@@ -203,6 +203,15 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         NEWPW: 'New Password',
         REPW: 'Re-type Password',
         
+        /******profile account ***/
+        
+        OVERVIEW: "Overview", 
+        HELP: "Help",
+        ACC_SETTINGS: "Account Settings",
+        PER_INFO: "Personal Info",
+        CHANGE_PASSWORD: "Change Password",
+        PRIV_SETTINGS: "Privacy Settings",
+        CHANGE_IMAGE: "Change Image",
         
         //Upgrade page
         MININGPOWER: 'Mining Power',
@@ -390,14 +399,22 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         MOBILE:'手机号码',
         //EMAIL:'电子邮箱',
         PROFILE:'我的账户',
-        PERSONALINFO: '个人信息',
+        
         WALLET: '钱包',
         CHANGEPW: '修改密码',
         SETUP: '在此设置钱包',
         CURPW: '目前密码',
         NEWPW: '新密码',
         REPW: '重新输入新密码',
-       
+        
+        /******profile account ***/
+        OVERVIEW: "总目录", 
+        HELP: "帮助",
+        ACC_SETTINGS: "账户 设置",
+        PER_INFO: "个人 信息",
+        CHANGE_PASSWORD: "更改 密码",
+        PRIV_SETTINGS: "隐私 设置",
+        CHANGE_IMAGE: "更改 头像",
         
         //Upgrade page
         MININGPOWER: '挖矿算力',
@@ -672,6 +689,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'js/services/fileApiService.js',
+                        'dist/openFrame.js',
                         'css/edit.css',
                         "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
                         'dist/themes/default/style.min.css',
@@ -691,6 +710,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js", 
                         'js/services/genInfoApiService.js',
@@ -711,6 +731,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'js/services/applicationApiService.js',
                         'js/services/fileApiService.js'
                     ]   
                 },{
@@ -721,6 +742,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }, {
                     name: 'Jstree',
                     files: [
+                        'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js"
                     ]

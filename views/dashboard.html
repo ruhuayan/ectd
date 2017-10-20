@@ -42,8 +42,8 @@
                 <td>{{submission.createdAt}}</td>
                 <td>{{submission.updatedAt}}</td>
                 <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
-                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
-                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
+                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission)"><span class="title" translate>EDIT</span></button></span>
+                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission)"><span class="title" translate>VIEW</span></button></span></td>
                
               </tr>
             </tbody>

@@ -2,11 +2,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a ui-sref="dashboard">Home</a>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a>Profile</a>
+            <a><span class="title" translate>PROFILE</span></a>
         </li>
     </ul>
     <div class="page-toolbar">
@@ -17,20 +17,20 @@
             <ul class="dropdown-menu pull-right" role="menu">
                 <li>
                    <a ui-sref="profile.dashboard">
-                        <i class="icon-home"></i> Overview </a>
+                        <i class="icon-home"></i> <span class="title" translate>OVERVIEW</span> </a>
                 </li>
                 <li>
                     <a ui-sref="profile.account">
-                        <i class="icon-settings"></i> Account Settings </a>
+                        <i class="icon-settings"></i> <span class="title" translate>ACC_SETTINGS</span> </a>
                 </li>
                 <li>
                     <a href="#">
-                        <i class="icon-basket"></i> Tasks </a>
+                        <i class="icon-basket"></i> <span class="title" translate>SUBMISSION</span> </a>
                 </li>
                 <!--<li class="divider"> </li>-->
                 <li>
                     <a ui-sref="profile.help">
-                        <i class="icon-info"></i> Help </a>
+                        <i class="icon-info"></i> <span class="title" translate>HELP</span> </a>
                 </li>
                 
             </ul>
@@ -67,20 +67,20 @@
                     <ul class="nav">
                         <li ng-class="{active: $state.includes('profile.dashboard')}">
                             <a ui-sref="profile.dashboard">
-                                <i class="icon-home"></i> Overview </a>
+                                <i class="icon-home"></i> <span class="title" translate>OVERVIEW</span> </a>
                         </li>
                         <li ng-class="{active: $state.includes('profile.account')}">
                             <a ui-sref="profile.account">
-                                <i class="icon-settings"></i> Account Settings </a>
+                                <i class="icon-settings"></i> <span class="title" translate>ACC_SETTINGS</span> </a>
                         </li>
                         <li ng-class="{active: $state.includes('todo')}">
                             
                              <a ui-sref="todo">
-                                <i class="icon-check"></i> Tasks </a>
+                                <i class="icon-check"></i> <span class="title" translate>SUBMISSION</span> </a>
                         </li>
                         <li ng-class="{active: $state.includes('profile.help')}">
                             <a ui-sref="profile.help">
-                                <i class="icon-info"></i> Help </a>
+                                <i class="icon-info"></i> <span class="title" translate>HELP</span> </a>
                         </li>
                     </ul>
                 </div>

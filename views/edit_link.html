@@ -256,11 +256,11 @@
                 </div>
 
     </div>                        
-<script src="dist/jsECTDtree.js"></script>
+<!--<script src="dist/jsECTDtree.js"></script>-->
 <script> 
     //"use strict";
-    var appUid; 
-    function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate){
+    var appUid, userData;  
+    function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate, FileApiService){
         
         var appData;
         if($cookies.get("appData")) {
@@ -273,12 +273,13 @@
             });
             //toastr.warning("You need to create an application to edit Link!");
         }
-        
+        userData = JSON.parse($cookies.get('globals'));
         if(!$rootScope.subFiles){
-           JsTree.initTree(fileTree);
+           //JsTree.initTree(fileTree);
+           $state.go("fileupload").then(function() {}); 
         }else{
-            var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
-            JsTree.initTree(fileJson);
+            //var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles);
             JsTree.setSelectList($rootScope.subFiles);
             JsTree.upFiles = $rootScope.subFiles;
         }
@@ -289,15 +290,31 @@
        
         JsTree.closeSidebar();
         //$rootScope.settings.layout.pageSidebarClosed = true;
+        $scope.saveEdits = function(fuuid, editData){
+            return FileApiService.SaveEdits(fuuid, userData, editData);
+        }
+        $scope.getFileByUuid = function(fuuid){
+            return FileApiService.GetFile(fuuid, userData); 
+        }
      }
 </script>
 <script>
-     var JsTree = function (){
+    var pdfFile={}, pdfCache={}, pdfEditor = $('.pdf-editor'), pdfFrame = $('.pdf-frame'), _EH = $(window).height()-200;   // Editor initial Height
+    var JsTree = function (){
         function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node); 
-            if(node.type=="file")
-                window.open("http://192.168.88.187:8080/ectd"+node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node);
+            
+            if(node && node.type=="file"){ 
+                var uuid = node.id;                                   
+                //var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
+                
+                var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
+                var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                openFrame(portlet, _EH, url);
+            }
+            //if(node.type=="file")
+            //    window.open("http://192.168.88.187:8080/ectd"+node.original.name+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
         }
         return {
             upFiles: [],
@@ -344,19 +361,9 @@
                     if(node['type']==="file") {
                         $('select.fileList').append('<option id="'+node['id']+'">'+node['text']+'</option>');
                         //$('select.fileList').find('#'+node['parent']).append('<option id="'+node['id']+'">'+node['text']+'</option>');
-                        //node.path = 'http://localhost/pdfEditor/pdfFiles/';
                     }   
                     //else  $('select.fileList').append('<optgroup label="'+node['text']+'" id="'+node['id']+'"></optgroup>');
                 } 
-            },
-            getPathById: function(fileId){
-                var path; 
-                if(JsTree.upFiles.length){
-                    $.each(JsTree.upFiles, function(index, value){
-                        if(value.id == fileId) {path = value.name;}         
-                    });
-                }
-                return path;
             }
         };   
     }();
@@ -371,11 +378,9 @@
 <script src="dist/jquery-resizable.js"></script>
 
 <script>
-    //alert("w/h: ", $(window).width()+" / "+$(window).height());
     //////////////////////////////////////////////
     //        load pdf 2 html
     //////////////////////////////////////////////
-    var pdfFile={}, pdfCache={}, pdfEditor = $('.pdf-editor'), pdfFrame = $('.pdf-frame'), _EH = $(window).height()-200;   // Editor initial Height
     
     $(document).on('dnd_move.vakata', function (e, data) {  
             var t = $(data.event.target);                                          //console.log(data);
@@ -391,39 +396,58 @@
                     else if(t.parents('div.pdf-frame').length && pdfFrame.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfFrame);
                 }   
        });  
-    /*function openFile(file, fileId, panel){                                          //console.log('panel: ',panel[0].id);          
-        if(!panel) {                                                          
-            if(pdfEditor.attr('data-loaded')=='false') openPanel(file, fileId, pdfEditor);       
-            else if(pdfFrame.attr('data-loaded')=='false')  openPanel(file, fileId, pdfFrame);
-            else alert('Can not open another pdf file !!!');
-        }else if(panel[0].id==='pdf-editor'){                                 //console.log('panel: ',panel);
-            if(panel.attr('data-loaded')=='false')  openPanel(file, fileId, panel);
-            //else alert('PDF Editor can not load another pdf');
-        }else if(panel[0].id==='pdf-frame'){
-            if(panel.attr('data-loaded')=='false')  openPanel(file, fileId, panel);
-            //else alert('PDF frame can not load another pdf');
-        } 
-    }*/
-    
+
     function openPanel(file, fileId, panel){                                   console.log("file uuid", fileId);                               
         panel.find('.drop-file-zone').hide();
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
-        
+        if(panel[0].id=='pdf-editor') loadEdits(fileId);
         var cacheOb; 
         for(var fid in pdfCache){                                              //console.log(filename)
             if (fid === fileId){cacheOb = pdfCache[fid];} 
         }
         if(cacheOb && cacheOb.pdf){
             if(!cacheOb.saved){
-                 
                 pdfFile[panel[0].id] = {'name': file,'fid': fileId, 'pdf': cacheOb.pdf, 'panel': panel, 'dataLoaded': true};
                 panel.find('div.load-process').fadeOut(1000); 
                     pdf2html(file, cacheOb.pdf, panel);
                 return;
             }//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
-        }//if(cacheOb.saved) file=cacheOb.name+"?nocache="+Math.random();                             
-        var path = "http://192.168.88.187:8080/ectd"+JsTree.getPathById(fileId);
+        }
+        
+        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+
+        xhr.onprogress = function(e){        console.log (e);
+            if (e.lengthComputable) {}
+        };
+        xhr.onload = function(e) {
+            if (this.status === 200) {
+                var blob = new Blob([this.response], {type: 'application/pdf'}),
+                pdfBlob = URL.createObjectURL(blob);           
+                var loadingTask = PDFJS.getDocument(pdfBlob);
+                loadingTask.onProgress = function(progress){
+                    panel.find('div.load-process').show();
+                    panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
+                };
+                loadingTask.promise.then(function(pdf){
+                    var pdfArr = pdfFile[panel[0].id];
+                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel;
+                    //pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
+                        pdfCache[fileId] = {'name': file, 'pdf': pdf};
+                        panel.find('div.load-process').fadeOut(1000);  
+                        pdf2html(file, pdf, panel);
+                }).catch(function(error){
+                    alert(error);
+                });
+            }
+        };
+        xhr.send();
+        
+        
+        /*var path = "http://192.168.88.187:8080/ectd"+JsTree.getPathById(fileId);
         var loadingTask = PDFJS.getDocument(path+"?nc="+Math.random());
         loadingTask.onProgress = function(progress){
             panel.find('div.load-process').show();
@@ -436,22 +460,16 @@
                 pdf2html(file, pdf, panel);
         }).catch(function(error){
             alert(error);
-        });
-            /*PDFJS.getDocument({url: path+"?nc="+Math.random()}, null, null, function(progress){
-                                                                                     //console.log((progress.loaded/progress.total)*100);
-                panel.find('div.load-process').show();
-                panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
-            }).then(function(pdf) {   
-                    
-                pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
-                pdfCache[fileId] = {'name': file, 'pdf': pdf};
-                panel.find('div.load-process').fadeOut(1000);  
-                pdf2html(file, pdf, panel);
-               
-            }).catch(function(error){
-                alert(error);
-            });*/
-        
+        });*/   
+    }
+    function loadEdits(fileId){
+            angular.element("#JstreeCtrl").scope().getFileByUuid(fileId).then(function(result){       console.log("file: ", result);
+                if(result && result.uuid){
+                    var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
+                    pdfFile['pdf-editor'] = pdfFile['pdf-editor'] || {};
+                    pdfFile['pdf-editor'].edits = JSON.parse(lastState.action);   console.log("edits: ", pdfFile['pdf-editor'].edits);            
+                }
+            });
     }
     function setTab(panel, fileName){
         panel.find('.pdfTab').html(fileName+'<i class="fa fa-times" aria-hidden="true" style="margin-left: 15px; margin-right: 1em;" onclick="closeFile(this)"></i>');
@@ -474,13 +492,15 @@
                 createPageList(pdfFrame.find('select.pageList'), pdf.numPages);
             }else createPageList(pdfEditor.find('select.pageList'), pdf.numPages);
             
-            render(pdf, fileZone, 1)
+            render(pdf, fileZone, 1);
+            
             //pdf.getMetadata().then(function(metadata){console.log('metadata',metadata);})
             setTab(panel, file);
         
             fileZone.css({'border': '1px solid #999', 'height': _EH}).scroll(function(e){
                 hideEditMenu();         
             });
+            
     }
     function closeFile(div, save){
         var panel;
@@ -520,23 +540,23 @@
             panel.find('.drop-file-zone').fadeIn(300);
     }
     pdfEditor.resize({
-                    minWidth: 350,
-                    maxWidth: $('.panel-container').width()-200,
-                    handleSelector: ".splitter",
-                    resizeHeight: false,
-                    onDragStart: function(e, $el, opts){ hideEditMenu(); },
-                    onDragEnd: function(e, $el, opts ){  
-                        for(var key in pdfFile){
-                            var o = pdfFile[key];
-                            var fileZone = o.panel.find('.fileZone');
-                            if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
-                        }
-                        var ob = pdfFile['pdf-editor'];                         //console.log('ob: ', ob);
-                        if(ob && ob.dataLoaded){ 
-                            scaleOperations(ob, pdfEditor.find('.fileZone'));
-                        }
-                    }
-                });
+        minWidth: 350,
+        maxWidth: $('.panel-container').width()-200,
+        handleSelector: ".splitter",
+        resizeHeight: false,
+        onDragStart: function(e, $el, opts){ hideEditMenu(); },
+        onDragEnd: function(e, $el, opts ){  
+            for(var key in pdfFile){
+                var o = pdfFile[key];
+                var fileZone = o.panel.find('.fileZone');
+                if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
+            }
+            var ob = pdfFile['pdf-editor'];                         //console.log('ob: ', ob);
+            if(ob && ob.dataLoaded){ 
+                scaleOperations(ob, pdfEditor.find('.fileZone'));
+            }
+        }
+    });
     function toggleSplitter(show){
         if(show){
             $('.splitter').show();
@@ -592,7 +612,7 @@
     }
     */
    
-    function render(pdf,fileZone, e) {
+    function render(pdf,fileZone, e) {                                          console.log("page: ", e);
                                                             
         pdf.getPage(e).then(function(page) {
                
@@ -613,11 +633,55 @@
             }; 
             page.render(renderContext).then(function() {
                 pageWrap.find("canvas.page").css("visibility", "visible"); 
+                var edits = pdfFile['pdf-editor'].edits;                         console.log(edits);   /********there is a bug here**************/
+                if(fileZone.parents("div.pdf-editor").length && edits){
+                    replaceEdits(edits, e);
+                }
             });
         }).catch(function(error){
                 alert(error);
             });
     }
+    function replaceEdits(edits, pageNum){
+        var linkEdits = edits["linkOperations"];                                
+        var textEdits = edits["textOperations"];
+        var editZone = pdfEditor.find('.fileZone');                             
+        
+        if(linkEdits && linkEdits.length>0){
+            for (var i=0; i<linkEdits.length; i++){                               console.log("page num: ", linkEdits[i].page);
+                
+                var lastOpNum = linkEdits[i].id.split("-")[2];
+                if(operationCount<lastOpNum) operationCount = lastOpNum;
+                
+                if(pageNum == parseInt(linkEdits[i].page)){                              
+                    var scale = (editZone.width()-window.browserScrollbarWidth)/linkEdits[i].pw;                   console.log("scale: ", scale);
+                    var t = linkEdits[i].boundingBox.top * scale,
+                            l = linkEdits[i].boundingBox.left * scale, 
+                            w = linkEdits[i].boundingBox.width * scale,
+                            h = linkEdits[i].boundingBox.height * scale, 
+                            tfid = linkEdits[i].tfid, 
+                            id = linkEdits[i].id, 
+                            page = linkEdits[i].page;
+                    var pageWrap = editZone.find(".page-wrap");
+                    createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page});
+
+                }
+            }
+        }
+        if(textEdits && textEdits.length>0){
+            for (var i=0; i<textEdits.length; i++){                               //console.log("page num: ", linkEdits[i].page);
+                
+                var lastOpNum = linkEdits[i].id.split("-")[2];
+                if(operationCount<lastOpNum) operationCount = lastOpNum;
+                
+                if(pageNum == parseInt(textEdits[i].page)){                              
+                    var scale = (editZone.width()-window.browserScrollbarWidth)/linkEdits[i].pw;                   console.log("scale: ", scale);
+                    
+                }
+            }
+        }
+    }
+   
     function scaleFileZone(canvas, fileZone){
         if(canvas.height < _EH){ 
                 fileZone.animate({"height": canvas.height}, 300, function(){
@@ -768,7 +832,7 @@
     function X(t, e) {
         return t.hasClass(e) || t.parents("." + e).length > 0;
     }
-    jQuery.fn.inlineEditor = function(t, e, a, i, n) {
+    jQuery.fn.inlineEditor = function(t, e, a, i, n) {                //
             var o = $(this[0]);
             removeOperationCache();
             o.attr("id", "text-editable-" + ++operationCount).addClass("text-editable").attr("contenteditable", "true").addClass('operation_'+operationCount),
@@ -846,7 +910,7 @@
 </script>
 <script>
  
-    var Et = !1, operationCount=0, operationCache=[], backIndex=0; // Et - editable
+    var Et = !1, operationCount=10, operationCache=[], backIndex=0; // Et - editable
     $(document).keydown(function(e){                 // hand undo/redo hotkey
         if( e.which === 89 && e.ctrlKey ){
             if(pdfEditor.attr('data-loaded')==='true') forwardHandler();                                                   //alert('control + y'); 
@@ -969,10 +1033,10 @@
                 t.parents(".text-editable-menu").hide();
     });
     $(".link-editable-menu select.fileList").on('change', function(){
-        var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
+        var sOption= $(this).find('option:selected');                                console.log("tfid: ", sOption.attr('id'));
         //$("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": sOption.text(), "data-target-fid":sOption.attr('id') }); 
-        var filePath= JsTree.getPathById(sOption.attr('id'));                   console.log(filePath);
-        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": filePath, "data-target-fid":sOption.attr('id') }); 
+        //var filePath= JsTree.getPathById(sOption.attr('id'));                   console.log(filePath);
+        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id') }); 
     });
     $(".link-editable-menu select.pageList").on('change', function(){
         var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
@@ -1047,13 +1111,14 @@
             }
         })();
 
-    function createTargetShape(t, l, w, h, pageWrap, select) {                  // t- top, l - left, i - width, n - height, 
-                                                                                                     //console.log('rectangle: ', t, l, w, h);
+    function createTargetShape(t, l, w, h, pageWrap, select, link) {                  // t- top, l - left, i - width, n - height, 
+                                                                                                     console.log('rectangle: ', link);
         w = w || 200, h = h || 100;
         var target = $('<div class="target-editable"></div>');                                           // link retangle
+        if(link.id) target.attr({"id": link.id, "data-target-fid": link.tfid, "data-page-num": link.page}).addClass('operation_'+link.id.split("-")[2]);
+        else target.attr("id", "target-editable-" + ++operationCount).addClass('operation_'+operationCount);
         removeOperationCache();                                                                                 //parseFloat(o.attr("data-scale"));
-        target.attr("id", "target-editable-" + ++operationCount).addClass('operation_'+operationCount)
-            .css({
+        target.css({
                 width: w + "px",
                 height: h + "px",
                 position: "absolute",
@@ -1159,7 +1224,7 @@
             t.preventDefault();
             var e = [];
             // debugger;
-            pdfEditor.find(".text-editable").each(function() {            
+            pdfEditor.find(".text-editable").each(function() {                  //console.log("text-editable: ", $(this));          
                     var t = $(this);
                     "www.sample.com" == t.text() && e.push(t);
                 }),
@@ -1167,34 +1232,30 @@
                     "yes" == t && e.forEach(function(t) {
                             t.remove();})
                         });
-            pdfEditor.find(".target-editable").each(function(){
+            /*pdfEditor.find(".target-editable").each(function(){                 //console.log("target-editable: ", $(this));
                if(!$(this).attr('data-uri')) $(this).remove(); 
-            });
+            });*/
             sendOpList(getOpList());                                            //it(getOpList()); // it - submit
-    });function sendOpList(opList){
+    });function sendOpList(opList){                                             //console.log("opList", opList)
         //if(!hasValidOP(operationCount)) {alert('file not edited!!!'); return;}
         var opl = opList;
         for(var op in opl){
             if(opl[op].length<=0) delete opl[op];
         }
-        var ob = pdfFile['pdf-editor'];
-        $.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appUid": appUid}, function(result){
-            if(result && result.indexOf('.pdf')){ 
-                ob.tempname = result; ob.lastOp = operationCount;
-                /*pdfFrame.find('iframe').remove();
-                pdfFrame.find('.drop-file-zone').fadeOut(300);
-                var fileZone = pdfFrame.find('.fileZone');
-                pdfFrame.attr('data-loaded')=='true' && fileZone.is(":visible") && fileZone.remove()&& $('<div class="fileZone"></div>').insertAfter(pdfFrame.find('.drop-file-zone'));;
-                pdfFrame.attr('data-loaded', 'true');
-                //toggleSplitter(false);
-                pdfFrame.find('.pdfTab').html(result+'<i class="fa fa-times" aria-hidden="true" style="margin-left: 1em; margin-right: 1em;" onclick="closeFile(this)"></i>');
-                var frame = $('<iframe src=/pdf/pdfFiles/'+result+' width="100%" height="'+_EH+'" class="resultFrame"></iframe>');
-                pdfFrame.append(frame);*/
-                window.open("/pdf/pdfFiles/"+result+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
-                //openFile(result.trim(), pdfFrame);
-            }        
-            //if(result) document.write(result);
+        var ob = pdfFile['pdf-editor'];                                         console.log("opList: ", JSON.stringify(opl));
+        
+        var postData = {"action": JSON.stringify(opl), "state": "0"};
+        angular.element("#JstreeCtrl").scope().saveEdits(ob.fid, postData).then(function(result){ console.log(result);
+            if(result && result.id) toastr.success("edits saved");
         });
+        
+        /*$.post('edit.php',{data: JSON.stringify(opl), file: ob.name, fid: ob.fid, "appUid": appUid}, function(result){    console.log("edited file: ", result);
+            if(result && result.indexOf('.pdf')){                               
+                ob.tempname = result; ob.lastOp = operationCount;
+                window.open("/pdf/pdfFiles/"+result+"?nc="+Math.random(),'newWin', 'width=600, height=800, top=100, left='+$("div.pdf-frame").offset().left);
+            }        
+            
+        });*/
     }
     $("#save-pdf-btn").click(function(t) {
         if(pdfEditor.attr('data-loaded')=='false') return;
@@ -1241,18 +1302,17 @@
             t[e] = []; 
         });
         //var e = ($(".task-form"), pdfEditor);
-         pdfEditor.find(".text-editable").each(applyFun(".text-editable", function() {
-                var e = $(this);
+         pdfEditor.find(".text-editable").each(applyFun(".text-editable", function() {   
+                var e = $(this);                                                //console.log(e);                       
                 //if (!e.hasClass("existingTextEdit")) {
                     var a = e.parents(".page-wrap"),
                         i = a.find("canvas.page"),
                         n = a.attr("data-scale"), //Big(a.attr("data-scale"))
                        
                         r = e.css("font-family").split(",")[0].trim().toLowerCase(),
-                        u = "times_roman";                                                  //console.log('pNo/scale: ',a.attr("data-page-num"), n)
+                        u = "times_roman";                                                  //console.log('font-fam: ',r)
                     r.indexOf("helvetica") >= 0 && (u = "helvetica"),
-                        r.indexOf("Courier New") >= 0 && (u = "courier"),
-                        document.PDFJSFonts[r] && (u = document.PDFJSFonts[r]);
+                        r.indexOf("Courier New") >= 0 && (u = "courier");
                     var s = e.css("font-size").slice(0, -2),
                         d = s/n,  //Big(s).div(n),
                         //l = e.height(),
@@ -1329,5 +1389,26 @@
         }
         return false;
     }
+    $("#download-btn").click(function(){                                        console.log("downloading .....", appUid);
+        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+        
+        xhr.onload = function(e) {
+            if (this.status === 200) {
+                var blob = new Blob([this.response], {type: 'application/zip'}),
+                file = URL.createObjectURL(blob);           console.log("zip file: ",file);
+                
+                var link = document.createElement('a');
+                link.href = file;
+                link.download = "ectd";
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+            }
+        };
+        xhr.send();
+        
+    });
 </script>
 <!--<script src="https://use.fontawesome.com/572e7c8d9e.js" async="async"></script>-->

@@ -26,7 +26,7 @@
 
        
         function GetOneTemplate(templateId, userData) {
-            return $http.get(Base_URL + '/a/eCTDTemplate/getById/'+ templateId +'.json'+ '?uid=' + userData.uid +
+            return $http.get(Base_URL + '/a/eCTDTemplate/getById/'+ templateId + '/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting one Template'));
         }
 

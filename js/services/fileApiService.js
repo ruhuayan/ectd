@@ -11,16 +11,20 @@
         var Base_URL = "http://192.168.88.187:8080/ectd"; 
 
         var service = {};
-
+        
         service.GetFileList = GetFileList;
         service.GetAppFileList = GetAppFileList;
         service.GetClientFileList = GetClientFileList; 
-        service.GetOneFile = GetOneFile;
+        service.GetFile = GetFile;
         service.FileCreate = FileCreate;
         service.FileUpdate = FileUpdate;
         service.FileDelete = FileDelete;
         service.DownloadFileByUuid = DownloadFileByUuid;
-
+        service.BatchUpdate = BatchUpdate;
+        service.SaveEdits = SaveEdits;
+        //service.AssignFile = AssignFile;
+        //service.CreateFolder = CreateFolder;
+        //service.GetAssignedFileByAppUid = GetAssignedFileByAppUid;
 
         return service;
 
@@ -37,9 +41,9 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting client file list'));
         }
         
-        function GetOneFile(fid, userData) {
-            return $http.get(Base_URL + '/a/application/file/getById/' + fid + '.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by id'));
+        function GetFile(uuid, userData) {
+            return $http.get(Base_URL + '/a/application/file/getByUuid/' + uuid + '?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
         }
 
         function FileCreate(userData, appUid, postData) {
@@ -60,6 +64,27 @@
             return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
         }
+        function BatchUpdate(userData, appUid, batchData){
+            return $http.post(Base_URL + '/a/application/node/batch_update/appUid/'+appUid+'/?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token, batchData).then(handleSuccess, handleError('Error batch updating nodes!'));
+        }
+        function SaveEdits(uuid, userData, editData){
+            return $http.post(Base_URL + '/a/application/file/save_state/'+ uuid +'?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token, editData).then(handleSuccess, handleError('Error in updating file info'));
+        }
+        /*function AssignFile(uuid, nodeId, userData){
+            return $http.get(Base_URL + "/a/application/file/assign/"+uuid+"?id=" + nodeId +"/?uid=" + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
+        }
+        function CreateFolder(userData, appUid, postData){
+            return $http.post(Base_URL + '/a/application/folder/create/appUid/'+appUid+'/?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
+        }
+        
+        function GetAssignedFileByAppUid(userData, appUid){
+            return $http.get(Base_URL +"/a/application/file/getAssignedByAppUid/"+ appUid +'/?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting application file list'));
+        }*/
 
         function handleSuccess(res) {
             return res.data;

@@ -24,13 +24,13 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all taglist'));
         }
 
-        function GetTagByNid(nid, userData) {
-            return $http.get(Base_URL + '/a/content/tag/' + nid + '.json?uid=' + userData.uid +
+        function GetTagByNid(appUid, nid, userData) {
+            return $http.get(Base_URL + '/a/application/' + appUid + '/tag/info?nodeId='+ nid +'&uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting tag by id'));
         }
 
-        function CreateTag(userData, nid, tagData) {
-            return $http.post(Base_URL + '/a/content/'+ nid +'/create?uid=' + userData.uid +
+        function CreateTag(userData, appUid, tagData) {
+            return $http.post(Base_URL + '/a/application/'+ appUid +'/tag/createUpdate?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token, tagData).then(handleSuccess, handleError('Error in creating tag'));
         }
 

@@ -15,7 +15,7 @@
 
         service.GetApplicationList = GetApplicationList;
         service.GetClientAppList = GetClientAppList;
-        service.GetOneApplication = GetOneApplication;
+        service.GetApplication = GetApplication;
         service.ApplicationCreate = ApplicationCreate;
         service.ApplicationUpdate = ApplicationUpdate;
         service.DeleteApplication = DeleteApplication;
@@ -33,7 +33,7 @@
             return $http.get(Base_URL + '/a/application/client/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all Application list'));
         }
-        function GetOneApplication(appUid, userData) {
+        function GetApplication(appUid, userData) {
             return $http.get(Base_URL + '/a/application/getByAppUid/' + appUid + '.json?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting Application by id'));
         }

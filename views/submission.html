@@ -3,7 +3,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a ui-sref="dashboard" translate><span class="title" translate>HOME</span></a>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -157,8 +157,8 @@
                         <div class="form-actions">
                             <div class="row">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <button type="submit" class="btn green" ng-disabled="subForm.$invalid"><span class="title" translate>{{submitLabel}}</span></button>
-                                    <button type="button" class="btn default" ng-click="cancelApp()"><span class="title" translate>CANCEL</span></button>
+                                    <button type="submit" class="btn green" ng-disabled="subForm.$invalid || uneditable"><span class="title" translate>{{submitLabel}}</span></button>
+                                    <button type="button" class="btn default" ng-click="cancelApp()" ng-disabled="uneditable"><span class="title" translate>CANCEL</span></button>
                                 </div>
                             </div>
                         </div>
@@ -198,8 +198,8 @@
                         <td>{{submission.folder}}</td>
                         <td>{{submission.createdAt}}</td>
                         <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
-                        <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission.id)"><span class="title" translate>EDIT</span></button></span>
-                            <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission.id)"><span class="title" translate>VIEW</span></button></span></td>
+                        <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission)"><span class="title" translate>EDIT</span></button></span>
+                            <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission)"><span class="title" translate>VIEW</span></button></span></td>
                       </tr>
                     </tbody>
                     <!--<tbody ng-if=" !submissions || submissions.length <=0 ">
@@ -231,11 +231,11 @@
                 .withLanguage({"sEmptyTable":"Empty"});
            
         //var table = $("#appTable").DataTable();
-        if(appData.appUid){ 
-                                                      //console.log('app data:', appData);
+        if(appData.appUid){                                         
             $scope.submitLabel = "EDITAPP";
+             $scope.template = appData.template;                    console.log("template", appData);
             $scope.formData = angular.copy(appData);
-            $scope.template = $scope.formData.template;                         //console.log("template", $scope.template);
+            //$scope.template = $scope.formData.template;            
             $scope.uneditable = true;
         }else{
             getTemplateList();                         // to create templates
@@ -248,11 +248,11 @@
             $scope.uneditable =!$scope.uneditable;
         };
         
-        $scope.createApp = function(){                                          
+        $scope.createApp = function(){                                          console.log($scope.subForm.$valid);                               
             if($scope.subForm.$valid){
                 var tid =  $scope.template.id || JSON.parse($scope.template).id
-                $scope.formData.template = {'id': tid};                         console.log("template", tid);
-                var jsonData = $scope.formData;                                 //console.log(JSON.stringify($scope.formData));
+                $scope.formData.template = {'id': tid};                         //console.log("template", tid);
+                var jsonData = $scope.formData;                                 console.log("appdata: ", jsonData);
                 var userData = JSON.parse($cookies.get('globals'));
                 if(appData.id){
                     // for update to work, i have to get rid of unnecessary field
@@ -318,35 +318,28 @@
             //$state.go("dashboard").then(function() {   });
         };
         
-        $scope.view = function(id){
-            toastr.success('View Application ID: '+id);
+        $scope.view = function(sub){
+            toastr.success('View Application ID: '+ sub.id);
             //$state.go("fileupload").then(function() {});    
         };
-        $scope.edit = function(id){
-            toastr.success('Application ID: '+id);
-            var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
+        $scope.edit = function(submission){                                             console.log(submission)
+            toastr.success('Application ID: '+submission.id);
+            //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
             if(submission){
                 appData = ApplicationApiService.ExtractApp(submission);
                 //$rootScope.uploadFiles = submission.ectdFileList;               console.log($rootScope.uploadFiles);
                 $scope.submitLabel = "EDITAPP";
                 var cookieExp = new Date();
                 cookieExp.setDate(cookieExp.getDate() + 1);
-                $cookies.putObject('appData', appData, { expires: cookieExp});                               console.log(submission) 
+                $cookies.putObject('appData', appData, { expires: cookieExp});   //console.log(submission) 
                 $scope.formData = angular.copy(submission);
                 $scope.template = submission.template;                          // console.log($scope.template)   
                 $scope.uneditable = true;
                 if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
                 //$state.go("fileupload").then(function() {});
-            }         
+            }        
         };
-        /*function getSubById(id){
-            var submission;
-            angular.forEach($scope.submissions, function(value, key){ 
-            if(value.id ===id) {submission=value; }
-            });
-            return submission;
-        }*/
-        
+       
         function getTemplateList(){
             TemplateApiService.GetTemplateList(userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
