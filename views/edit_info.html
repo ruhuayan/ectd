@@ -567,13 +567,26 @@ END PAGE HEADER-->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script>
-    function JstreeCtrl($rootScope, $scope, $state){                             //console.log("open",$rootScope.open);
-        if(!$rootScope.subFiles){
-           //JsTree.initTree(fileTree);
-            $state.go("fileupload").then(function() {}); 
-        }else{
-            //var fileJson = fileTree.concat($rootScope.subFiles);                //console.log('data', $rootScope.subFiles);  
-            JsTree.initTree($rootScope.subFiles);
+    function JstreeCtrl($rootScope, $scope, $state, $cookies, ApplicationApiService){ 
+        var appData, appUid;
+        if($cookies.get("appData")) {
+            appData = JSON.parse($cookies.get("appData"));
+            appUid = appData.appUid;                                       //console.log("appUid", appUid)
+        }else {
+            $state.go("submission");
+            $translate("WARNING_NOAPP").then(function(translation){
+                toastr.warning(translation);
+            })
+        }
+        
+        if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
+            var userData = JSON.parse($cookies.get('globals'));
+            ApplicationApiService.GetApplication(appUid, userData).then(function(result){                   
+                $rootScope.subFiles = result.nodeList;
+                JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles); 
+            });
+        }else{             
+            JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);  
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -581,7 +594,7 @@ END PAGE HEADER-->
         };
         
      }
-    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate, GenInfoApiService){
+    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate, GenInfoApiService){  console.log($rootScope.subFiles);
         
         var appData, appUid;
         if($cookies.get("appData")) {
@@ -796,11 +809,16 @@ END PAGE HEADER-->
             $rootScope.tagEdit = false;
         };
         
-        $scope.submitTag = function(){                                          console.log("tag data: " , $scope.genData);
+        $scope.submitTag = function(){                                          
             if($scope.genForm.$valid){                                          
                 $scope.genData.nodeId = nodeId;
+                $scope.genData.species = "";
+                if($scope.genData.createdAt){
+                    delete $scope.genData.createdAt;
+                    delete $scope.genData.updatedAt;
+                }
                 $scope.genData.tag = $scope.substanceTag? "substance" : $scope.productTag? "product" : $scope.stfTag ? "stf" : null; 
-                var genData = JSON.stringify($scope.genData);                                 //console.log('id',$scope.genData.nodeId)
+                var genData = JSON.stringify($scope.genData);                                  console.log("tag: " , $scope.genData);
                 
                 TagApiService.CreateTag(userData, appUid, genData).then(function(result){           console.log(result)
                      if(result.id){
@@ -963,19 +981,7 @@ END PAGE HEADER-->
 <script src="dist/jsECTDtree.js"></script>
 <script>
     var JsTree = function (){
-        
-        /*function customMenu(node) {
-            var items = {
-                'open':{
-                    'label': 'Open',
-                    'action': function(data){
-                        var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference);                //console.log(obj.type);
-                    }
-                }
-            };
-            return items;
-        }*/
+
          function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);             //console.log(node); 
@@ -991,7 +997,7 @@ END PAGE HEADER-->
                 
                 var portlet = $("div.admin-portlet");
                 //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-                var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 openFrame(portlet, $(".jstree-portlet").height(), url);
             }
         }

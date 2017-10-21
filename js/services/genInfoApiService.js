@@ -8,7 +8,7 @@
     GenInfoApiService.$inject = ['$http', '$rootScope'];
 
     function GenInfoApiService($http, $rootScope) {
-        var Base_URL = "http://52.4.14.123/ectd";                        //$rootScope.settings.Base_URL;;
+        var Base_URL = $rootScope.Base_URL;                                     //"http://52.4.14.123/ectd";      //$rootScope.settings.Base_URL;;
 
         var service = {};
 

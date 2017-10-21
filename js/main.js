@@ -148,7 +148,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         ALIGN: "align",
         COLOR: "color",
         FONT: "font",
-        CHECK: "check",
+        CHECK: "preview",
         DOWNLOAD: "download",
         
         ORDERS: 'My Orders',
@@ -353,7 +353,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         ALIGN: "对齐",
         COLOR: "颜色",
         FONT: "字体",
-        CHECK: "检查",
+        CHECK: "预览",
         DOWNLOAD: "下载",
         //sideba
         ORDERS: '我的订单',
@@ -639,14 +639,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
-                        /*'assets/global/plugins/morris/morris.css',
-                        'assets/global/plugins/morris/morris.min.js',
-                        'assets/global/plugins/morris/raphael-min.js',
-                        'assets/global/plugins/jquery.sparkline.min.js',
-                        'assets/pages/scripts/dashboard.min.js',*/
-                        //'assets/global/plugins/datatables/datatables.min.css',
-                        //'assets/global/plugins/datatables/datatables.all.min.js',
-                        //'assets/pages/scripts/angular-datatables.js',
                         'js/controllers/DashboardController.js',
                         'js/services/applicationApiService.js'
                         
@@ -670,10 +662,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'css/edit.css',
                         'js/services/templateApiService.js',
                         'js/services/applicationApiService.js'
-                         
-                        //'js/controllers/GeneralPageController.js'
-                        //"//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
-                        //'dist/themes/default/style.min.css'
                     ]
                 });
             }]
@@ -689,6 +677,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'dist/location.js',
                         'js/services/fileApiService.js',
                         'dist/openFrame.js',
                         'css/edit.css',
@@ -710,9 +699,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'dist/location.js',
                         'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js", 
+                        'js/services/applicationApiService.js',
                         'js/services/genInfoApiService.js',
                         'js/services/tagApiService.js'
                     ]
@@ -742,6 +733,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }, {
                     name: 'Jstree',
                     files: [
+                        'dist/location.js',
                         'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js"
@@ -1324,12 +1316,13 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    var lastDigestRun = new Date();
-    console.log(lastDigestRun);
+    $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    var lastDigestRun = new Date();                                             console.log(lastDigestRun);
+    
     setInterval(function() {
         var now = Date.now();
         if (now - lastDigestRun > 10 * 30 * 1000) {
-            console.log("loggedout");
+            console.log("url: ", $rootScope.Base_URL);
             console.log("if" + now);
         }
     }, 60 * 1000);

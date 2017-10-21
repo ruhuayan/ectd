@@ -222,37 +222,9 @@ END PAGE HEADER-->
                 var userData = angular.element("#FileUploadCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
                 
                 var portlet = $(".upload-portlet");
-                var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 openFrame(portlet, $(".jstree-portlet").height(), url);
-                /*var layer = $("<div>").attr("id", "layer")
-                        .css({"position": "absolute", "top": 0, "left": 0, "width": $(window).width(), "height": $(window).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center" });
-               
-                var pdfFrame = $("<iframe>").attr("id", "frame")
-                        .css({"position": "absolute","top":portlet.offset().top,"left":portlet.offset().left ,"width": portlet.width(), "height": $(".jstree-portlet").height(), "border": "solid 1px #999"});        
-                
-                $("body").append(layer);
-                $("#layer").click(function(){
-                    $(this).remove();
-                });
-        
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
-                xhr.responseType = 'blob';
-               
-                xhr.onload = function(e) {
-                    if (this.status == 200) {
-                        var blob = new Blob([this.response], {type: 'application/pdf'}),
-                        file = URL.createObjectURL(blob);           console.log(file);
-                        layer.append(pdfFrame);
-                        $("#frame").attr("src", file);
-                        
-                        //var newWin = window.open(file, 'newWin', 'width=600, height=800, top=100, left='+$("div.upload-queue").offset().left);
-                        //setTimeout(newWin.focus, 100);
-                    }
-                };
-                xhr.send();*/
-                
             }
             
         }

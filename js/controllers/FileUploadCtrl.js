@@ -19,7 +19,7 @@
        
         var uploader = $scope.uploader = new FileUploader({
             //url: "http://192.168.88.187:8080/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
-            url: "http://52.4.14.123/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
+            url: $rootScope.Base_URL + "/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
             //url: 'php/upload.php?appUid='+appUid+'&uid=' + userData.uid + "&apptoken=" + userData.access_token,
             removeAfterUpload: true
         }); 
@@ -28,7 +28,7 @@
             name: 'quequeLimit',
             message: "WARNING_FILES", //"Maximum 10 files",
             fn: function(item  , options){
-                return this.queue.length < 10;
+                return this.queue.length < 8;
             }
         });                     //uploader.queueLimit = 10;
         uploader.filters.push({
@@ -205,7 +205,7 @@
                 return;
             }
             var json = JsTree.get_fileJson();
-            if(json){                                                           console.log("save files: ", json) 
+            if(json){                                                           //console.log("save files: ", json) 
                                                                                  
                 $translate("INFO_WAIT").then(function(translation){
                     toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
@@ -220,29 +220,19 @@
                 });
                 
                 //for(var i=0; i<json.length; i++ ){                                                  console.log("file: ", json[i]);}
-                FileApiService.BatchUpdate(userData, appUid, json).then(function(result){            console.log(result);
+                FileApiService.BatchUpdate(userData, appUid, json).then(function(result){            //console.log(result);
                     
                     if(result){
                         toastr.remove();
                         App.unblockUI($("#FileUploadCtrl"));
                         
-                        $rootScope.subFiles = json;
+                        $rootScope.subFiles = [];
                         $state.go("editinfo").then(function() {
-                            //toastr.success("Stucture save in app ID: "+appID);
+                            toastr.success("Stucture save in app");
                         });
                      }
                 });
-                /*$.post('php/savestructure.php', {'appData': JSON.stringify(json), "appUid": appUid}, function(result){
-                     if(result){
-                        toastr.remove();
 
-                        App.unblockUI($("#FileUploadCtrl"));
-                        $state.go("editinfo").then(function() {
-                            //toastr.success("Stucture save in app ID: "+appID);
-                        });
-                     }
-                 });*/
-                
             }else { 
                 $translate("NO_FILE").then(function(translation){
                     toastr.warning(translation);

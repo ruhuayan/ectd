@@ -18,13 +18,12 @@
                     <li><a href="#"><i class="fa fa-align-left" aria-hidden="true"></i><div translate>ALIGN</div></a></li>
                     <li><a href="#"><i class="fa fa-square" aria-hidden="true"></i><div translate>COLOR</div></a></li>
                     <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div translate>FONT</div></a></li>
-                    <li><a href="#" title="check" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>
+                    <li><a href="#" title="preview" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>
                     <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div translate>SAVE</div></a></li>
                     <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download" aria-hidden="true"></i><div translate>DOWNLOAD</div></a></li>
                     <!--<li><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><div>Edit Info</div></a></li>
                     <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
                     <li class="pull-right"><a href="#" title="Download file" id=""><i class="fa fa-arrows-alt" aria-hidden="true"></i> <div>Full Screen</div></a></li>-->
-           
                 </ul>
             </div>
         </nav>
@@ -310,7 +309,7 @@
                 //var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
                 
                 var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
-                var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+                var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 openFrame(portlet, _EH, url);
             }
@@ -398,7 +397,7 @@
                 }   
        });  
 
-    function openPanel(file, fileId, panel){                                   console.log("file uuid", fileId);                               
+    function openPanel(file, fileId, panel){                                   console.log("panel id", panel[0].id);                               
         panel.find('.drop-file-zone').hide();
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
@@ -417,12 +416,12 @@
         }
         
         //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-        var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
 
-        xhr.onprogress = function(e){        console.log (e);
+        xhr.onprogress = function(e){        //console.log (e);
             if (e.lengthComputable) {}
         };
         xhr.onload = function(e) {
@@ -435,8 +434,8 @@
                     panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
                 };
                 loadingTask.promise.then(function(pdf){
-                    var pdfArr = pdfFile[panel[0].id];
-                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel;
+                    var pdfArr = pdfFile[panel[0].id] = pdfFile[panel[0].id]||{};
+                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel;                      console.log(pdfFile[panel[0].id]);
                     //pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
                         pdfCache[fileId] = {'name': file, 'pdf': pdf};
                         panel.find('div.load-process').fadeOut(1000);  
@@ -466,7 +465,7 @@
     }
     function loadEdits(fileId){
             angular.element("#JstreeCtrl").scope().getFileByUuid(fileId).then(function(result){       console.log("file: ", result);
-                if(result && result.uuid){
+                if(result && result.state.length>0){
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
                     pdfFile['pdf-editor'] = pdfFile['pdf-editor'] || {};
                     pdfFile['pdf-editor'].edits = JSON.parse(lastState.action);   console.log("edits: ", pdfFile['pdf-editor'].edits);            
@@ -635,7 +634,7 @@
             }; 
             page.render(renderContext).then(function() {
                 pageWrap.find("canvas.page").css("visibility", "visible"); 
-                var edits = pdfFile['pdf-editor'].edits;                         console.log(edits);   /********there is a bug here**************/
+                var edits = pdfFile['pdf-editor'].edits;                        console.log(edits);   /********there is a bug here**************/
                 if(fileZone.parents("div.pdf-editor").length && edits){
                     replaceEdits(edits, e);
                 }
@@ -1117,7 +1116,7 @@
                                                                                                      console.log('rectangle: ', link);
         w = w || 200, h = h || 100;
         var target = $('<div class="target-editable"></div>');                                           // link retangle
-        if(link.id) target.attr({"id": link.id, "data-target-fid": link.tfid, "data-page-num": link.page}).addClass('operation_'+link.id.split("-")[2]);
+        if(link && link.id) target.attr({"id": link.id, "data-target-fid": link.tfid, "data-page-num": link.page}).addClass('operation_'+link.id.split("-")[2]);
         else target.attr("id", "target-editable-" + ++operationCount).addClass('operation_'+operationCount);
         removeOperationCache();                                                                                 //parseFloat(o.attr("data-scale"));
         target.css({
@@ -1393,7 +1392,7 @@
     }
     $("#download-btn").click(function(){                                        console.log("downloading .....", appUid);
         //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-        var url = "http://52.4.14.123/ectd" + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';

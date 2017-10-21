@@ -54,7 +54,7 @@
                 async: true,
                 crossDomain: true,
                 method: "POST",
-                url: "http://192.168.88.187:8080/ectd/f/login",
+                url: $rootScope.Base_URL + "/f/login",
                 
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",

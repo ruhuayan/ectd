@@ -8,7 +8,7 @@
     FileApiService.$inject = ['$http', '$rootScope'];
 
     function FileApiService($http, $rootScope) {
-        var Base_URL = "http://52.4.14.123/ectd"; 
+        var Base_URL = $rootScope.Base_URL;                                     // "http://52.4.14.123/ectd"; 
 
         var service = {};
         
