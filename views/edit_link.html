@@ -402,18 +402,18 @@
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
         if(panel[0].id=='pdf-editor') loadEdits(fileId);
-        var cacheOb; 
+        /*var cacheOb; 
         for(var fid in pdfCache){                                              //console.log(filename)
             if (fid === fileId){cacheOb = pdfCache[fid];} 
         }
         if(cacheOb && cacheOb.pdf){
-            if(!cacheOb.saved){
+            //if(!cacheOb.saved){
                 pdfFile[panel[0].id] = {'name': file,'fid': fileId, 'pdf': cacheOb.pdf, 'panel': panel, 'dataLoaded': true};
                 panel.find('div.load-process').fadeOut(1000); 
                     pdf2html(file, cacheOb.pdf, panel);
                 return;
-            }//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
-        }
+            //}//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
+        }*/
         
         //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
@@ -634,16 +634,17 @@
             }; 
             page.render(renderContext).then(function() {
                 pageWrap.find("canvas.page").css("visibility", "visible"); 
-                var edits = pdfFile['pdf-editor'].edits;                        console.log(edits);   /********there is a bug here**************/
+                var edits = pdfFile['pdf-editor'].edits;                        console.log("get edits: ", edits);   /********there is a bug here**************/
                 if(fileZone.parents("div.pdf-editor").length && edits){
-                    replaceEdits(edits, e);
+                        replaceEdits(edits, e, pageWrap);
                 }
             });
+            
         }).catch(function(error){
                 alert(error);
             });
     }
-    function replaceEdits(edits, pageNum){
+    function replaceEdits(edits, pageNum, pageWrap){
         var linkEdits = edits["linkOperations"];                                
         var textEdits = edits["textOperations"];
         var editZone = pdfEditor.find('.fileZone');                             
@@ -663,7 +664,7 @@
                             tfid = linkEdits[i].tfid, 
                             id = linkEdits[i].id, 
                             page = linkEdits[i].page;
-                    var pageWrap = editZone.find(".page-wrap");
+                    
                     createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page});
 
                 }
@@ -1128,7 +1129,7 @@
                 
             }).draggable().resizable({
                 handles: "all"
-            }).addClass("active").addClass("shape-rectangle").css("z-index", 9),
+            }).addClass("active").addClass("shape-rectangle"),
                     
             setTimeout(function() { openLinkEdit(target, select);  }, 100),    
 
@@ -1160,7 +1161,7 @@
             if(select) 
                 target.attr({"data-uri": pdfFile['pdf-frame'].name, "data-target-fid":pdfFile['pdf-frame'].fid });
            
-            pageWrap.append(target);
+            pageWrap.append(target);                                            console.log("append edit: ", pageWrap);
     }
     function openLinkEdit(t, select) {                                                                           //  console.log("f1");
         var e = $("#link-editable-menu"), fileListSelect = $('select.fileList'), pageList =$('.link-editable-menu select.pageList'); 
