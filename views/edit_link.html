@@ -1124,10 +1124,11 @@
                 height: h + "px",
                 position: "absolute",
                 top: t + "px",
-                left: l + "px"
+                left: l + "px" 
+                
             }).draggable().resizable({
                 handles: "all"
-            }).addClass("active").addClass("shape-rectangle"),
+            }).addClass("active").addClass("shape-rectangle").css("z-index", 9),
                     
             setTimeout(function() { openLinkEdit(target, select);  }, 100),    
 
