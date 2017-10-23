@@ -328,7 +328,7 @@ var JsTree = function (){
             });
             
         }).catch(function(error){
-                //alert(error);
+                alert(error);
             });
     }
     function showEdits(op, pageNum){
@@ -341,7 +341,7 @@ var JsTree = function (){
             if(num && num==pageNum) target.css("z-index", 10);
         }
     }
-    function replaceEdits(edits, pageNum, pageWrap){
+    function replaceEdits(edits, pageNum, pageWrap){                            console.log("page no: ", pageNum)
         var linkEdits = edits["linkOperations"];                                
         var textEdits = edits["textOperations"];
         var editZone = pdfEditor.find('.fileZone');                             
@@ -359,10 +359,9 @@ var JsTree = function (){
                         tfid = linkEdits[i].tfid, 
                         id = linkEdits[i].id, 
                         page = linkEdits[i].page;
-                createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page});
-                if(pageNum == parseInt(linkEdits[i].page)){
-                    var linkEdit = $("#"+linkEdits[i].id);
-                    if(linkEdit.length) linkEdit.css("z-index", -1);
+                var edit = createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page});
+                if(pageNum !== parseInt(linkEdits[i].page)){
+                    edit.css("z-index", -1);
                 }
                 //}
             }
@@ -370,7 +369,7 @@ var JsTree = function (){
         if(textEdits && textEdits.length>0){
             for (var i=0; i<textEdits.length; i++){                               //console.log("page num: ", linkEdits[i].page);
                 
-                var lastOpNum = textEdits[i].id.split("-")[2];                   console.log("edit no: ", lastOpNum);
+                var lastOpNum = textEdits[i].id.split("-")[2];                   //console.log("edit no: ", lastOpNum);
                 if(operationCount<lastOpNum) operationCount = lastOpNum;
                
                 var scale = (editZone.width()-window.browserScrollbarWidth)/textEdits[i].pw;                  
@@ -380,10 +379,9 @@ var JsTree = function (){
                         id = textEdits[i].id, 
                         text = textEdits[i].text;
                         page = textEdits[i].page;
-                createTextEdit(pageWrap, t, l, text, {id: id, page: page, style: style});
-                if(pageNum == parseInt(textEdits[i].page)){
-                    var textEdit = $("#"+textEdits[i].id);
-                    if(textEdit.length) textEdit.css("z-index", -1);
+                var edit = createTextEdit(pageWrap, t, l, text, {id: id, page: page, style: style});
+                if(pageNum !== parseInt(textEdits[i].page)){
+                    edit.css("z-index", -1);
                 }
             }
         }
@@ -421,7 +419,6 @@ var JsTree = function (){
             panel = $(this).parents('div.pdf-editor');
             pageNum = parseInt(panel.find(".page-wrap").attr("data-page-num"));
             pdf = pdfFile['pdf-editor'].pdf;
-            if(pageNum >1) showEdits(operationCount, pageNum);
         } else{
             panel = $(this).parents('div.pdf-frame');
             pageNum = parseInt(panel.find(".page-wrap").attr("data-page-num"));
@@ -430,6 +427,7 @@ var JsTree = function (){
         if(pageNum >1){ 
             render(pdf, panel.find(".fileZone"), --pageNum);
             panel.find(".right-tabs select.pageList").val(pageNum);
+            if($(this).parents('div.pdf-editor').length) showEdits(operationCount, pageNum);
         }
     });
     $("a.nextPage").click(function(e){          //alert("a prePage click");
@@ -438,7 +436,7 @@ var JsTree = function (){
             panel = $(this).parents('div.pdf-editor');
             pageNum = parseInt(panel.find(".page-wrap").attr("data-page-num"));
             pdf = pdfFile['pdf-editor'].pdf;
-            if(pageNum < pdf.numPages) showEdits(operationCount, pageNum);
+            
         } else{
             panel = $(this).parents('div.pdf-frame');
             pageNum = parseInt(panel.find(".page-wrap").attr("data-page-num"));
@@ -447,6 +445,7 @@ var JsTree = function (){
         if(pageNum < pdf.numPages){ 
             render(pdf, panel.find(".fileZone"), ++pageNum);
             panel.find(".right-tabs select.pageList").val(pageNum);
+            if($(this).parents('div.pdf-editor').length) showEdits(operationCount, pageNum);
         }
     });
     $(".pageNum").keydown(function(event){
@@ -553,6 +552,7 @@ var JsTree = function (){
             });                                                     
         pageWrap.append(f),                                                   //console.log('textinput ', f.offset().left);
             f.html(text).inlineEditor(obj);
+        return f; 
     }
     jQuery.fn.inlineEditor = function(obj) {                //
             var o = $(this[0]);
@@ -877,6 +877,7 @@ var JsTree = function (){
                 target.attr({"data-uri": pdfFile['pdf-frame'].name, "data-target-fid":pdfFile['pdf-frame'].fid });
            
             pageWrap.append(target);                                            //console.log("append edit: ", pageWrap);
+            return target;
     }
     function openLinkEdit(t, select) {                                                                           //  console.log("f1");
         var e = $("#link-editable-menu"), fileListSelect = $('select.fileList'), pageList =$('.link-editable-menu select.pageList'); 
