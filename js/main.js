@@ -473,7 +473,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         assetsPath: 'assets',
         globalPath: 'assets/global',
         layoutPath: 'assets/layouts/layout',
-        Base_URL: "http://52.4.14.123/ectd" //"http://192.168.88.187:8080/ectd"
+        //Base_URL: "http://52.4.14.123/ectd" //"http://192.168.88.187:8080/ectd"
     };
 
     $rootScope.settings = settings;
@@ -1316,14 +1316,15 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
+    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
     $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {
         var now = Date.now();
         if (now - lastDigestRun > 10 * 30 * 1000) {
-            console.log("url: ", $rootScope.Base_URL);
-            console.log("if" + now);
+                                                                                //console.log("url: ", $rootScope.Base_URL);
+                                                                                console.log("if" + now);
         }
     }, 60 * 1000);
 

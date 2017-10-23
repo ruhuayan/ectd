@@ -1,7 +1,7 @@
 // portlet position , portlet width, height, url       
 function openFrame(portlet, height, url){
     var layer = $("<div>").attr("id", "layer")
-            .css({"position": "absolute", "top": 0, "left": 0, "width": $(window).width(), "height": $(window).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 10 });
+            .css({"position": "absolute", "top": 0, "left": 0, "width": $(window).width(), "height": $(window).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 1001 });
     var pdfFrame = $("<iframe>").attr("id", "frame")
             .css({"position": "absolute","top":portlet.offset().top,"left":portlet.offset().left ,"width": portlet.width(), "height": height, "border": "solid 1px #999"});        
 

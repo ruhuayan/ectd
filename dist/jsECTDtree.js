@@ -344,13 +344,13 @@ var fileTree = [
     { "id" : "m5341", "parent" : "m534", "name" : "5341-healthy-subj-pd-stud-rep", "text": "5.3.4.1 Healthy Subject PD and PK/PD Study Reports" , "sNumber": "5.3.4.1"},
     { "id" : "m5342", "parent" : "m534", "name" : "5342-patient-pd-stud-rep", "text": "5.3.4.2 Patient PD and PK/PD Study Reports" , "sNumber": "5.3.4.2"},
     { "id" : "m535", "parent" : "m53", "name" : "535-rep-effic-safety-stud", "text": "5.3.5 Reports of Efficacy and Safety Studies",  "sNumber": "5.3.5"},
-    { "id" : "m5350", "parent" : "m535", "name" : "indication-1", "text": "Reports of Efficacy and Safety Studies" },
-    { "id" : "m5351", "parent" : "m5350", "name" : "5351-stud-rep-contr", "text": "Study Reports of Controlled Clinical Studies" },
-    { "id" : "m5352", "parent" : "m5350", "name" : "5352-stud-rep-uncontr", "text": "Study Reports of Uncontrolled Clinical Studies" },
-    { "id" : "m5353", "parent" : "m5350", "name" : "5353-rep-analys-data-more-one-stud", "text": "Reports of Analyses of Data from More than One Study" },
-    { "id" : "m5354", "parent" : "m5350", "name" : "5354-other-stud-rep", "text": "Other Study Reports" },
-    { "id" : "m5356", "parent" : "m5350", "name" : "536-postmark-exp", "text": "Reports of Postmarketing Experience" },
-    { "id" : "m5357", "parent" : "m5350", "name" : "537-crf-ipl", "text": "Case Report Forms and Individual Patient Listings" },
+    { "id" : "m5350", "parent" : "m535", "name" : "indication-1", "text": "Reports of Efficacy and Safety Studies", "sNumber": "5.3.5.0" },
+    { "id" : "m5351", "parent" : "m5350", "name" : "5351-stud-rep-contr", "text": "Study Reports of Controlled Clinical Studies", "sNumber": "5.3.5.1" },
+    { "id" : "m5352", "parent" : "m5350", "name" : "5352-stud-rep-uncontr", "text": "Study Reports of Uncontrolled Clinical Studies", "sNumber": "5.3.5.2" },
+    { "id" : "m5353", "parent" : "m5350", "name" : "5353-rep-analys-data-more-one-stud", "text": "Reports of Analyses of Data from More than One Study", "sNumber": "5.3.5.2" },
+    { "id" : "m5354", "parent" : "m5350", "name" : "5354-other-stud-rep", "text": "Other Study Reports", "sNumber": "5.3.5.4" },
+    { "id" : "m5356", "parent" : "m5350", "name" : "536-postmark-exp", "text": "Reports of Postmarketing Experience", "sNumber": "5.3.5.6" },
+    { "id" : "m5357", "parent" : "m5350", "name" : "537-crf-ipl", "text": "Case Report Forms and Individual Patient Listings", "sNumber": "5.3.5.7" },
     { "id" : "m54", "parent" : "m5", "name" : "54-lit-ref", "text": "Literature References", "sNumber": "5.4" }
 ];
 
