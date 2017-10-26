@@ -156,6 +156,7 @@ var JsTree = function (){
                     }
                     
                 }).bind("before.jstree", function (event, data) {
+             
                    //console.log("node: ", data)
                     
                 }).bind("loaded.jstree", function (event, data) {
