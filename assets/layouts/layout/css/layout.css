@@ -3,14 +3,14 @@
 
 #input-name::-webkit-input-placeholder {
     text-align: center;
-    background-image: url("../../../../pdfEditor/assets/input-name1.png");
+    background-image: url("../../../../pdf/assets/input-name1.png");
     background-position: 0 50%;
     background-repeat: no-repeat;  
     padding: 2px 2px 3px 2px;
 }
 #input-pass::-webkit-input-placeholder {
     text-align: center;
-    background-image: url("../../../../pdfEditor/assets/input-pass1.png");
+    background-image: url("../../../../pdf/assets/input-pass1.png");
     background-position: 0 50%;
     background-repeat: no-repeat;
     padding: 2px 2px 6px 2px;

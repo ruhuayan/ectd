@@ -18,8 +18,8 @@
                     <li><a href="#"><i class="fa fa-align-left" aria-hidden="true"></i><div translate>ALIGN</div></a></li>
                     <li><a href="#"><i class="fa fa-square" aria-hidden="true"></i><div translate>COLOR</div></a></li>
                     <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div translate>FONT</div></a></li>
-                    <li><a href="#" title="preview" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>
-                    <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div translate>SAVE</div></a></li>
+                    <!--<li><a href="#" title="preview" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>-->
+                    <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div translate>SAVEFILE</div></a></li>
                     <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download" aria-hidden="true"></i><div translate>DOWNLOAD</div></a></li>
                     <!--<li><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><div>Edit Info</div></a></li>
                     <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
@@ -93,7 +93,7 @@
                         <script>
                             window.lastTextEditSettings = {
                                 size: 16,
-                                color: '#000',
+                                color: 'rgb(0,0,0)',
                                 font: 'Times New Roman'
                             };
                             //$('.font-size-opts').attr('title',window.lastTextEditSettings.size);
@@ -295,6 +295,9 @@
         $scope.getFileByUuid = function(fuuid){
             return FileApiService.GetFile(fuuid, userData); 
         }
+        $scope.getUserData = function(){
+            return userData;
+        };
      }
 </script>
 <script src="dist/pdfjs/pdf.min.js"></script>
@@ -306,5 +309,6 @@
     </script>
 <script src="dist/jquery-resizable.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="dist/Filetree.js"></script>
 <script src="dist/editLink/edits.js"></script>
 <!--<script src="https://use.fontawesome.com/572e7c8d9e.js" async="async"></script>-->

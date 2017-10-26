@@ -6,10 +6,11 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     });
     
     var userData = JSON.parse($cookies.get('globals'));                         //console.log(userData);
+    if($rootScope.applications)                                             
+            $scope.submissions = $rootScope.applications.slice(0,5);     
+    else getUserAppList(1, 50, null);                                             
     
-    getUserAppList(1, 50, null);                                             
-    
-    $scope.edit = function(submission){                                         console.log("submission: ", submission.id);
+    $scope.edit = function(submission){                                         //console.log("submission: ", submission.id);
         toastr.success('Application ID: '+ submission.id);
         //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
         if(submission){
@@ -17,7 +18,7 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
             //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 1);
-            $cookies.putObject('appData', appData, { expires: cookieExp});     console.log('appData: ', appData); 
+            $cookies.putObject('appData', appData, { expires: cookieExp});      console.log('appData: ', appData); 
             if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
             $state.go("fileupload").then(function() {}); 
         }         
@@ -45,9 +46,3 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
         });  
     }
 }]);
-
-/*var submissions = [{'id': '56787','description': 'Drug_5', 'folder': 'xxxxxxx5', "version": "0000", 'uploadDate':'2017-07-12', 'submitDate': null},
-    {'id': '5344', "description":"Drug-4", 'folder': 'xxxxxxx4',"version": "0000", 'uploadDate':'2017-07-11', 'submitDate': null},
-    {'id': '34343',"description":"Drug-3", 'folder': 'xxxxxxx3',"version": "0000", 'uploadDate':'2017-07-10', 'submitDate': null},
-    {'id': '9797', "description":"Drug-3", 'folder': 'xxxxxxx2', "version": "0000", 'uploadDate':'2017-07-05', 'submitDate': '2017-07-09'},
-    {'id': '87876', "description":"Drug-3", 'folder': 'xxxxxxx1', "version": "0000", 'uploadDate':'2017-07-02', 'submitDate': '2017-07-06'}];*/

@@ -32,7 +32,7 @@ for($i =1; $i<=$pageNum; $i++){
         $scale = $tPos['w']/$width;
     }*/
     foreach ($operations as $key => $value) {
-        if($key=="appendTextOperations"){
+        if($key=="textOperations"){
         //var_dump($value);
             $arrlength=count($value);
             for($x=0;$x<$arrlength;$x++){

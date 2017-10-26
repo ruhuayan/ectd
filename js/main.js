@@ -150,7 +150,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         FONT: "font",
         CHECK: "preview",
         DOWNLOAD: "download",
-        
+        SAVEFILE: "Save file",
         ORDERS: 'My Orders',
         TRANSACTIONS: 'Payouts',
         
@@ -342,6 +342,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         NO: "否", 
         
         /*EDIT LINK*/
+        SAVEFILE: "保存文件",
         REACT: "打开链接",
         SELECT: "选择链接",
         LINK: "链接",
@@ -472,7 +473,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         },
         assetsPath: 'assets',
         globalPath: 'assets/global',
-        layoutPath: 'assets/layouts/layout',
+        layoutPath: 'assets/layouts/layout'
         //Base_URL: "http://52.4.14.123/ectd" //"http://192.168.88.187:8080/ectd"
     };
 
@@ -774,276 +775,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     })
     //category
 
-    //Post lists
-    /*.state('posts', {
-        url: "/postlist",
-        templateUrl: "views/post/postlist.html",
-        data: { pageTitle: 'Post Page Template' },
-        controller: "PostListController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/PostControllers/PostListController.js',
-                        'js/services/postApiService.js',
-                        'js/services/categoryApiService.js',
-
-                        'js/controllers/PostControllers/delete_post_modal.js',
-
-                        'js/scripts/modal/modal.js',
-                        'js/modalService.js',
-
-                        '../assets/global/plugins/datatables/datatables.min.css',
-                        '../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css',
-
-                        '../assets/global/plugins/datatables/datatables.all.min.js',
-
-                        '../assets/pages/scripts/table-datatables-managed.min.js',
-                        '../assets/global/scripts/datatable.min.js',
-
-                        '../assets/global/scripts/datatable.js',
-                        '../assets/global/plugins/jquery-bootpag/jquery.bootpag.min.js',
-                        '../assets/pages/scripts/angular-datatables.js'
-                    ]
-                });
-            }]
-        }
-    })*/
-
-    //Create post and edit post 
-    /*.state('editPost', {
-        url: "/postedit/",
-        templateUrl: "views/post/postedit.html",
-        params: { id: null },
-        data: { pageTitle: 'Post Page Template' },
-        controller: "PostEditController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/PostControllers/PostEditController.js',
-                        'js/services/postApiService.js',
-                        'js/services/categoryApiService.js',
-                        'js/services/mediaApiServices.js',
-                        'js/services/tagApiService.js',
-
-                        '../assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css',
-                        '../assets/global/plugins/select2/css/select2.min.css',
-                        '../assets/global/plugins/select2/css/select2-bootstrap.min.css',
-
-                        '../assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js',
-                        '../assets/global/plugins/select2/js/select2.full.min.js',
-                        '../assets/global/plugins/bootstrap-typeahead/bootstrap3-typeahead.min.js',
-
-                        '../assets/pages/scripts/components-bootstrap-select.min.js',
-                        '../assets/pages/scripts/components-select2.min.js',
-                        '../assets/global/plugins/typeahead/typeahead.css',
-
-                        '../assets/global/plugins/typeahead/typeahead.bundle.min.js',
 
 
 
-                        '../assets/pages/scripts/select2.js'
-
-                    ]
-                });
-            }]
-        }
-    })*/
-    
-/*
-    //Media page
-    .state('library', {
-        url: "/library",
-        templateUrl: "views/media/mediaLibrary.html",
-        data: { pageTitle: 'Media library Page Template' },
-        controller: "MediaLibraryController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/MediaControllers/MediaLibraryController.js',
-                        'js/services/mediaApiServices.js',
-                    ]
-                });
-            }]
-        }
-    })
-
-    .state('mediaUpload', {
-        url: "/mediaUpload",
-        templateUrl: "views/media/mediaUpload.html",
-        data: { pageTitle: 'Media add Page Template' },
-        controller: "MediaUploadController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/MediaControllers/MediaUploadController.js',
-                        'js/services/mediaApiServices.js',
-
-                        '../assets/global/plugins/dropzone/basic.min.css',
-                        '../assets/global/plugins/dropzone/dropzone.min.css',
-                        '../assets/global/plugins/dropzone/dropzone.min.js'
-
-                    ]
-                });
-            }]
-        }
-    })
-
-    //domain management
-
-
-    .state('domainlist', {
-        url: "/domainlist",
-        templateUrl: "views/domain/domainlist.html",
-        data: { pageTitle: 'Domain Page Template' },
-        controller: "DomainListController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/DomainControllers/DomainListController.js',
-                        'js/services/domainApiService.js',
-
-                        '../assets/global/plugins/datatables/datatables.min.css',
-                        '../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css',
-
-                        '../assets/global/plugins/datatables/datatables.all.min.js',
-
-                        '../assets/pages/scripts/table-datatables-managed.min.js',
-                        '../assets/global/scripts/datatable.min.js',
-
-                        '../assets/global/scripts/datatable.js',
-                        '../assets/global/plugins/jquery-bootpag/jquery.bootpag.min.js',
-                        '../assets/pages/scripts/angular-datatables.js'
-                    ]
-                });
-            }]
-        }
-    })
-
-    .state('domainedit', {
-        url: "/domainedit/:id",
-        templateUrl: "views/domain/domainedit.html",
-        data: { pageTitle: 'Domain Edit Page Template' },
-        controller: "DomainEditController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/DomainControllers/DomainEditController.js',
-                        'js/services/domainApiService.js'
-
-                    ]
-                });
-            }]
-        }
-    })
-
-    // Blank Page
-    .state('blank', {
-        url: "/blank",
-        templateUrl: "views/blank.html",
-        data: { pageTitle: 'Blank Page Template' },
-        controller: "BlankController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/controllers/BlankController.js'
-                    ]
-                });
-            }]
-        }
-    })
-
-    // AngularJS plugins
-    
-
-    // UI Select
-    .state('uiselect', {
-        url: "/ui_select.html",
-        templateUrl: "views/ui_select.html",
-        data: { pageTitle: 'AngularJS Ui Select' },
-        controller: "UISelectController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load([{
-                    name: 'ui.select',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                    files: [
-                        '../assets/global/plugins/angularjs/plugins/ui-select/select.min.css',
-                        '../assets/global/plugins/angularjs/plugins/ui-select/select.min.js'
-                    ]
-                }, {
-                    name: 'MetronicApp',
-                    files: [
-                        'js/controllers/UISelectController.js'
-                    ]
-                }]);
-            }]
-        }
-    })
-
-    // UI Bootstrap
-    .state('uibootstrap', {
-        url: "/ui_bootstrap.html",
-        templateUrl: "views/ui_bootstrap.html",
-        data: { pageTitle: 'AngularJS UI Bootstrap' },
-        controller: "GeneralPageController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load([{
-                    name: 'MetronicApp',
-                    files: [
-                        'js/controllers/GeneralPageController.js'
-                    ]
-                }]);
-            }]
-        }
-    })
-
-    // Tree View
-    .state('tree', {
-        url: "/tree",
-        templateUrl: "views/tree.html",
-        data: { pageTitle: 'jQuery Tree View' },
-        controller: "GeneralPageController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load([{
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                    files: [
-                        '../assets/global/plugins/jstree/dist/themes/default/style.min.css',
-
-                        '../assets/global/plugins/jstree/dist/jstree.min.js',
-                        '../assets/pages/scripts/ui-tree.min.js',
-                        'js/controllers/GeneralPageController.js'
-                    ]
-                }]);
-            }]
-        }
-    })*/
-/*
     // Form Tools
-    .state('formtools', {
+    /*.state('formtools', {
         url: "/form-tools",
         templateUrl: "views/form_tools.html",
         data: { pageTitle: 'Form Tools' },
@@ -1316,8 +1052,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
-    $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
+    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {

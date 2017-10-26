@@ -6,7 +6,7 @@
     function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader, FileApiService, ApplicationApiService){ //$http does not use
         
         var appData, appUid, toasts = {};
-        var userData = JSON.parse($cookies.get('globals'));  //console.log(userData.uid)
+        var userData = JSON.parse($cookies.get('globals'));  
         
         if($cookies.get("appData")) {
             appData = JSON.parse($cookies.get("appData"));                      console.log("appData: ", appData)
@@ -18,17 +18,15 @@
         
        
         var uploader = $scope.uploader = new FileUploader({
-            //url: "http://192.168.88.187:8080/ectd/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
             url: $rootScope.Base_URL + "/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
-            //url: 'php/upload.php?appUid='+appUid+'&uid=' + userData.uid + "&apptoken=" + userData.access_token,
             removeAfterUpload: true
         }); 
         // FILTERS
         uploader.filters.push({
             name: 'quequeLimit',
             message: "WARNING_FILES", //"Maximum 10 files",
-            fn: function(item  , options){
-                return this.queue.length < 8;
+            fn: function(item , options){
+                return this.queue.length < 10;
             }
         });                     //uploader.queueLimit = 10;
         uploader.filters.push({
@@ -84,11 +82,11 @@
             //toastr.warning(item.name+" loading failed", filter.message);
         };
         uploader.onAfterAddingFile = function(fileItem){                       // console.log(uploader.queue);
-            var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];
+            var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];        
             if(upFiles && upFiles.length>0){                                               
                 for(var i=0; i<upFiles.length; i++){
                     var fileName = fileItem.file.name; 
-                    if(upFiles[i].text===fileName ){  
+                    if(upFiles[i].text===fileName ){                            console.log(upFiles[i].text);
                        
                         var warning = ["WARNING_EXISTS", "REPLACE"];
                         $translate(warning).then(function(translations){                            //console.log(translations);
@@ -110,7 +108,7 @@
                 var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];
                 if(upFiles && upFiles.length>0){                    //console.log(upFiles)                           
                     for(var i=1; i<upFiles.length; i++){ 
-                        if(upFiles[i].text===res.filename ){                     
+                        if(upFiles[i].text===res.filename ){                                      
                             $translate("SUCCESS_REPLACED").then(function(translation){
                                 toastr.success(res.filename + translation, translation);                            //"You need to create an application to upload files!"
                             });
@@ -121,71 +119,32 @@
                 } 
                
                 var treeNode = {'id': res.uuid, 'parent': 'up1', 'text': res.name, 'type': 'file', 'fileId': res.fileId, "path": res.path};
-                upFiles.push(treeNode);             console.log("on complete", upFiles)                                                                 
+                upFiles.push(treeNode);                                         //console.log("on complete", upFiles)                                                                 
             }else console.log(res);
         };
         uploader.onCompleteAll = function(){
-            JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+            if($scope.noUpfile) JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+            else JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));
             $scope.showHint = false;
+            
         };
         /************getting uploaded files******************************************/
        
         var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
-        
-        /*function getAppFileList(userData, appUid){
-            FileApiService.GetAppFileList(userData, appUid).then(function(result){             //console.log("result", result)
-                if(result && result.length>0){ 
-                    //$rootScope.uploadFiles = result; 
-                    $scope.showHint = false;
-                    setFileNodes(result);                                  //console.log("upfiles");
-                    restoreUpfileNode($rootScope.subFiles);
-                    JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
-                    JsTree.setUpTreeBorder()
-                }else{
-                     $scope.showHint = true; 
-                    JsTree.initUploadTree();
-                    //$rootScope.uploadFiles = [];
-                }
-            });
-        }*/
-        
+
         ApplicationApiService.GetApplication(appUid, userData).then(function(result){                   console.log("application: ", result);
             $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
             
-            JsTree.initSubTree($rootScope.subFiles);
-            var upFiles = result.ectdFileList;                                  console.log("upfiles: ", upFiles);
+            JsTree.initTree($rootScope.subFiles);
+            var upFiles = result.ectdFileList;                                  //console.log("upfiles: ", upFiles);
             if(upFiles.length>0){
                 setFileNodes(upFiles);                                          
                 restoreUpfileNode($rootScope.subFiles);
                 JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
-                JsTree.setUpTreeBorder();
                 $scope.showHint = false;
-            }
-            /*if(!$rootScope.subFiles){                           //console.log("subFiles: ", result.nodeList);
-                JsTree.initSubTree(fileTree);
-            }else
-                JsTree.initSubTree(fileTree.concat($rootScope.subFiles));   */            
-            
+            }else $scope.noUpfile = true;
         });
         
-        
-        /*if(!$rootScope.uploadFiles ){ 
-            $rootScope.uploadFiles = [];
-            if(appUid) getAppFileList(userData, appUid);
-            //$rootScope.uploadFiles = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "uuid": "Uploaded files"}];
-        }else{
-            $scope.showHint = false;
-            //setFileNodes($rootScope.uploadFiles);                                  console.log("upfiles", $rootScope.uploadFiles);
-            restoreUpfileNode($rootScope.subFiles);
-            
-            JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
-            JsTree.setUpTreeBorder()
-        }                                                                       // console.log('upload files',  $rootScope.uploadFiles)
-        if(!$rootScope.subFiles){
-                JsTree.initSubTree(fileTree);
-            }else
-                JsTree.initSubTree(fileTree.concat($rootScope.subFiles));               //console.log(tags);
-        */
         $scope.removeItem = function(item){                                                                    
             if(toasts[item.file.name]) { console.log(toasts[item.file.name]);
                 toastr.clear(toasts[item.file.name]); 
@@ -261,11 +220,11 @@
             node.state =  { "hidden" : false };
         };
         $scope.duplicateNode = function(obj){
-            var newID = obj.id + "_" + Math.ceil(Math.random()*100000);
-            var treeNode = {'id': newID, 'parent': 'up1', 'text': obj.text, 'type': 'file', 'fileId': newID, "path": obj.original.path};
+            var newID =  Math.ceil(Math.random()*100000);                       console.log("new id", newID);
+            var treeNode = {'id': newID, 'parent': 'up1', 'text': obj.text, 'type': 'file', 'fileId': newID};
             $rootScope.uploadFiles.push(treeNode);
             JsTree.refreshUploadTree($rootScope.uploadFiles);
-        }
+        };
         function getUpfileNodeById(id){
             var upFiles = $rootScope.uploadFiles;
             if(upFiles.length>0){                                               

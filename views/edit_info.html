@@ -566,6 +566,48 @@ END PAGE HEADER-->
 </div>
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
+<!--<script src="dist/jsECTDtree.js"></script>-->
+<script src="dist/Filetree.js"></script>
+<script>
+    function Jstree(id, height){
+        this.tree = $(id); 
+        this.height = height;
+        this.ctrlId = "#AdinfoCtrl";
+    }
+    Jstree.prototype = {
+        constructor: Jstree,
+        setHandler: function(){
+            var _this = this;
+            this.tree.jstree(true).bind("select_node.jstree", function (e, data) { 
+                _this.tree.jstree(true).getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id); 
+            });
+        },
+        getSelectedNode: function(){
+            var node = this.tree.jstree(true).get_selected(true);
+            return node.length ? node[0] : false;
+        },
+        addNodeText:function(id, text){
+            //var node = $('#jsECTDtree').find("[id="+id+"]"); console.log(node); 
+            var node = this.tree.jstree(true).get_node(id); console.log(node);
+            this.tree.jstree(true).set_text(node, node.text+' '+text);
+        }, 
+        getNodeContent: function(selectedNode){           
+            if(selectedNode){
+                var node = selectedNode;
+                angular.element("#TagCtrl").scope().setTagTitle(node, true);
+            }else{
+                var node = this.getSelectedNode();                        //console.log(node);
+                if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
+            }
+        }
+    }
+    Jstree.prototype.__proto__ = Filetree.prototype;
+    var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
+
+    JsTree.setSelectNodeHandler(function(data){
+            JsTree.getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id); 
+        });
+</script>
 <script>
     function JstreeCtrl($rootScope, $scope, $state, $cookies, ApplicationApiService){ 
         var appData, appUid;
@@ -583,7 +625,7 @@ END PAGE HEADER-->
             var userData = JSON.parse($cookies.get('globals'));
             ApplicationApiService.GetApplication(appUid, userData).then(function(result){                   
                 $rootScope.subFiles = result.nodeList;
-                JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles); 
+                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles); 
             });
         }else{             
             JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);  
@@ -594,7 +636,7 @@ END PAGE HEADER-->
         };
         
      }
-    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate, GenInfoApiService){  console.log($rootScope.subFiles);
+    function AdinfoCtrl($rootScope, $scope, $state, $cookies, $translate, GenInfoApiService){  //console.log($rootScope.subFiles);
         
         var appData, appUid;
         if($cookies.get("appData")) {
@@ -699,25 +741,7 @@ END PAGE HEADER-->
                             $scope.uneditable = true;
                             updateContact(contact);
                 });
-                /*$.post('php/adinfo.php', {'appData': jsonData}, function(result){
-                    if(result) {
-                        toastr.success('Contact information Saved');
-                        
-                        var findContact = false;
-                        if(contacts.length>=1){
-                            for(var i=0; i<contacts.length; i++ ){                          //console.log(contacts[i].contactType);               
-                               if(contacts[i].contactType == $scope.contactData.contactType){ 
-                                   contacts[i]=angular.copy($scope.contactData);
-                                   findContact = true;
-                               }
-                            };
-                        }//else   contacts.push(angular.copy($scope.contactData)); 
-                        if(!findContact) contacts.push(angular.copy($scope.contactData));
-                        //$scope.uneditable = true;
-                        $cookies.putObject("contactData", contacts);
-                        //Portlet.write(result);                                  //console.log(contacts);
-                    }
-                });*/
+                
             }   
         };
         $scope.cancelContact = function(){                                          //console.log(contact);
@@ -752,7 +776,7 @@ END PAGE HEADER-->
                     if(result) {
                         toastr.success('Reference information Saved');
                         //$scope.uneditable = true;
-                        Portlet.write(result);
+                        //Portlet.write(result);
                     }
                 });
             }   
@@ -931,31 +955,10 @@ END PAGE HEADER-->
     }
     var Portlet = function(){
         return{
-            /*toggle: function(id, selectedNode){
-                if(id==="admin"){
-                   
-                }else if(id==="tag"){
-                    if(selectedNode){
-                        var node = selectedNode;
-                        angular.element("#TagCtrl").scope().setTagTitle(node, true);
-                    }else{
-                        var node = JsTree.getSelectedNode();                        //console.log(node);
-                       if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
-                    }
-                   //angular.element("#TagCtrl").scope().cancelTag();
-                    
-                }
-               
-            },*/
             write: function(data, tag){
                 if(tag) $('.tag-portlet').find('.portlet-body').html(data);
                 else $('.admin-portlet').find('.portlet-body').html(data);
             },
-            /*openFrame: function(filename){                                      //console.log(filename);
-                $('.study-frame').find('iframe').remove();
-                var frame = $('<iframe src='+filename+' width="100%" height="'+700+'"></iframe>');
-                $('.study-frame').append(frame);
-            },*/
             togglePanel: function(el, x){                                          //console.log($(el))
                 var accordin = $(el).parents(".form-panels");
                 accordin.find(".panel").each(function(index){                    
@@ -978,27 +981,22 @@ END PAGE HEADER-->
         };
     }();
 </script>
-<script src="dist/jsECTDtree.js"></script>
-<script>
+
+<!--<script>
     var JsTree = function (){
 
          function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);             //console.log(node); 
-            
-            /*if(node.type!="file") return; 
-            var filename =node.original.name;//"/pdf/pdfFiles/"+node.text;
-            if($(".study-frame").is(":visible")) Portlet.openFrame(filename);
-            else window.open("http://192.168.88.187:8080/ectd"+filename,'newWin', 'width=600, height=800, top=100, left='+$("div.admin-portlet").offset().left);
-            */
             if(node && node.type=="file"){ 
                 var uuid = node.id;                                   
                 var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
                 
-                var portlet = $("div.admin-portlet");
+                //var portlet = $("div.admin-portlet");
                 //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
                 var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-                openFrame(portlet, $(".jstree-portlet").height(), url);
+                //openFrame(portlet, $(".jstree-portlet").height(), url);
+                openIframe(url);
             }
         }
         return {
@@ -1023,10 +1021,16 @@ END PAGE HEADER-->
                         'items' : customMenu, select_node : true
                     }*/
                 }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
-                    $("#"+data.node.id).prop("title",data.node.original.text );
+                    $("#"+data.node.id).prop("title", data.node.text);
                 }).bind("loaded.jstree", function (event, data) {
                     $(this).css("height", $(window).height()-250);              //alert($(this).width());
-                    //$(this).css("width", $(this).width());
+                    var $tree = $(this);
+                    $($tree.jstree().get_json("#", {flat: true}))
+                        .each(function(index, value) {
+                              var node = $tree.jstree().get_node(this.id);
+                              if(node.type === "tag" && node.children.length) 
+                                  $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                        });
                     App.initSlimScroll("#jsECTDtree");
                 }).bind("select_node.jstree", function (e, data) { 
                     JsTree.getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id); 
@@ -1061,4 +1065,4 @@ END PAGE HEADER-->
         };   
     }();
     //App.initSlimScroll('.scroller');
-</script>
+</script>-->

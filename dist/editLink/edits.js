@@ -1,5 +1,31 @@
-var pdfFile={}, pdfCache={}, pdfEditor = $('.pdf-editor'), pdfFrame = $('.pdf-frame'), _EH = $(window).height()-200;   // Editor initial Height
-var JsTree = function (){
+    var pdfFile={}, pdfCache={}, pdfEditor = $('.pdf-editor'), pdfFrame = $('.pdf-frame'), _EH = $(window).height()-200;   // Editor initial Height
+
+    function Jstree(id, height){
+        this.tree = $(id); 
+        this.height = height;
+        this.ctrlId = "#JstreeCtrl";
+    }
+    Jstree.prototype = {
+        constructor: Jstree,
+        closeSidebar: function(){
+            if(!$('.page-sidebar-menu').hasClass('page-sidebar-menu-closed'))
+                $('.sidebar-toggler').click();
+        },
+        setSelectList: function(json){
+            for(var i in json){
+                var node = json[i];
+                if(node['type']==="file") {
+                    $('select.fileList').append('<option id="'+node['id']+'">'+node['text']+'</option>');
+                    //$('select.fileList').find('#'+node['parent']).append('<option id="'+node['id']+'">'+node['text']+'</option>');
+                }   
+                //else  $('select.fileList').append('<optgroup label="'+node['text']+'" id="'+node['id']+'"></optgroup>');
+            } 
+        }
+    }
+    Jstree.prototype.__proto__ = Filetree.prototype;
+    var JsTree = new Jstree("#jsECTDtree", _EH );
+
+/*var JsTree = function (){
         function dblclickEventHandler(event){
             var nodeId = $(event.target).closest("li")[0].id;
             var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node);
@@ -7,10 +33,9 @@ var JsTree = function (){
             if(node && node.type=="file"){ 
                 var uuid = node.id;                                   
                 //var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
-                var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
+                //var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
                 var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-                //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-                openFrame(portlet, _EH, url);
+                openIframe(url);
             }
         }
         return {
@@ -35,7 +60,14 @@ var JsTree = function (){
                 }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
                      $("#"+data.node.id).prop("title", data.node.text);
                 }).bind("loaded.jstree", function (event, data) {
-                    $('#jsECTDtree').css('height', _EH);
+                    var $tree = $(this);
+                    $tree.css('height', _EH);
+                    $($tree.jstree().get_json("#", {flat: true}))
+                        .each(function(index, value) {
+                              var node = $tree.jstree().get_node(this.id);
+                              if(node.type === "tag" && node.children.length) 
+                                  $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                        });
                     //$(this).jstree('open_all');
                     App.initSlimScroll("#jsECTDtree");
                 }).bind("dblclick.jstree", function(event){
@@ -63,17 +95,26 @@ var JsTree = function (){
                 } 
             }
         };   
-    }();
+    }();*/
     //////////////////////////////////////////////
     //        load pdf 2 html
     //////////////////////////////////////////////
-    
+    var PdfEditor = function(){
+        return{
+            
+        };
+    };
     $(document).on('dnd_move.vakata', function (e, data) {  
-            var t = $(data.event.target);                                          //console.log(data);
+            var t = $(data.event.target);                                       //console.log("move node:", data);
             if(t.parents('div.pdf-editor').length && t.parents('div.pdf-editor').attr('data-loaded')=='false')
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
             if(t.parents('div.pdf-frame').length && t.parents('div.pdf-frame').attr('data-loaded')=='false')
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
+            var nodeId = $(data.element);
+            var node = $('#jsECTDtree').jstree(true).get_selected(true);
+            if(node) $('#jsECTDtree').jstree(true).deselect_node(node);
+            $('#jsECTDtree').jstree("select_node", nodeId, true);               
+            
         }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data.element);
                 var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
                 var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
@@ -82,8 +123,8 @@ var JsTree = function (){
                     else if(t.parents('div.pdf-frame').length && pdfFrame.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfFrame);
                 }   
        });  
-
-    function openPanel(file, fileId, panel){                                   console.log("panel id", panel[0].id);                               
+    
+    function openPanel(file, fileId, panel){                                   //console.log("panel id", panel[0].id);                               
         panel.find('.drop-file-zone').hide();
         panel.attr('data-loaded', 'true');
         panel.find('.fileZone').show();
@@ -100,16 +141,15 @@ var JsTree = function (){
                 return;
             //}//else file=cacheOb.name+"?nc="+Math.random();                    // to prevent loading cache file
         }*/
-        
-        //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+
         var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
 
-        /*xhr.onprogress = function(e){        //console.log (e);
+        xhr.onprogress = function(e){        //console.log (e);
             if (e.lengthComputable) {}
-        };*/
+        };
         xhr.onload = function() {
             if (this.status === 200) {
                 var blob = new Blob([this.response], {type: 'application/pdf'}),
@@ -121,7 +161,7 @@ var JsTree = function (){
                 };
                 loadingTask.promise.then(function(pdf){
                     var pdfArr = pdfFile[panel[0].id] = pdfFile[panel[0].id]||{};
-                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel;                      console.log(pdfFile[panel[0].id]);
+                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel, pdfArr.saved = true;                     console.log(pdfFile[panel[0].id]);
                     //pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
                         pdfCache[fileId] = {'name': file, 'pdf': pdf};
                         panel.find('div.load-process').fadeOut(1000);  
@@ -154,7 +194,7 @@ var JsTree = function (){
                 if(result && result.state.length>0){
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
                     pdfFile['pdf-editor'] = pdfFile['pdf-editor'] || {};
-                    pdfFile['pdf-editor'].edits = JSON.parse(lastState.action);   console.log("edits: ", pdfFile['pdf-editor'].edits);            
+                    pdfFile['pdf-editor'].edits = JSON.parse(lastState.action);                         //console.log("edits: ", pdfFile['pdf-editor'].edits);            
                 }
             });
     }
@@ -180,22 +220,21 @@ var JsTree = function (){
             }else createPageList(pdfEditor.find('select.pageList'), pdf.numPages);
             
             render(pdf, fileZone, 1);
-            var edits = pdfFile['pdf-editor'].edits;                        console.log("get edits: ", edits);   
-            if(fileZone.parents("div.pdf-editor").length && edits){
-                replaceEdits(edits, 1, fileZone.find(".page-wrap"));
-            }
             //pdf.getMetadata().then(function(metadata){console.log('metadata',metadata);})
             setTab(panel, file);
         
             fileZone.css({'border': '1px solid #999', 'height': _EH}).scroll(function(e){
                 hideEditMenu();         
             });
-            
+            var edits = pdfFile['pdf-editor'].edits;                            //console.log("get edits: ", edits);   
+            if(fileZone.parents("div.pdf-editor").length && edits){
+                replaceEdits(edits, 1, fileZone.find(".page-wrap"));
+            }
     }
-    function closeFile(div, save){
+    function closeFile(div){
         var panel;
         if($(div).parents('div.pdf-editor').length){
-            if(!save && hasValidOP(operationCount)){
+            if(!pdfFile['pdf-editor'].saved && hasValidOP(operationCount)){
                 var response = confirm("There are some valid edits. Are you sure that you want to quit editting!");
                 if(response==false) return; 
             }
@@ -237,8 +276,8 @@ var JsTree = function (){
                 if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
             }
             var ob = pdfFile['pdf-editor'];                         //console.log('ob: ', ob);
-            if(ob && ob.dataLoaded){ 
-                scaleOperations(ob, pdfEditor.find('.fileZone'));
+            if(ob){ 
+                scaleOperations( pdfEditor.find('.fileZone'));
             }
         }
     });
@@ -249,7 +288,7 @@ var JsTree = function (){
             $('.splitter').hide();
         }
     }
-    function scaleOperations(ob, editZone){
+    function scaleOperations(editZone){
         if(hasValidOP(operationCount)){
             //var scale = (editZone.width()-window.browserScrollbarWidth)/ob.pdfWidth;    //console.log('scale2',scale);                     
             var opList = getOpList();                                     
@@ -257,7 +296,7 @@ var JsTree = function (){
                 if(opList[op].length>0){                                   
                     var operations = opList[op];                                //console.log(operations);
                     for(var i=0; i<operations.length; i++) {
-                        var operation = operations[i];                            console.log(operation);
+                        var operation = operations[i];                            //console.log(operation);
                         var scale = (editZone.width()-window.browserScrollbarWidth)/operation.pw;
                         if(operation.boundingBox)                  // link edit 
                             $('#'+operation.id).css({
@@ -333,15 +372,16 @@ var JsTree = function (){
     }
     function showEdits(op, pageNum){
         if(op===0) return false;
-        hideEditMenu();
+        
         for(var i=op; i>=1; i--){
             var target = pdfEditor.find('.operation_'+i);
             if(target.length && target.is(":visible")) {target.css("z-index", -1);}
             var num = target.attr("data-page-num"); 
             if(num && num==pageNum) target.css("z-index", 10);
         }
+        hideEditMenu();
     }
-    function replaceEdits(edits, pageNum, pageWrap){                            console.log("page no: ", pageNum)
+    function replaceEdits(edits, pageNum, pageWrap){                            //console.log("page no: ", pageNum)
         var linkEdits = edits["linkOperations"];                                
         var textEdits = edits["textOperations"];
         var editZone = pdfEditor.find('.fileZone');                             
@@ -379,12 +419,14 @@ var JsTree = function (){
                         id = textEdits[i].id, 
                         text = textEdits[i].text;
                         page = textEdits[i].page;
+                style.fontSize = style.fontSize * scale;
                 var edit = createTextEdit(pageWrap, t, l, text, {id: id, page: page, style: style});
                 if(pageNum !== parseInt(textEdits[i].page)){
                     edit.css("z-index", -1);
                 }
             }
         }
+        hideEditMenu();
     }
    
     function scaleFileZone(canvas, fileZone){
@@ -542,16 +584,18 @@ var JsTree = function (){
     function X(t, e) {
         return t.hasClass(e) || t.parents("." + e).length > 0;
     }
-    function createTextEdit(pageWrap, top, left, text, obj){
+    function createTextEdit(pageWrap, top, left, text, obj){                    //console.log("page no: ", pageWrap.attr("data-page-num"));
         var f = $("<div></div>").css({
-                "data-page-num": pageWrap.attr("data-page-num"),
                 "position": "absolute",
                 "z-index": "10",
                 "top": top,               //evt.pageY - u.offset().top - window.lastTextEditSettings.size,
                 "left": left                   //evt.pageX - u.offset().left - 7
-            });                                                     
+            });
+        if(obj&&obj.page)  f.attr({ "data-page-num": obj.page});  
+        else f.attr({ "data-page-num": pageWrap.attr("data-page-num")});                                                     
         pageWrap.append(f),                                                   //console.log('textinput ', f.offset().left);
             f.html(text).inlineEditor(obj);
+        pdfFile["pdf-editor"].saved = false;
         return f; 
     }
     jQuery.fn.inlineEditor = function(obj) {                //
@@ -593,9 +637,9 @@ var JsTree = function (){
                 u = parseFloat(r.attr("data-scale")),
                 weight = void 0,
                 size = obj? obj.style.fontSize : 0,
-                color =  0,
+                color = obj? obj.style.color : 0,
                 font = 0,
-                d = void 0;
+                d = void 0;                                                     console.log("color: ", color);
             (size = size || u * window.lastTextEditSettings.size + "px",
                     font = font || window.lastTextEditSettings.font,
                     color = color || window.lastTextEditSettings.color,
@@ -844,9 +888,9 @@ var JsTree = function (){
                 
             }).draggable().resizable({
                 handles: "all"
-            }).addClass("active").addClass("shape-rectangle"),
+            }).addClass("active").addClass("shape-rectangle");
                     
-            setTimeout(function() { openLinkEdit(target, select);  }, 100),    
+        if(!link) setTimeout(function() { openLinkEdit(target, select);  }, 100);    
 
             target.click(function(t) {
                 var e = $(this);
@@ -877,6 +921,7 @@ var JsTree = function (){
                 target.attr({"data-uri": pdfFile['pdf-frame'].name, "data-target-fid":pdfFile['pdf-frame'].fid });
            
             pageWrap.append(target);                                            //console.log("append edit: ", pageWrap);
+            pdfFile["pdf-editor"].saved = false;
             return target;
     }
     function openLinkEdit(t, select) {                                                                           //  console.log("f1");
@@ -933,7 +978,7 @@ var JsTree = function (){
     ///////////////////////////////////////////////////////////////////////////
     //var opList = {};
     var operations = ["textOperations", "linkOperations"];
-    $("#check-pdf-btn").click(function(t) {
+    $("#save-pdf-btn").click(function(t) {
         if(!pdfFile['pdf-editor']) {alert('file not opened!!!'); return;}       //console.log(hasValidOP(operationCount));
         if(!hasValidOP(operationCount)) {alert('file not edited!!!'); return;}
         
@@ -964,6 +1009,7 @@ var JsTree = function (){
         var postData = {"action": JSON.stringify(opl), "state": "0"};
         angular.element("#JstreeCtrl").scope().saveEdits(ob.fid, postData).then(function(result){ console.log(result);
             if(result && result.id) toastr.success("edits saved");
+            ob.saved = true; 
         });
     }
     /*$("#save-pdf-btn").click(function(t) {
@@ -1091,8 +1137,8 @@ var JsTree = function (){
    
     
     $("#download-btn").click(function(){                                        console.log("downloading .....", appUid);
-        //var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-        var url = Base_URL + "/a/application/file/download/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        //var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
