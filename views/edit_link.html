@@ -3,8 +3,8 @@
             <div class="row">
     <!--<div class="navbar-header"> <a class="navbar-brand" href="#">Tools</a></div>-->
                 <ul class="nav navbar-nav navbar-tools tools-menu edit-menu" id="tools-menu">
-                    <!--<li><a href="#"><i class="fa fa-arrows-alt"></i> <div>Full Screen</div></a></li>-->
-                    <li><a href="#" title="Open Link" data-tool="react"><i class="fa fa-openid"></i><div translate>REACT</div></a></li>
+                    <!--<li><a href="#"><i class="fa fa-arrows-alt"></i> <div>Full Screen</div></a></li>
+                    <li><a href="#" title="Open Link" data-tool="react"><i class="fa fa-openid"></i><div translate>REACT</div></a></li>-->
                     <li><a href="#" title="Select Text to Link" data-tool="select"><i class="fa fa-square-o"></i><div translate>SELECT</div></a></li>
                     <li><a href="#" title="Add Link" data-tool="link"><i class="fa fa-link" aria-hidden="true"></i><div translate>LINK</div></a></li>
                     <li><a href="#" data-tool="text" title="Add new text"><i class="fa fa-file-text-o " aria-hidden="true"></i><div translate>NOTE</div></a></li>
@@ -258,12 +258,12 @@
 <!--<script src="dist/jsECTDtree.js"></script>-->
 <script> 
     //"use strict";
-    var appUid, userData;  
+    
     function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, FileApiService){
         
-        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appUid, userData;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appUid = $rootScope.appData.appUid;                                 
             userData = $rootScope.userData;
         }
         userData = JSON.parse($cookies.get('globals'));
@@ -292,6 +292,9 @@
         $scope.getUserData = function(){
             return userData;
         };
+        $scope.getAppUid = function(){
+            return appUid;
+        }
      }
 </script>
 <script src="dist/pdfjs/pdf.min.js"></script>

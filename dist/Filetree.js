@@ -35,8 +35,9 @@ Filetree.prototype ={
             }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
                  $("#"+data.node.id).prop("title", data.node.text);
             }).bind("loaded.jstree", function (event, data) {
-                $(this).css("height", _this.height);                             
-                var $tree = $(this);                                            //console.log($tree);
+                $(this).css("height", _this.height);       
+                _this.loadedHandler();
+                /*var $tree = $(this);                                            //console.log($tree);
                 $($tree.jstree().get_json("#", {flat: true}))
                     .each(function(index, value) {
                           var node = $tree.jstree().get_node(this.id);
@@ -50,7 +51,7 @@ Filetree.prototype ={
                 $("input[name='query']").keyup(function(){
                         var searchString = $(this).val();
                         $('#jsECTDtree').jstree('search', searchString);                //console.log($(this).val());
-                });
+                });*/
             }).bind("select_node.jstree", function (e, data) { 
                 if(_this.selectNodeHandler) _this.selectNodeHandler(data);
             }).bind("dblclick.jstree", function(event){
@@ -62,6 +63,23 @@ Filetree.prototype ={
             }).on('move_node.jstree', function (e, data) {
                 if(_this.moveNodeHandler) _this.moveNodeHandler(data);
             });
+    },
+    loadedHandler: function(){
+        var _this = this; 
+        $(_this.tree.jstree().get_json("#", {flat: true}))
+            .each(function(index, value) {
+                  var node = _this.tree.jstree().get_node(this.id);
+                  if(node.type === "tag" && node.children.length) 
+                      _this.tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                  if(node.type ==="file") _this.paintParents(node.parents);
+            });
+        App.initSlimScroll(_this.tree);
+        var search = $("input[name='query']").val();
+        if(search.length) _this.tree.jstree('search', search);
+        $("input[name='query']").keyup(function(){
+                var searchString = $(this).val();
+                _this.tree.jstree('search', searchString);                //console.log($(this).val());
+        });
     },
     setSelectNodeHandler: function(selectNodeHandler){
         this.selectNodeHandler = selectNodeHandler;
@@ -98,7 +116,7 @@ Filetree.prototype ={
     },
     dblclickEventHandler: function(event){
         var nodeId = $(event.target).closest("li")[0].id;
-        var node = this.tree.jstree(true).get_node(nodeId);             console.log("node", node); 
+        var node = this.tree.jstree(true).get_node(nodeId);             //console.log("node", node); 
         if(node && node.type=="file"){ 
             var uuid = node.id;                                   
             var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );
@@ -110,11 +128,14 @@ Filetree.prototype ={
     openIframe: function(url){
         var w = $(window).width(), h = $(window).height(), gap = 100;
         var layer = $("<div>").attr("id", "layer")
-                .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 1001 });
+                .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 1001 })
+                .appendTo($("body"));
+        var progressbar = $('<div class="load-process">Loading...</div>')
+            .css({"position": "absolute","top":gap-2, "left":w/4 ,"width": w/2, "height": 2, "background": "#ff0000"}).appendTo(layer);
         var iframe = $("<iframe>").attr("id", "frame")
-                .css({"position": "absolute","top":gap,"left":w/4 ,"width": w/2, "height": h-gap*2, "border": "solid 1px #999"});        
+                .css({"position": "absolute","top":gap,"left":w/4 ,"width": w/2, "height": h-gap*2, "border": "solid 1px #999"}).appendTo(layer);        
 
-        $("body").append(layer);
+        //$("body").append(layer);
         $("#layer").click(function(){
             $(this).remove();
         });
@@ -125,14 +146,15 @@ Filetree.prototype ={
         xhr.onprogress = function(e){        //console.log (e);
             if (e.lengthComputable) {
                 var progress = e.loaded/e.total; 
-                                                                                //console.log(progress); 
+                progressbar.show().css("width", progress +"%");                                                              //console.log(progress); 
             }
         };
         xhr.onload = function(e) {
             if (this.status === 200) {
                 var blob = new Blob([this.response], {type: 'application/pdf'}),
                 file = URL.createObjectURL(blob);                               //console.log(file);
-                layer.append(iframe);
+                progressbar.hide();
+                //layer.append(iframe);
                 $("#frame").attr("src", file);
             }
         };
