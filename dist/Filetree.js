@@ -42,6 +42,7 @@ Filetree.prototype ={
                           var node = $tree.jstree().get_node(this.id);
                           if(node.type === "tag" && node.children.length) 
                               $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                          if(node.type ==="file") _this.paintParents(node.parents);
                     });
                 App.initSlimScroll(_this.tree);
                 var search = $("input[name='query']").val();
@@ -88,9 +89,16 @@ Filetree.prototype ={
         else
             this.tree.jstree("open_all");
     },
+    paintParents: function(parents){                                              //console.log(parents);
+        for(var i =0; i<parents.length-2; i++){
+            var parent = $('#jsECTDtree').jstree(true).get_node(parents[i]);    
+            if(parent.type!=="tag" && parent.text.indexOf("<b>")<0) $('#jsECTDtree').jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
+            //$("#"+parent.id+"_anchor").addClass("hasFile"); //console.log($("#"+parent.id+"_anchor"))
+        }
+    },
     dblclickEventHandler: function(event){
         var nodeId = $(event.target).closest("li")[0].id;
-        var node = this.tree.jstree(true).get_node(nodeId);             //console.log(node); 
+        var node = this.tree.jstree(true).get_node(nodeId);             console.log("node", node); 
         if(node && node.type=="file"){ 
             var uuid = node.id;                                   
             var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );

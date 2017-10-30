@@ -3,18 +3,22 @@
         
     }]);*/
 
-function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiService, TemplateApiService, DTOptionsBuilder){
+function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, DTOptionsBuilder){
+        var appData; 
+        if(CookiesApiService.GetCookies())
+            appData = $rootScope.appData;
+        else appData = {"version": "0000"};                                     console.log('app data:', appData);
+        //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
+        //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
         
-        var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          //console.log('app data:', appData.version);
-        var userData = JSON.parse($cookies.get('globals')); 
         $scope.submissions = [{}];                    // to make sure data-table has json data
         if($rootScope.applications)                                             
             $scope.submissions = $rootScope.applications;     
         else 
-            ApplicationApiService.GetClientAppList(userData, 1, 50).then(function(data){                          //console.log("api service", data.list); 
+            ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){                          //console.log("api service", data.list); 
             if(!data.list) {$rootScope.applications=[]; return;} 
-            $rootScope.applications = data.list;                                //console.log($rootScope.applications)
-            if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
+            $scope.submissions = $rootScope.applications = data.list;                                //console.log($rootScope.applications)
+            //if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
         });                           
                                                                                 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
@@ -42,34 +46,34 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiServ
         
         $scope.createApp = function(){                                          //console.log($scope.subForm.$valid);                               
             if($scope.subForm.$valid){
-                var tid =  $scope.template.id || JSON.parse($scope.template).id
+                var tid =  $scope.template.id || JSON.parse($scope.template).id;
                 $scope.formData.template = {'id': tid};                         //console.log("template", tid);
-                var jsonData = $scope.formData;                                 console.log("appdata: ", jsonData);
-                var userData = JSON.parse($cookies.get('globals'));
+                var jsonData = $scope.formData;                                 //console.log("appdata: ", jsonData);
+                
                 if(appData.id){
                     // for update to work, i have to get rid of unnecessary field
                     jsonData ={"id": jsonData.id, "appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description, 
                         "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
                     
-                    ApplicationApiService.ApplicationUpdate(userData, jsonData).then(function(result){                    console.log(result);
+                    ApplicationApiService.ApplicationUpdate($rootScope.userData, jsonData).then(function(result){                    console.log(result);
                         if(result.id){
-                            var sub = ApplicationApiService.ExtractApp(result);
+                            $rootScope.appData = ApplicationApiService.ExtractApp(result);
                             toastr.success("Create Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', sub, { expires: cookieExp});          
-                            $state.go("fileupload").then(function() {}); 
+                            $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
+                            $state.go("editinfo").then(function() {}); 
                         }
                     });
                 }else{
-                    ApplicationApiService.ApplicationCreate(userData, jsonData).then(function(result){                      console.log(result);      // res.success ==false
+                    ApplicationApiService.ApplicationCreate($rootScope.userData, jsonData).then(function(result){                      console.log(result);      // res.success ==false
                         if(result.id){
-                            var sub = ApplicationApiService.ExtractApp(result);
+                            $rootScope.appData = ApplicationApiService.ExtractApp(result);
                             toastr.success("Save Application id: " + result.id);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', sub, { expires: cookieExp});          
-                            $state.go("fileupload").then(function() {}); 
+                            $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
+                            $state.go("editinfo").then(function() {}); 
                         } 
                     })
                 }
@@ -85,6 +89,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiServ
          
         $scope.exitApp = function(){
             $cookies.remove("appData");
+            $rootScope.appData = false;
             appData = {};
             $scope.formData= {"version": "0000"};
             $scope.submitLabel = "CREATEAPP"; 
@@ -105,7 +110,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiServ
             toastr.success('Application ID: '+submission.id);
             //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
             if(submission){
-                appData = ApplicationApiService.ExtractApp(submission);
+                $rootScope.appData = appData = ApplicationApiService.ExtractApp(submission);
                 //$rootScope.uploadFiles = submission.ectdFileList;               console.log($rootScope.uploadFiles);
                 $scope.submitLabel = "EDITAPP";
                 var cookieExp = new Date();
@@ -115,12 +120,11 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, ApplicationApiServ
                 $scope.template = submission.template;                          // console.log($scope.template)   
                 $scope.uneditable = true;
                 if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
-                //$state.go("fileupload").then(function() {});
             }        
         };
        
         function getTemplateList(){
-            TemplateApiService.GetTemplateList(userData).then(function(result){             //console.log(result)
+            TemplateApiService.GetTemplateList($rootScope.userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
             });
         }

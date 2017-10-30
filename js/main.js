@@ -27,7 +27,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         DASHBOARD: "DashBoard",
         MYSUB: "My Submission",
         UPLOAD: "File Upload",
-        EDITINFO: "Edit Info",
+        EDITINFO: "SUB Info",  //edit info
         EDITLINK: "Edit Link",
         BALANCE: "Balance",
         SETTINGS: "Settings",
@@ -52,7 +52,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         /* SUBMISSION */
         PLANNEDSUB: "planned submission",
         DOCUMENT: "Document",
-        APPFOLDER: "Application Folder", 
+        APPFOLDER: "Application Number",    //application folder
+        SUBID: "Submission ID",
         VERSION: "Version", 
         SEQUENCE: "Sequence", 
         COMPILATION: "Compilation in Progress", 
@@ -89,6 +90,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         REMOVEALL: "Remove file",
         REPLACE: "Replace",
         SAVE: 'Save Changes',
+         
         WARNING_NOAPP: "You need to create an application to...",
         WARNING_FILES: "Maximum 10 files", 
         WARNING_SIZE: "Maximum file size 6mb",
@@ -111,12 +113,13 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         D_CONTENT: "Are you sure to delete the item ?",
         
         /* EDIT INFO */
+        EDITTAG: "Edit Tag",
         ADMINISTRATION: "Administration Information",
         APPLICATION: "Application",
         COMPANYNAME: "Company Name",
         NUMBER: "Number",
         TYPE: "Type",
-        SUBTYPE: "-sub-type",
+        SUBTYPE: "sub-type",
         APP_CONTACT:"Application Contact",
         CONT_TYPE: "Contact Type",
         CONT_NAME:"Contact Name",
@@ -266,7 +269,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
        /* SUBMISSION */
         PLANNEDSUB: "计划的申请档",
         DOCUMENT: "文件",
-        APPFOLDER: "文件夹", 
+        APPFOLDER: "申请档号码", 
+        SUBID: "序列号",
         VERSION: "版本", 
         SEQUENCE: "系列", 
         COMPILATION: "收编进行中", 
@@ -302,6 +306,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         REMOVEALL: "删除文件",
         REPLACE: "覆盖原文件",
         SAVE:'保存信息',
+        
         WARNING_NOAPP: "请先建立申请表",
         WARNING_FILES: "不超过10个文件", 
         WARNING_SIZE: "文件不大于 6mb",
@@ -324,6 +329,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         D_CONTENT: "确定要删除这个文件？",
         
         /* EDIT INFO */
+        EDITTAG: "标签编辑",
         ADMINISTRATION: "管理者信息",
         APPLICATION: "申请",
         COMPANYNAME: "公司名字",
@@ -642,7 +648,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     files: [
                         'js/controllers/DashboardController.js',
                         'js/services/applicationApiService.js'
-                        
                     ]
                 });
             }]
@@ -661,6 +666,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'assets/global/plugins/datatables/datatables.all.min.js',
                         'assets/pages/scripts/angular-datatables.js',
                         'css/edit.css',
+                        'js/services/cookiesApiService.js',
                         'js/services/templateApiService.js',
                         'js/services/applicationApiService.js'
                     ]
@@ -679,6 +685,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
                         'dist/location.js',
+                        'js/services/cookiesApiService.js',
                         'js/services/fileApiService.js',
                         'dist/openFrame.js',
                         'css/edit.css',
@@ -704,6 +711,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js", 
+                        'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
                         'js/services/genInfoApiService.js',
                         'js/services/tagApiService.js'
@@ -723,6 +731,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
                         'js/services/fileApiService.js'
                     ]   
@@ -755,6 +764,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'js/services/cookiesApiService.js',
                         'js/controllers/SystemController/UserMgtController.js',
                         'js/systemApiService.js',
                         'js/scripts/modal/modal.js',
@@ -1052,8 +1062,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
-    $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
+    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {

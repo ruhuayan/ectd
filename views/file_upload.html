@@ -74,11 +74,10 @@ END PAGE HEADER-->
                 </div>
                 <div class="actions">
                     <div class="btn-group">
-                        <a class="btn btn-circle btn-default btn-sm" href="#" data-toggle="dropdown">
-                            <i class="fa fa-cogs"></i> Other Panels
-                            <i class="fa fa-angle-down"></i>
+                        <a class="btn btn-circle btn-default btn-sm" href="javascript:toggleUpload();">
+                            <i class="fa fa-random"></i> Upload Queue
                         </a>
-                        <ul class="dropdown-menu pull-right">
+                        <!--<ul class="dropdown-menu pull-right">
                             <li>
                                 <a>
                                     <i class="fa fa-info"></i> Admin Info </a>
@@ -93,14 +92,15 @@ END PAGE HEADER-->
                             </li>
                             <li class="divider"> </li>
                             
-                        </ul>
+                        </ul>-->
                     </div>
                     <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""> </a>
                 </div>
             </div>
             
             <div class="portlet-body row">
-                <div class="col-sm-4"> 
+                
+                <div class="uploadTree col-sm-4"> 
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
                            
@@ -119,58 +119,58 @@ END PAGE HEADER-->
                             <input class="btn btn-success btn-s" type="file" nv-file-select="" uploader="uploader" accept="application/pdf" multiple />
                         </div>
                     </div>
-                <div class="table-scrollable table-scrollable-borderless">
-                    <table class="table table-hover table-light">
-                        <thead>
-                            <tr class="uppercase">
-                                <th width="50%" translate>NAME</th>
-                                <th ng-show="uploader.isHTML5" translate>SIZE</th>
-                                <th ng-show="uploader.isHTML5" translate>PROGRESS</th>
-                                <th translate>STATUS</th>
-                                <th translate>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in uploader.queue">
-                                <td>
-                                    <strong>{{ item.file.name }}</strong>
-                                </td>
-                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-                                <td ng-show="uploader.isHTML5">
-                                    <div class="progress progress-sm" style="margin-bottom: 0;">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <span ng-show="item.isSuccess" class="text-success">
-                                        <i class="glyphicon glyphicon-ok"></i>
-                                    </span>
-                                    <span ng-show="item.isCancel" class="text-info">
-                                        <i class="glyphicon glyphicon-ban-circle"></i>
-                                    </span>
-                                    <span ng-show="item.isError" class="text-danger">
-                                        <i class="glyphicon glyphicon-remove"></i>
-                                    </span>
-                                </td>
-                                <td nowrap>
-                                    <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                        <span class="glyphicon glyphicon-upload"></span> Upload </button>-->
-                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCEL</span></button>
-                                        <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(item)">
-                                        <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVE</span> </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="table-scrollable table-scrollable-borderless">
+                        <table class="table table-hover table-light">
+                            <thead>
+                                <tr class="uppercase">
+                                    <th width="50%" translate>NAME</th>
+                                    <th ng-show="uploader.isHTML5" translate>SIZE</th>
+                                    <th ng-show="uploader.isHTML5" translate>PROGRESS</th>
+                                    <!--<th translate>STATUS</th>-->
+                                    <th translate>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td>
+                                        <strong>{{ item.file.name }}</strong>
+                                    </td>
+                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                    <td ng-show="uploader.isHTML5">
+                                        <div class="progress progress-sm" style="margin-bottom: 0;">
+                                            <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                        </div>
+                                    </td>
+                                    <!--<td class="text-center">
+                                        <span ng-show="item.isSuccess" class="text-success">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </span>
+                                        <span ng-show="item.isCancel" class="text-info">
+                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                        </span>
+                                        <span ng-show="item.isError" class="text-danger">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </span>
+                                    </td>-->
+                                    <td nowrap>
+                                        <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                            <span class="glyphicon glyphicon-upload"></span> Upload </button>-->
+                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                            <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCEL</span></button>
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(item)">
+                                            <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVE</span> </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 <div>
                     <p>Queue progress:  {{ uploader.queue.length }} </p>
                     <div class="progress progress-sm" style="">
                         <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length||!appCreated">
+                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
                     <span class="glyphicon glyphicon-upload"></span><span class="title" translate>UPLOADALL</span> </button>
                 <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
                     <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCELALL</span></button>
@@ -205,3 +205,16 @@ END PAGE HEADER-->
 <script src="js/controllers/FileUploadCtrl.js"></script>
 
 <script src="dist/UpFiletree.js"></script>
+<script>
+   
+    function toggleUpload(){
+                var uploadTree = $(".uploadTree");
+                if(uploadTree.hasClass("col-sm-4")){
+                    uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
+                    $(".upload-queue").removeClass("col-sm-8").addClass("col-sm-4").fadeOut(300,function(){});
+                }else {
+                    uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
+                    $(".upload-queue").removeClass("col-sm-4").addClass("col-sm-8").fadeIn(300, function(){});
+                }
+            }
+</script>

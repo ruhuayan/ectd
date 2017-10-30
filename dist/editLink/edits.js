@@ -99,23 +99,21 @@
     //////////////////////////////////////////////
     //        load pdf 2 html
     //////////////////////////////////////////////
-    var PdfEditor = function(){
-        return{
-            
-        };
-    };
+   
     $(document).on('dnd_move.vakata', function (e, data) {  
-            var t = $(data.event.target);                                       //console.log("move node:", data);
-            if(t.parents('div.pdf-editor').length && t.parents('div.pdf-editor').attr('data-loaded')=='false')
+            var t = $(data.event.target);                                      
+            var node =  $('#jsECTDtree').jstree(true).get_node(data.data.nodes[0]);                      //console.log("move node:", node);
+            if(node.type!=="file") return;                                                               //does not work
+            if(t.parents('div.pdf-editor').length && t.parents('div.pdf-editor').attr('data-loaded')=='false' )
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
             if(t.parents('div.pdf-frame').length && t.parents('div.pdf-frame').attr('data-loaded')=='false')
                 data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
             var nodeId = $(data.element);
-            var node = $('#jsECTDtree').jstree(true).get_selected(true);
-            if(node) $('#jsECTDtree').jstree(true).deselect_node(node);
+            var preNode = $('#jsECTDtree').jstree(true).get_selected(true);
+            if(preNode) $('#jsECTDtree').jstree(true).deselect_node(preNode);
             $('#jsECTDtree').jstree("select_node", nodeId, true);               
             
-        }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data.element);
+        }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data);
                 var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
                 var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
                 if(fileName.indexOf('.pdf')>0) {                                                
@@ -195,7 +193,10 @@
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
                     pdfFile['pdf-editor'] = pdfFile['pdf-editor'] || {};
                     pdfFile['pdf-editor'].edits = JSON.parse(lastState.action);                         //console.log("edits: ", pdfFile['pdf-editor'].edits);            
-                }
+                }else {
+                    pdfFile['pdf-editor'] = pdfFile['pdf-editor'] || {};
+                    pdfFile['pdf-editor'].edits = false;
+                }                                                                                       
             });
     }
     function setTab(panel, fileName){
@@ -209,27 +210,27 @@
         if(pageList.parents(".pageControl").length) pageList.parents(".pageControl").show();
     }
     function pdf2html(file, pdf, panel){
-            $('.splitter').fadeIn(300);
-            var fileZone = panel.find('.fileZone');
-            //for (var i = 1; i <= pdf.numPages; i++) 
-            genHtml(1, fileZone);
-            if(panel[0].id=='pdf-frame'){                      // add page number to select pagelist
-                //createPageList($('.link-editable-menu select.pageList'), pdf);
-                $('.link-editable-menu select.pageList').attr("data-numPages", pdf.numPages);
-                createPageList(pdfFrame.find('select.pageList'), pdf.numPages);
-            }else createPageList(pdfEditor.find('select.pageList'), pdf.numPages);
-            
-            render(pdf, fileZone, 1);
-            //pdf.getMetadata().then(function(metadata){console.log('metadata',metadata);})
-            setTab(panel, file);
-        
-            fileZone.css({'border': '1px solid #999', 'height': _EH}).scroll(function(e){
-                hideEditMenu();         
-            });
-            var edits = pdfFile['pdf-editor'].edits;                            //console.log("get edits: ", edits);   
-            if(fileZone.parents("div.pdf-editor").length && edits){
+        $('.splitter').fadeIn(300);
+        var fileZone = panel.find('.fileZone');
+        //for (var i = 1; i <= pdf.numPages; i++) 
+        genHtml(1, fileZone);
+         render(pdf, fileZone, 1);
+        //pdf.getMetadata().then(function(metadata){console.log('metadata',metadata);})
+        setTab(panel, file);
+        fileZone.css({'border': '1px solid #999', 'height': _EH}).scroll(function(e){
+            hideEditMenu();         
+        });
+        if(panel[0].id=='pdf-frame'){                      // add page number to select pagelist
+            //createPageList($('.link-editable-menu select.pageList'), pdf);
+            $('.link-editable-menu select.pageList').attr("data-numPages", pdf.numPages);
+            createPageList(pdfFrame.find('select.pageList'), pdf.numPages);
+        }else {
+            createPageList(pdfEditor.find('select.pageList'), pdf.numPages);
+            var edits = pdfFile['pdf-editor'].edits;                            
+            if(edits){                                          console.log("get edits: ", edits);   
                 replaceEdits(edits, 1, fileZone.find(".page-wrap"));
             }
+        }
     }
     function closeFile(div){
         var panel;
@@ -994,9 +995,9 @@
                     "yes" == t && e.forEach(function(t) {
                             t.remove();});
                         });
-            /*pdfEditor.find(".target-editable").each(function(){                 //console.log("target-editable: ", $(this));
-               if(!$(this).attr('data-uri')) $(this).remove(); 
-            });*/
+            pdfEditor.find(".target-editable").each(function(){                 //console.log("target-editable: ", $(this));
+               if(!$(this).attr('data-target-fid')) $(this).remove(); 
+            });
             sendOpList(getOpList());                                            //it(getOpList()); // it - submit
     });function sendOpList(opList){                                             //console.log("opList", opList)
         //if(!hasValidOP(operationCount)) {alert('file not edited!!!'); return;}

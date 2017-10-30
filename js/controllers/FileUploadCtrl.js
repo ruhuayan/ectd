@@ -3,22 +3,16 @@
         
     }]);*/
 
-    function FileUploadCtrl($rootScope, $scope, $state, $cookies, $translate, FileUploader, FileApiService, ApplicationApiService){ //$http does not use
+    function FileUploadCtrl($rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService){ //$http does not use
         
-        var appData, appUid, toasts = {};
-        var userData = JSON.parse($cookies.get('globals'));  
-        
-        if($cookies.get("appData")) {
-            appData = JSON.parse($cookies.get("appData"));                      console.log("appData: ", appData)
-            appUid = appData.appUid;
-            $scope.appCreated = true; 
-        }else $translate("WARNING_NOAPP").then(function(translation){
-            toastr.warning(translation);                            //"You need to create an application to upload files!"
-        });
-        
-       
+        var appUid, toasts = {};                                                //console.log("user Data", CookiesApiService.GetCookies());
+        if(CookiesApiService.GetCookies()){
+            appUid = $rootScope.appData.appUid;                                 
+            //$scope.appCreated = true;
+        }                                                                       
+
         var uploader = $scope.uploader = new FileUploader({
-            url: $rootScope.Base_URL + "/a/application/file/create/appUid/" + appUid+"/?uid=" + userData.uid + "&apptoken=" + userData.access_token,
+            url: $rootScope.Base_URL + "/a/application/file/create/appUid/" + appUid+"/?uid=" + $rootScope.userData.uid + "&apptoken=" + $rootScope.userData.access_token,
             removeAfterUpload: true
         }); 
         // FILTERS
@@ -131,8 +125,9 @@
         /************getting uploaded files******************************************/
        
         var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
-
-        ApplicationApiService.GetApplication(appUid, userData).then(function(result){                   console.log("application: ", result);
+        console.log("application: ", appUid, $rootScope.userData);
+        ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){                   console.log("application: ", result);
+            if(result.errors) return; 
             $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
             
             JsTree.initTree($rootScope.subFiles);
@@ -179,7 +174,7 @@
                 });
                 
                 //for(var i=0; i<json.length; i++ ){                                                  console.log("file: ", json[i]);}
-                FileApiService.BatchUpdate(userData, appUid, json).then(function(result){            //console.log(result);
+                FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
                     
                     if(result){
                         toastr.remove();
@@ -188,6 +183,7 @@
                         $rootScope.subFiles = [];
                         $state.go("editinfo").then(function() {
                             toastr.success("Stucture save in app");
+                            $rootScope.tagEdit = true;
                         });
                      }
                 });
@@ -246,7 +242,7 @@
                 if(subFiles && subFiles.length>=1){
                     for(var i=0; i<upFiles.length; i++){                             
                         for(var j=0; j<subFiles.length; j++){
-                            if(upFiles[i].id==subFiles[j].id)  {                //console.log('upid: ', upFiles[i].id);               
+                            if(upFiles[i].id==subFiles[j].id)  {                //console.log('upid: ', upFiles[i]);               
                                 upFiles[i].state = { "hidden" : true };
                             }  
                         }
@@ -265,7 +261,7 @@
                 })
         }*/
         $scope.getUserData = function(){
-            return userData;
+            return $rootScope.userData;
         };
         function setFileNodes(upFiles){
             $rootScope.uploadFiles = [];

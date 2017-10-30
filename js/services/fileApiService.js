@@ -51,7 +51,7 @@
                 "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
         }
 
-        function FileUpdate(userData, postData) {                               console.log(postData); 
+        function FileUpdate(userData, postData) {                               //console.log(postData); 
             return $http.post(Base_URL + '/a/application/file/update.json?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error in updating file info'));
         }

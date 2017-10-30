@@ -156,18 +156,18 @@ var JsTree = function (){
                     }
                     
                 }).bind("before.jstree", function (event, data) {
-             
-                   //console.log("node: ", data)
-                    
+                   //console.log("node: ", data)  
                 }).bind("loaded.jstree", function (event, data) {
                     //$(this).css("height", $(window).height()-250);
                     jsECTDtree = $('#jsECTDtree').jstree(true);
                     var $tree = $(this);
                     $($tree.jstree().get_json("#", {flat: true}))
                         .each(function(index, value) {
-                              var node = $tree.jstree().get_node(this.id);
-                              if(node.type === "tag" && node.children.length) 
-                                  $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                                var node = $tree.jstree().get_node(this.id);
+                                if(node.type === "tag" && node.children.length){ 
+                                    $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                                }
+                                if(node.type ==="file") JsTree.paintParents(node.parents);
                         });
                     App.initSlimScroll("#jsECTDtree");
                     var search = $("input[name='query']").val();
@@ -327,6 +327,16 @@ var JsTree = function (){
                     if(childNode.children.length>1) JsTree.openChildren(children[i]);
                 }
 
+            }, 
+            paintParents: function(parents){                                              //console.log(parents);
+                for(var i =0; i<parents.length-2; i++){
+                    var parent = $('#jsECTDtree').jstree(true).get_node(parents[i]);    //console.log(parent) 
+                    if(parent.type!=="tag" && parent.text.indexOf("<b>")<0) $('#jsECTDtree').jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
+                    //$("#"+parent.id+"_anchor").addClass("hasFile"); //console.log($("#"+parent.id+"_anchor"))
+                }
             }
         }   
     }(); 
+    
+    
+        
