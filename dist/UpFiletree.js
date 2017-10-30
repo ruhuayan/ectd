@@ -316,18 +316,18 @@ var JsTree = function (){
                     callback(); 
                 });
             },
-            openChildren: function(id){
+            /*openChildren: function(id){
                 var node = $('#jsECTDtree').jstree(true).get_node(id);          //console.log(node);
                 var children = node.children; 
                 if(children.length==0) return;
                 
                 for(var i =0; i<children.length; i++){
                     var childNode = $('#jsECTDtree').jstree(true).get_node(children[i]);
-                    if (!node.state.opened && childNode.type!=="tag" &&childNode.type!=="file") $('#jsECTDtree').jstree(true).open_node(id) 
+                    if (!node.state.opened && childNode.type!=="tag" &&childNode.type!=="file") $('#jsECTDtree').jstree(true).open_node(id);
                     if(childNode.children.length>1) JsTree.openChildren(children[i]);
                 }
 
-            }, 
+            }, */
             paintParents: function(parents){                                              //console.log(parents);
                 for(var i =0; i<parents.length-2; i++){
                     var parent = $('#jsECTDtree').jstree(true).get_node(parents[i]);    //console.log(parent) 
