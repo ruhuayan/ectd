@@ -47,10 +47,10 @@
             ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", appUid);              
                 $rootScope.subFiles = result.nodeList;
                 $rootScope.appData.NumOfFiles = result.nodeList.length;
-                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles); 
+                JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles); 
             });
         }else{             
-            JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);  
+            JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles);  
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -299,14 +299,6 @@
             var sNumber =node.type=="tag"? node.text.split(" ")[0] : node.original.sNumber;
             nodeId = node.id;                                                                  //console.log('id',nodeId)
             var studyTag = showTags(node);
-            //var findTag = false;
-            /*if(tagData.length>=1){
-                for(var i=0; i<tagData.length; i++){
-                    if(tagData[i].nodeId == nodeId){ 
-                        jsonx = tagData[i]; findTag = true;
-                    }
-                }
-            }*/
             
             TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData).then(function(result){    //console.log("tag:", result);
                 if(result && result.id){

@@ -687,7 +687,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'dist/location.js',
                         'js/services/cookiesApiService.js',
                         'js/services/fileApiService.js',
-                        'dist/openFrame.js',
+                        //'dist/openFrame.js',
                         'css/edit.css',
                         "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
                         'dist/themes/default/style.min.css',
@@ -708,7 +708,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
                         'dist/location.js',
-                        'dist/openFrame.js',
+                        //'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js", 
                         'js/services/cookiesApiService.js',
@@ -744,7 +744,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'Jstree',
                     files: [
                         'dist/location.js',
-                        'dist/openFrame.js',
+                        //'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js"
                     ]
@@ -1062,8 +1062,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
-    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
+    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
+    $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {

@@ -90,6 +90,8 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
         $scope.exitApp = function(){
             $cookies.remove("appData");
             $rootScope.appData = false;
+            delete $rootScope.subFiles;
+            delete $rootScope.uploadFiles;
             appData = {};
             $scope.formData= {"version": "0000"};
             $scope.submitLabel = "CREATEAPP"; 
@@ -108,6 +110,8 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
         };
         $scope.edit = function(submission){                                             //console.log(submission)
             toastr.success('Application ID: '+submission.id);
+             delete $rootScope.subFiles;
+            delete $rootScope.uploadFiles;
             //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
             if(submission){
                 $rootScope.appData = appData = ApplicationApiService.ExtractApp(submission);
@@ -119,7 +123,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 $scope.formData = angular.copy(submission);
                 $scope.template = submission.template;                          // console.log($scope.template)   
                 $scope.uneditable = true;
-                if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
+                
             }        
         };
        

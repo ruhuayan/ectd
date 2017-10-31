@@ -129,7 +129,7 @@
                 _this.dblclickEventHandler(event);
             });
         },
-        subtreeMenu: function(node) {                                           console.log(this.tree);
+        subtreeMenu: function(node) {                                           //can not read this (Jstree object itself)// console.log(this.tree);
             var items = {
                 'create':{  //create new node
                     'label': 'create',
@@ -172,16 +172,16 @@
                             }
                     }
                 },
-                /*"duplicate": {
+                "duplicate": {
                     "label": "Duplicate",
                     "action": function(data){
                          var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference); 
-                        if(obj.type == "file"){    // not yet finished
+                        if(obj.type == "file"){                                 // not yet finished
                             angular.element("#FileUploadCtrl").scope().duplicateNode(obj);
                         }
                     }
-                },*/
+                },
                 'remove': { // The "delete" menu item
                     'label': "Delete",
                     'action': function (data) { //console.log(data);
@@ -203,8 +203,8 @@
 
             return items;
         },
-        uptreeMenu: function(node) {
-            var _this = this;
+        uptreeMenu: function(node) {                 //can not read this (Jstree object itself)//
+            //var _this = this;
             var items = {
                 /*"duplicate": {
                     "label": "Duplicate",
@@ -274,10 +274,10 @@
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );             
    
 
-     function showWarningModal(title, body, btn, callback){
-            $("#myModal").modal(); 
-            $("#myModal").find("#confirmBtn").click(function(e){
-                $("#myModal").modal("hide");
-                callback(); 
-            });
-        }
+    function showWarningModal(title, body, btn, callback){
+        $("#myModal").modal(); 
+        $("#myModal").find("#confirmBtn").click(function(e){
+            $("#myModal").modal("hide");
+            callback(); 
+        });
+    }

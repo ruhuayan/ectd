@@ -12,9 +12,12 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     
     $scope.edit = function(submission){                                         //console.log("submission: ", submission.id);
         toastr.success('Application ID: '+ submission.id);
+        delete $rootScope.subFiles;
+        delete $rootScope.uploadFiles;
         //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
         if(submission){
             $rootScope.appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
+            
             //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 1);
@@ -29,6 +32,8 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     };
     $scope.create = function(){
         delete $rootScope.appData;
+        delete $rootScope.subFiles;
+        delete $rootScope.uploadFiles;
         if($cookies.get("appData")) $cookies.remove("appData");
         
         $state.go("submission").then(function() {
