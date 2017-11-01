@@ -1,6 +1,5 @@
     function Jstree(id, height){
-        this.tree = $(id); 
-        this.height = height;
+        Filetree.call(this, id, height);
         this.ctrlId = "#AdinfoCtrl";
     }
     Jstree.prototype = {
@@ -29,8 +28,9 @@
                 if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
             }
         }
-    }
+    };
     Jstree.prototype.__proto__ = Filetree.prototype;
+    //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
 
     JsTree.setSelectNodeHandler(function(data){
@@ -47,10 +47,10 @@
             ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", appUid);              
                 $rootScope.subFiles = result.nodeList;
                 $rootScope.appData.NumOfFiles = result.nodeList.length;
-                JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles); 
+                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles); 
             });
         }else{             
-            JsTree.initTree($rootScope.subFiles);                               console.log('subFiles: ', $rootScope.subFiles);  
+            JsTree.initTree($rootScope.subFiles);                                   //console.log('subFiles: ', $rootScope.subFiles);  
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);

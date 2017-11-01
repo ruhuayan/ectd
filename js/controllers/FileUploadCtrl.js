@@ -80,7 +80,7 @@
             if(upFiles && upFiles.length>0){                                               
                 for(var i=0; i<upFiles.length; i++){
                     var fileName = fileItem.file.name; 
-                    if(upFiles[i].text===fileName ){                            console.log(upFiles[i].text);
+                    if(upFiles[i].text===fileName ){                            //console.log(upFiles[i].text);
                        
                         var warning = ["WARNING_EXISTS", "REPLACE"];
                         $translate(warning).then(function(translations){                            //console.log(translations);
@@ -125,7 +125,7 @@
         /************getting uploaded files******************************************/
        
         var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
-        console.log("application: ", appUid, $rootScope.userData);
+                                                                                                            //console.log("application: ", appUid, $rootScope.userData);
         ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){                   console.log("application: ", result);
             if(result.errors) return; 
             $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);

@@ -52,7 +52,7 @@ END PAGE HEADER-->
     </h3>
 </div>-->
 <div class="row">
-    <div class="col-md-4"> 
+    <div class="leftPanel col-md-4"> 
         <div class="portlet light bordered jstree-portlet" ng-controller="JstreeCtrl">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -64,7 +64,9 @@ END PAGE HEADER-->
                     </a>
                 </div>
                 <div class="actions">
-                    <a class="btn btn-sm green" ng-click="togglePortlet()"><span class="title" translate>EDITTAG</span></a>
+                    <a class="btn btn-sm green" ng-click="togglePortlet()" ng-hide="tagEdit"><span class="title" translate>EDITTAG</span></a>
+                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
+                        <i class="fa fa-exchange" aria-hidden="true"></i></a>    
                 </div>
             </div>
             <div class="portlet-body"><div id="jsECTDtree" class="scroller"> </div>
@@ -72,7 +74,7 @@ END PAGE HEADER-->
         </div>
        
     </div>
-    <div class="col-md-8">
+    <div class="rightPanel col-md-8">
         <!-- BEGIN: ACCORDION DEMO -->
         <div class="portlet light bordered admin-portlet" id="AdinfoCtrl" ng-controller="AdinfoCtrl" ng-init="uneditable = true" ng-hide="tagEdit">
             <div class="portlet-title">
@@ -331,7 +333,7 @@ END PAGE HEADER-->
                 </div>
             
         </div>
-        <div class="portlet light bordered tag-portlet" id="TagCtrl" ng-show="tagEdit" ng-controller="TagCtrl" ng-init="init();">
+        <div class="portlet light bordered tag-portlet" id="TagCtrl" style="width: 60%;" ng-show="tagEdit" ng-controller="TagCtrl" ng-init="init();">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <i class="icon-settings font-green-sharp"></i>
@@ -349,16 +351,16 @@ END PAGE HEADER-->
                 </div>
             </div>
             <div class="portlet-body row" > 
-                <div class="appinfo col-sm-6" style="height: 700px;  font-weight: bold; color:#000080; border: 1px solid #ddd;">
+                <!--<div class="appinfo col-sm-4" style="height: 700px;  font-weight: bold; color:#000080; border: 1px solid #ddd;">
                     <h3>Summary: </h3>
-                    <p>Template: {{appData.template.name}}</p>
-                    <p>Description: {{appData.description}}</p>
-                    <p>Number: {{appData.folder}}</p>
-                    <p>Upload files: {{appData.NumOfFiles}}</p>
-                    <p>Created at: {{appData.createdAt}}</p>
-                </div>
+                    <p>Template: <br />{{appData.template.name}}</p>
+                    <p>Description: <br />{{appData.description}}</p>
+                    <p>Number: <br />{{appData.folder}}</p>
+                    <p>Upload files: <br />{{appData.NumOfFiles}}</p>
+                    <p>Created at: <br />{{appData.createdAt}}</p>
+                </div>-->
                
-                <div class="panel-group form-panels col-sm-6" id="accordion1" role="tablist" aria-multiselectable="true">
+                <div class="panel-group form-panels col-sm-12" id="accordion1" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-primary">
                         <div class="panel-heading" role="tab" id="heading1">
                             <a class="panel-title" onclick="Portlet.togglePanel(this, 0);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="true" aria-controls="collapse1">
@@ -578,6 +580,19 @@ END PAGE HEADER-->
 <!--<script src="dist/jsECTDtree.js"></script>-->
 <script src="dist/Filetree.js"></script>
 <script src="dist/InfoFiletree.js"></script>
+<script>
+    function togglePanel(){
+        var leftPanel = $(".leftPanel");
+        var rightPanel = $(".rightPanel");
+        if(leftPanel.hasClass("col-md-4")){
+            leftPanel.removeClass("col-md-4").addClass("col-md-6");
+            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
+        }else {
+            leftPanel.removeClass("col-md-6").addClass("col-md-4");
+            rightPanel.removeClass("col-md-6").addClass("col-md-8");
+        }
+    }
+</script>
 <!--<script>
     function Jstree(id, height){
         this.tree = $(id); 

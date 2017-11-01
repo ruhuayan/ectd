@@ -6,7 +6,7 @@
 
 function Filetree(id, height){
     this.tree = $(id); 
-    this.height = height;
+    this.height = height >650 ? height: 650; ;
 };
 Filetree.prototype ={
     constructor: Filetree,
@@ -34,24 +34,9 @@ Filetree.prototype ={
                 "plugins" : _this.plugins || ["types", "state", "dnd", "search"]
             }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
                  $("#"+data.node.id).prop("title", data.node.text);
-            }).bind("loaded.jstree", function (event, data) {
-                $(this).css("height", _this.height);       
+            }).bind("loaded.jstree", function (event, data) {                               //console.log(_this.height);
+                //$(this).css("height", _this.height);       
                 _this.loadedHandler();
-                /*var $tree = $(this);                                            //console.log($tree);
-                $($tree.jstree().get_json("#", {flat: true}))
-                    .each(function(index, value) {
-                          var node = $tree.jstree().get_node(this.id);
-                          if(node.type === "tag" && node.children.length) 
-                              $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
-                          if(node.type ==="file") _this.paintParents(node.parents);
-                    });
-                App.initSlimScroll(_this.tree);
-                var search = $("input[name='query']").val();
-                if(search.length) $('#jsECTDtree').jstree('search', search);
-                $("input[name='query']").keyup(function(){
-                        var searchString = $(this).val();
-                        $('#jsECTDtree').jstree('search', searchString);                //console.log($(this).val());
-                });*/
             }).bind("select_node.jstree", function (e, data) { 
                 if(_this.selectNodeHandler) _this.selectNodeHandler(data);
             }).bind("dblclick.jstree", function(event){
@@ -66,6 +51,7 @@ Filetree.prototype ={
     },
     loadedHandler: function(){
         var _this = this; 
+        _this.tree.css("height", _this.height);                                 //console.log("this.height: ", this.height);
         $(_this.tree.jstree().get_json("#", {flat: true}))
             .each(function(index, value) {
                   var node = _this.tree.jstree().get_node(this.id);
@@ -73,6 +59,7 @@ Filetree.prototype ={
                       _this.tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
                   if(node.type ==="file") _this.paintParents(node.parents);
             });
+        
         App.initSlimScroll(_this.tree);
         var search = $("input[name='query']").val();
         if(search.length) _this.tree.jstree('search', search);
@@ -83,18 +70,6 @@ Filetree.prototype ={
     },
     setSelectNodeHandler: function(selectNodeHandler){
         this.selectNodeHandler = selectNodeHandler;
-        return this;
-    },
-    setCopyNodeHandler: function(copyNodeHandler){
-        this.copyNodeHandler = copyNodeHandler;
-        return this;
-    },
-    setDeleteNodeHandler: function(deleteNodeHandler){
-        this.deleteNodeHandler = deleteNodeHandler;
-        return this;
-    },
-    setMoveNodeHandler: function(moveNodeHandler){
-        this.moveNodeHandler = moveNodeHandler;
         return this;
     },
     setController: function(ctrlId){
@@ -186,3 +161,14 @@ $(window).bind("beforeunload", function(e){
     return 0; 
 });
 
+function togglePanel(){
+        var leftPanel = $(".leftPanel");
+        var rightPanel = $(".rightPanel");
+        if(leftPanel.hasClass("col-md-4")){
+            leftPanel.removeClass("col-md-4").addClass("col-md-6");
+            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
+        }else {
+            leftPanel.removeClass("col-md-6").addClass("col-md-4");
+            rightPanel.removeClass("col-md-6").addClass("col-md-8");
+        }
+    }

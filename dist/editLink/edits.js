@@ -4,8 +4,7 @@
         "pdf-frame": {}
     };
     function Jstree(id, height){
-        this.tree = $(id); 
-        this.height = height;
+        Filetree.call(this, id, height);
         this.ctrlId = "#JstreeCtrl";
     }
     Jstree.prototype = {
@@ -162,7 +161,7 @@
                 };
                 loadingTask.promise.then(function(pdf){
                     var pdfArr = pdfFile[panel[0].id];
-                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel, pdfArr.saved = true;                     console.log(pdfFile[panel[0].id]);
+                    pdfArr.name = file, pdfArr.fid = fileId, pdfArr.pdf=pdf, pdfArr.panel=panel, pdfArr.saved = true;                     console.log(pdfFile);
                     //pdfFile[panel[0].id] = {'name': file, 'fid': fileId, 'pdf': pdf, 'panel': panel, 'dataLoaded': true};      //console.log('pdfFile: ',pdfFile);
                     pdfCache[fileId] = {'name': file, 'pdf': pdf};
                     panel.find('div.load-process').fadeOut(1000);  
@@ -275,7 +274,7 @@
         onDragStart: function(e, $el, opts){ hideEditMenu(); },
         onDragEnd: function(e, $el, opts ){  
             for(var key in pdfFile){
-                var o = pdfFile[key];
+                var o = pdfFile[key];                                           console.log("pdfFile", o);
                 var fileZone = o.panel.find('.fileZone');
                 if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
             }
@@ -402,8 +401,11 @@
                         h = linkEdits[i].boundingBox.height * scale, 
                         tfid = linkEdits[i].tfid, 
                         id = linkEdits[i].id, 
-                        page = linkEdits[i].page;
-                var edit = createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page});
+                        page = linkEdits[i].page,
+                        tpage = linkEdits[i].tpage, 
+                        uri = linkEdits[i].uri;
+                
+                var edit = createTargetShape(t, l, w, h, pageWrap, false, {id: id, tfid: tfid, page: page, tpage: tpage, uri: uri});
                 if(pageNum !== parseInt(linkEdits[i].page)){
                     edit.css("z-index", -1);
                 }
@@ -798,10 +800,10 @@
                 t.parents(".text-editable-menu").hide();
     });
     $(".link-editable-menu select.fileList").on('change', function(){
-        var sOption= $(this).find('option:selected');                                console.log("tfid: ", sOption.attr('id'));
+        var sOption= $(this).find('option:selected');                                //console.log("tfid: ", sOption.attr('id'));
         //$("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-uri": sOption.text(), "data-target-fid":sOption.attr('id') }); 
         //var filePath= JsTree.getPathById(sOption.attr('id'));                   console.log(filePath);
-        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id') }); 
+        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()}); 
     });
     $(".link-editable-menu select.pageList").on('change', function(){
         var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
@@ -880,7 +882,8 @@
                                                                                                      //console.log('rectangle: ', link);
         w = w || 200, h = h || 100;
         var target = $('<div class="target-editable"></div>');                                           // link retangle
-        if(link && link.id) target.attr({"id": link.id, "data-target-fid": link.tfid, "data-page-num": link.page}).addClass('operation_'+link.id.split("-")[2]);
+        if(link && link.id) target.attr({"id": link.id, "data-target-fid": link.tfid, "data-page-num": link.page, "data-target-page": link.tpage, "data-uri": link.uri})
+                                    .addClass('operation_'+link.id.split("-")[2]);
         else target.attr({"id": "target-editable-" + ++operationCount, "data-page-num":pageWrap.attr("data-page-num")}).addClass('operation_'+operationCount);
         removeOperationCache();                                                                                 //parseFloat(o.attr("data-scale"));
         target.css({
@@ -905,15 +908,15 @@
                 //e()
             }).on("resizestop", function() {
                 setTimeout(function() {
-                    openLinkEdit(target, select)
-                }, 100)
+                    openLinkEdit(target, select);
+                }, 100);
             }).on("dragstart", function() {
                 $("#link-editable-menu").hide();
             }).on("dragstop", function() {
                 setTimeout(function() {
                     //c(target)
                     openLinkEdit(target, select);
-                }, 100)
+                }, 100);
             }).on("mouseover", function() {
                 target.find(".ui-resizable-handle").show();
             }).on("mouseout", function() {
@@ -929,7 +932,7 @@
             return target;
     }
     function openLinkEdit(t, select) {                                                                           //  console.log("f1");
-        var e = $("#link-editable-menu"), fileListSelect = $('select.fileList'), pageList =$('.link-editable-menu select.pageList'); 
+        var e = $("#link-editable-menu"), fileListSelect = $('.link-editable-menu select.fileList'), pageList =$('.link-editable-menu select.pageList'); 
         if(select) {
             if(t.attr('data-target-fid') && t.attr('data-uri'))                                     // pageList is not first time loaded 
                 fileListSelect.val( t.attr('data-uri')).attr('disabled', 'disabled');
@@ -938,21 +941,30 @@
             if(t.attr("data-numPages")){ 
                 createPageList(pageList, t.attr("data-numPages"));           //pageList
                 pageList.val(t.attr('data-target-page'));
-            }else {
-                createPageList(pageList, pageList.attr("data-numPages"), );
+            }else if(pageList.attr("data-numPages")){
+                createPageList(pageList, pageList.attr("data-numPages"));
                 t.attr("data-numPages", pageList.attr("data-numPages"));
-            }
+            }else 
+                pageList.val(t.attr('data-target-page')).attr('disabled', 'disabled');;
             pageList.show();
         }else {
-            var sText;
-            $("select.fileList option").each(function(){ 
-                if(t.attr('data-target-fid') && $(this).attr('id')==t.attr('data-target-fid')) {
-                    $(this).attr('selected' ,'selected'); sText = $(this).text();
-                }else $(this).removeAttr('selected');
-            });
+            if(t.attr('data-target-page')>1 && t.attr('data-uri')){             console.log(t.attr('data-target-page'));
+                fileListSelect.val( t.attr('data-uri')).attr('disabled', 'disabled');
+                createPageList(pageList, t.attr('data-target-page'));
+                pageList.val(t.attr('data-target-page')).attr('disabled', 'disabled').show();
+            }else{
+                var sText;
+                $("select.fileList option").each(function(){ 
+                    if(t.attr('data-target-fid') && $(this).attr('id')==t.attr('data-target-fid')) {
+                        $(this).attr('selected' ,'selected'); sText = $(this).text();
+                    }else $(this).removeAttr('selected');
+                });
+
+                fileListSelect.removeAttr('disabled').val(sText);
+                pageList.hide();
+            }
             
-            fileListSelect.removeAttr('disabled').val(sText);
-            pageList.hide();
+            
         } //else{ fileListSelect.val( pdfFile['pdf-frame'].name).attr('disabled', 'disabled'); }
        
         //e.find("input").val(t.attr("data-uri") || ""),
@@ -1143,8 +1155,8 @@
     $("#download-btn").click(function(){                                        
         var appUid = angular.element("#JstreeCtrl").scope().getAppUid();         
         var userData = angular.element("#JstreeCtrl").scope().getUserData();        console.log("downloading .....", appUid, userData);
-        var url = 'http://192.168.88.187:8080/ectd' + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-        //var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        
+        var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';

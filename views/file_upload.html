@@ -19,7 +19,7 @@ END PAGE HEADER-->
     </h3>
 </div>-->
 <div class="row" id="FileUploadCtrl" ng-controller="FileUploadCtrl" nv-file-drop="" uploader="uploader">
-    <div class="col-md-4">
+    <div class="leftPanel col-md-4">
         
         <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
@@ -35,7 +35,10 @@ END PAGE HEADER-->
                     <form class="form-horizontal" role="form" ng-submit="savetree();">
                     <div class="form-actions">
                             <div class="btn-group">
-                                    <button type="submit" class="btn btn-sm green"><span class="title" translate>SAVE</span></button>
+                                <button type="submit" class="btn btn-sm green"><span class="title" translate>SAVE</span></button>
+                                 <a class="btn btn-square btn-default btn-sm" href="javascript:toggleUpload();">
+                                    <i class="fa fa-exchange" aria-hidden="true"></i>
+                                 </a>  
                                     <!--<button type="button" class="btn btn-sm default" ng-click="canceltree()"><span class="title" translate>CANCEL</span></button>-->
                             </div>
                     </div>
@@ -63,7 +66,7 @@ END PAGE HEADER-->
             </div>
         </div>
     </div>-->
-    <div class="col-md-8">
+    <div class="rightPanel col-md-8">
         <!-- BEGIN: ACCORDION DEMO -->
         <div class="portlet light bordered upload-portlet">
             <div class="portlet-title">
@@ -74,10 +77,10 @@ END PAGE HEADER-->
                 </div>
                 <div class="actions">
                     <div class="btn-group">
-                        <a class="btn btn-circle btn-default btn-sm" href="javascript:toggleUpload();">
-                            <i class="fa fa-random"></i> Upload Queue
+                        <!--<a class="btn btn-circle btn-default btn-sm" href="javascript:toggleUpload();">
+                            hide/show Queue
                         </a>
-                        <!--<ul class="dropdown-menu pull-right">
+                        <ul class="dropdown-menu pull-right">
                             <li>
                                 <a>
                                     <i class="fa fa-info"></i> Admin Info </a>
@@ -201,20 +204,28 @@ END PAGE HEADER-->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script src="dist/Filetree.js"></script>
-<script src="dist/editLink/UpTree.js"></script>
+<script src="dist/UpFiletree.js"></script>
 <script src="js/controllers/FileUploadCtrl.js"></script>
 
 <!--<script src="dist/UpFiletree.js"></script>-->
 <script>
-   
     function toggleUpload(){
-                var uploadTree = $(".uploadTree");
-                if(uploadTree.hasClass("col-sm-4")){
-                    uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
-                    $(".upload-queue").removeClass("col-sm-8").addClass("col-sm-4").fadeOut(300,function(){});
-                }else {
-                    uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
-                    $(".upload-queue").removeClass("col-sm-4").addClass("col-sm-8").fadeIn(300, function(){});
-                }
-            }
+        var uploadTree = $(".uploadTree");
+        var leftPanel = $(".leftPanel");
+        var rightPanel = $(".rightPanel");
+        if(uploadTree.hasClass("col-sm-4")){
+            leftPanel.removeClass("col-md-4").addClass("col-md-6");
+            rightPanel.removeClass("col-md-8").addClass("col-md-6");
+            $(".upload-queue").fadeOut(300,function(){
+                uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
+            });
+            
+            
+        }else {
+            leftPanel.removeClass("col-md-6").addClass("col-md-4");
+            rightPanel.removeClass("col-md-6").addClass("col-md-8");
+            uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
+            $(".upload-queue").fadeIn(300, function(){});
+        }
+    }
 </script>

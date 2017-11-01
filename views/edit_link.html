@@ -10,14 +10,14 @@
                     <li><a href="#" data-tool="text" title="Add new text"><i class="fa fa-file-text-o " aria-hidden="true"></i><div translate>NOTE</div></a></li>
                     <li><a href="#" title="Ctrl+Z" data-tool="backward"><i class="fa fa-backward " aria-hidden="true"></i><div translate>BACKWARD</div></a></li>
                     <li><a href="#" title="Ctrl+Y" data-tool="forward"><i class="fa fa-forward" aria-hidden="true"></i><div translate>FORWARD</div></a></li>
-                    <!--<li><a href="#" title="Refresh" data-tool="refresh"><i class="fa fa-refresh" aria-hidden="true"></i><div>refresh</div></a></li>-->
+                    <!--<li><a href="#" title="Refresh" data-tool="refresh"><i class="fa fa-refresh" aria-hidden="true"></i><div>refresh</div></a></li>
                     <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i><div translate>FAVORITE</div></a></li>          
-                    <!--<li><a href="#" data-tool="delete" title="Delete current page"><i class="fa fa-window-close" aria-hidden="true"></i><div>delete</div></a></li>
-                    <li><a href="#"><i class="fa fa-files-o" aria-hidden="true"></i><div>duplicate</div></a></li>-->
+                    <li><a href="#" data-tool="delete" title="Delete current page"><i class="fa fa-window-close" aria-hidden="true"></i><div>delete</div></a></li>
+                    <li><a href="#"><i class="fa fa-files-o" aria-hidden="true"></i><div>duplicate</div></a></li>
                     <li><a href="#"><i class="fa fa-bookmark-o" aria-hidden="true"></i><div translate>BOOKMARK</div></a></li>
                     <li><a href="#"><i class="fa fa-align-left" aria-hidden="true"></i><div translate>ALIGN</div></a></li>
                     <li><a href="#"><i class="fa fa-square" aria-hidden="true"></i><div translate>COLOR</div></a></li>
-                    <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div translate>FONT</div></a></li>
+                    <li><a href="#"><i class="fa fa-font" aria-hidden="true"></i><div translate>FONT</div></a></li>-->
                     <!--<li><a href="#" title="preview" id="check-pdf-btn"><i class="fa fa-check-square-o" aria-hidden="true"></i><div translate>CHECK</div></a></li>-->
                     <li><a href="#" title="Save file" id="save-pdf-btn"><i class="fa fa-floppy-o"></i><div translate>SAVEFILE</div></a></li>
                     <li><a href="#" title="Download file" id="download-btn"><i class="fa fa-download" aria-hidden="true"></i><div translate>DOWNLOAD</div></a></li>
@@ -29,9 +29,8 @@
         </nav>
 </div>
 
-<div class="rightPanel" >
+<div class="rightPanel">
         <div class="row" >
-           
             <div class="col-sm-3 sidebar" ng-controller="JstreeCtrl" id="JstreeCtrl">
                 <div class="caption font-green-sharp" style="font-size:14px; margin: 15px 0px 10px 10px;">
                     <span class="caption-subject bold uppercase">Application</span>
@@ -39,7 +38,12 @@
                         <i class="fa fa-caret-up" title="close file tree" ng-show="open"></i>
                         <i class="fa fa-caret-down" title="open file tree" ng-hide="open"></i>
                     </a>
+                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
+                        <i class="fa fa-exchange" aria-hidden="true"></i>
+                    </a>
+                    
                 </div>
+                
                 <div id="jsECTDtree" class="scroller"> </div>
             </div>
         
@@ -308,4 +312,9 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="dist/Filetree.js"></script>
 <script src="dist/editLink/edits.js"></script>
+<script>
+    function togglePanel(){
+        
+    }
+</script>
 <!--<script src="https://use.fontawesome.com/572e7c8d9e.js" async="async"></script>-->
