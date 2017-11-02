@@ -5,7 +5,7 @@ angular.module('MetronicApp').service('modalService', ['$modal',
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            // templateUrl: '/js/scripts/modal/modal.html'
+            templateUrl: '/js/scripts/modal/modal.html'
         };
 
         var modalOptions = {

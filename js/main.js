@@ -4,7 +4,8 @@ var MetronicApp = angular.module("MetronicApp", [
     "oc.lazyLoad",
     "ngSanitize",
     "ngCookies",
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'angularModalService'
 ]);
 
 /* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
@@ -31,6 +32,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         EDITLINK: "Edit Link",
         BALANCE: "Balance",
         SETTINGS: "Settings",
+        PUBLISH: "Publish",
         LOGOUT: "Logout",
         
         INBOX: "Inbox",
@@ -244,6 +246,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         EDITLINK: "链接编辑",
         BALANCE: "账单",
         SETTINGS: "设置",
+        PUBLISH: "发布",
         LOGOUT: '下线',
         LANGUAGE: '语言',
         USER: '用户',
@@ -750,6 +753,26 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }]);
             }]
         }
+    }).state('publish', {
+        url: '/publish.html',
+        templateUrl: "views/publish.html",
+        data: {pageTitle: 'Publish the application'},
+        controller: '',
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'MetronicApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
+                        'dist/location.js',
+                        'dist/themes/default/style.min.css',
+                        "dist/jstree.min.js",
+                        'js/services/cookiesApiService.js',
+                        'js/services/applicationApiService.js'
+                    ]
+                });
+            }]
+        }
     })
     //Post lists
     .state('users', {
@@ -1061,8 +1084,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd"; 
-    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
+    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {

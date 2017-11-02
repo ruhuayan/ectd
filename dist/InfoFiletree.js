@@ -46,7 +46,7 @@
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
             ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", appUid);              
                 $rootScope.subFiles = result.nodeList;
-                $rootScope.appData.NumOfFiles = result.nodeList.length;
+                //$rootScope.appData.NumOfFiles = result.nodeList.length;
                 JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles); 
             });
         }else{             

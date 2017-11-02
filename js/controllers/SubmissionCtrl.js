@@ -1,13 +1,11 @@
-/*MetronicApp.controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state', '$cookies', '$translate', 'FileUploader','FileApiService'
-    function($scope, $rootScope, $state, $cookies, $translate, FileUploader, FileApiService ) {
-        
-    }]);*/
+//angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService','TemplateApiService', 'ModalService',
+//    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService ) {
 
-function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, DTOptionsBuilder){
+function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
         var appData; 
         if(CookiesApiService.GetCookies())
             appData = $rootScope.appData;
-        else appData = {"version": "0000"};                                     console.log('app data:', appData);
+        else appData = {"version": "0000"};                                     //console.log('app data:', appData);
         //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
         //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
         
@@ -21,10 +19,10 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
             //if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
         });                           
                                                                                 
-        $scope.dtOptions = DTOptionsBuilder.newOptions()
-                .withOption('order', [1, 'asc'])
-                .withOption('lengthMenu', [5,10])
-                .withLanguage({"sEmptyTable":"Empty"});
+//        $scope.dtOptions = DTOptionsBuilder.newOptions()
+//                .withOption('order', [1, 'asc'])
+//                .withOption('lengthMenu', [5,10])
+//                .withLanguage({"sEmptyTable":"Empty"});
            
         //var table = $("#appTable").DataTable();
         if(appData.appUid){                                         
@@ -110,7 +108,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
         };
         $scope.edit = function(submission){                                             //console.log(submission)
             toastr.success('Application ID: '+submission.id);
-             delete $rootScope.subFiles;
+            delete $rootScope.subFiles;
             delete $rootScope.uploadFiles;
             //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   
             if(submission){
@@ -126,10 +124,45 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 
             }        
         };
+        $scope.delete = function(submission,index){                 //console.log(submission)
+
+            ModalService.showModal({
+                templateUrl: "tpl/modal.html",
+                controller: "YesNoController",
+                preClose: function(modal){ modal.element.modal('hide'); },
+                inputs:{
+                    title: "Delete an Application? "
+                }
+            }).then(function(modal) {
+                //it's a bootstrap element, use 'modal' to show it
+                modal.element.modal();
+                modal.close.then(function(result) {                                           //console.log(result);
+                    if(!result) return;
+                    if(result.appNumber !== submission.folder) return;
+                    toastr.success("Application ID " + submission.id + " deleted");     //console.log(index);
+                    $scope.submissions.splice(index, 1);
+                    if($rootScope.appData && $rootScope.appData.id === submission.id) $scope.exitApp();
+                    //ApplicationApiService.DeleteApplicationById(submission.id, $rootScope.userData).then(function(result){});
+                });
+            });
+        };
        
         function getTemplateList(){
             TemplateApiService.GetTemplateList($rootScope.userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
             });
         }
+    };
+    //}]);
+    /*angular.module('MetronicApp').controller('YesNoController', ['$scope', 'close', function($scope, close) {
+        $scope.close = function(result) {
+            close(result, 500); // close, but give 500ms for bootstrap to animate
+        };
+    }]);*/
+    function YesNoController($scope, $element, title, close){
+        $scope.title = title;
+        $scope.close = function(result) {
+            close({appNumber: $scope.appNumber}, 300); // close, but give 500ms for bootstrap to animate
+        };
     }
+

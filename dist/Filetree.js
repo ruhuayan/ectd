@@ -25,7 +25,7 @@ Filetree.prototype ={
                     "default" : {"valid_children" : ["folder", "file"]},
                     "folder": {"valid_children" : ["folder","file"]},
                     "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
-                    "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
+                    "file" : { "icon" : "fa fa-file-pdf-o", "valid_children" : []}
                 },
                 "search": {
                     "case_insensitive": true,
@@ -84,19 +84,20 @@ Filetree.prototype ={
     },
     paintParents: function(parents){                                              //console.log(parents);
         for(var i =0; i<parents.length-2; i++){
-            var parent = $('#jsECTDtree').jstree(true).get_node(parents[i]);    
-            if(parent.type!=="tag" && parent.text.indexOf("<b>")<0) $('#jsECTDtree').jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
+            var parent = this.tree.jstree(true).get_node(parents[i]);
+            if(parent.type!=="tag" && parent.text.indexOf("<b>")<0) this.tree.jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
             //$("#"+parent.id+"_anchor").addClass("hasFile"); //console.log($("#"+parent.id+"_anchor"))
         }
     },
-    dblclickEventHandler: function(event){
+    dblclickEventHandler: function(event, uptree){
+        var tree = uptree || this.tree;
         var nodeId = $(event.target).closest("li")[0].id;
-        var node = this.tree.jstree(true).get_node(nodeId);             //console.log("node", node); 
+        var node = tree.jstree(true).get_node(nodeId);             //console.log("node", nodeId);
         if(node && node.type=="file"){ 
             var uuid = node.id;                                   
             var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );
 
-            var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+            var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
             this.openIframe( url);
         }
     },
@@ -137,38 +138,4 @@ Filetree.prototype ={
     }
 };
 
-// to prevent client from leaving the page 
-$(window).bind("beforeunload", function(e){
-    toastr.warning("Please right click to open the link in a new tab!", "OPEN PDF LINKS", {
-                                      "closeButton": true,
-                                      "debug": false,
-                                      "newestOnTop": false,
-                                      "progressBar": false,
-                                      "positionClass": "toast-bottom-full-width",
-                                      "preventDuplicates": true,
-                                      "onclick": null,
-                                      "showDuration": "300",
-                                      "hideDuration": "1000",
-                                      "timeOut": "5000",
-                                      "extendedTimeOut": "1000",
-                                      "showEasing": "swing",
-                                      "hideEasing": "linear",
-                                      "showMethod": "fadeIn",
-                                      "hideMethod": "fadeOut"
-    });
-        //console.log("document href: ", e.activeElement, window.status )
-        //return "Right click the link inside pdf to open a tab";
-    return 0; 
-});
 
-function togglePanel(){
-        var leftPanel = $(".leftPanel");
-        var rightPanel = $(".rightPanel");
-        if(leftPanel.hasClass("col-md-4")){
-            leftPanel.removeClass("col-md-4").addClass("col-md-6");
-            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
-        }else {
-            leftPanel.removeClass("col-md-6").addClass("col-md-4");
-            rightPanel.removeClass("col-md-6").addClass("col-md-8");
-        }
-    }

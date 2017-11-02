@@ -21,7 +21,10 @@
     };
     Jstree.prototype.__proto__ = Filetree.prototype;
     var JsTree = new Jstree("#jsECTDtree", _EH );
-    
+    var panels = {
+        "#pdf-editor": {},
+        "#pdf-frame": {}
+    };
     function PdfPanel(id){
         this.id = id; 
         this.panel = $(id);
@@ -91,7 +94,7 @@
             });
             return this;
         }, 
-        render: function(e=1) {                                          //console.log("page: ", e);    
+        render: function(e) {                                          //console.log("page: ", e);
             var _this = this; 
             this.pdf.getPage(e).then(function(page) {                           //console.log(page);
                 var n = page.getViewport(1),                                          

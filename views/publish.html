@@ -1,0 +1,170 @@
+<!-- BEGIN PAGE HEADER-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a><span class="title" translate>PUBLISH</span></a>
+        </li>
+    </ul> 
+</div>
+<!-- <h3 class="page-title"> Edit File</h3>
+END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<!--<div class="note note-success">
+    <h3>
+        <span class="label label-danger">Edit Admin info and STF</span>
+    </h3>
+</div>-->
+<div class="row">
+    <div class="leftPanel col-md-4"> 
+        <div class="portlet light bordered jstree-portlet" ng-controller="JstreeCtrl" id="JstreeCtrl">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <!--<i class="icon-settings font-green-sharp"></i>-->
+                    <span class="caption-subject bold uppercase">Application</span>
+                    <a class="btn-circle" ng-click="toggleTree()">
+                        <i class="fa fa-caret-up" title="close file tree" ng-show="open"></i>
+                        <i class="fa fa-caret-down" title="open file tree" ng-hide="open"></i>
+                    </a>
+                </div>
+                <div class="actions">
+                    <!--<a class="btn btn-sm green" ng-click="togglePortlet()" ng-hide="tagEdit"><span class="title" translate>EDITTAG</span></a>-->
+                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
+                        <i class="fa fa-exchange" aria-hidden="true"></i></a>    
+                </div>
+            </div>
+            <div class="portlet-body"><div id="jsECTDtree" class="scroller"> </div>
+            </div>
+        </div>
+       
+    </div>
+    <div class="rightPanel col-md-8">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <i class="icon-settings font-green-sharp"></i>
+                    <span class="caption-subject bold uppercase"><span class="title" translate>PUBLISH</span></span>
+                </div>
+
+                <div class="actions">
+
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div><a class="btn btn-sm green" href="#" id="download-btn"><span class="title" translate>PUBLISH</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS-->
+<!--<script src="dist/jsECTDtree.js"></script>-->
+<script src="dist/Filetree.js"></script>
+
+<script>
+
+    function JstreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
+        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        if(CookiesApiService.GetCookies()){
+            appUid = $rootScope.appData.appUid;
+        }
+
+        if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
+            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", appUid);
+                $rootScope.subFiles = result.nodeList;
+                $rootScope.appData.NumOfFiles = result.nodeList.length;
+                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+            });
+        }else{
+            JsTree.initTree($rootScope.subFiles);                                   //console.log('subFiles: ', $rootScope.subFiles);
+        }
+        $scope.toggleTree = function(){
+            JsTree.toggle($rootScope.open);
+            $rootScope.open = ! $rootScope.open; // ? false : true;
+        };
+        $scope.getUserData = function(){
+            return $rootScope.userData;
+        };
+        $scope.getAppUid = function(){
+            return appUid;
+        }
+    }
+
+    function Jstree(id, height){
+        Filetree.call(this, id, height);
+        this.ctrlId = "#JstreeCtrl";
+    }
+    /*Jstree.prototype = {
+        constructor: Jstree,
+        setHandler: function(){
+            var _this = this;
+            this.tree.jstree(true).bind("select_node.jstree", function (e, data) {
+                _this.tree.jstree(true).getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id);
+            });
+        },
+        getSelectedNode: function(){
+            var node = this.tree.jstree(true).get_selected(true);
+            return node.length ? node[0] : false;
+        },
+        addNodeText:function(id, text){
+            //var node = $('#jsECTDtree').find("[id="+id+"]"); console.log(node);
+            var node = this.tree.jstree(true).get_node(id);                     console.log(node);
+            this.tree.jstree(true).set_text(node, node.text+' '+text);
+        },
+        getNodeContent: function(selectedNode){
+            if(selectedNode){
+                var node = selectedNode;
+                angular.element("#TagCtrl").scope().setTagTitle(node, true);
+            }else{
+                var node = this.getSelectedNode();                        //console.log(node);
+                if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
+            }
+        }
+    };*/
+    Jstree.prototype.__proto__ = Filetree.prototype;
+    //Jstree.prototype = Object.create(Filetree.prototype);
+    var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
+
+    function togglePanel(){
+        var leftPanel = $(".leftPanel");
+        var rightPanel = $(".rightPanel");
+        if(leftPanel.hasClass("col-md-4")){
+            leftPanel.removeClass("col-md-4").addClass("col-md-6");
+            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
+        }else {
+            leftPanel.removeClass("col-md-6").addClass("col-md-4");
+            rightPanel.removeClass("col-md-6").addClass("col-md-8");
+        }
+    }
+
+    $("#download-btn").click(function(){
+        var appUid = angular.element("#JstreeCtrl").scope().getAppUid();
+        var userData = angular.element("#JstreeCtrl").scope().getUserData();        console.log("downloading .....", appUid, userData);
+
+        var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+
+        xhr.onload = function(e) {
+            if (this.status === 200) {                                          //console.log("zip file: ",this.response);
+                var blob = new Blob([this.response], {type: 'application/zip'}),
+                    file = URL.createObjectURL(blob);
+
+                var link = document.createElement('a');
+                link.href = file;
+                link.download = "ectd";
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+            }
+        };
+        xhr.send();
+
+    });
+</script>
+

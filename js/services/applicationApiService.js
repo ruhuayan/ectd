@@ -18,7 +18,7 @@
         service.GetApplication = GetApplication;
         service.ApplicationCreate = ApplicationCreate;
         service.ApplicationUpdate = ApplicationUpdate;
-        service.DeleteApplication = DeleteApplication;
+        service.DeleteApplicationById = DeleteApplicationById;
         service.ExtractApp = ExtractApp;
         service.GetApplicationById = GetApplicationById;
 
@@ -48,9 +48,9 @@
                 "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in updating an Application'));
         }
 
-        function DeleteApplication(appUid, userData) {
-            /*return $http.post(Base_URL + '/a/content/post/delete/' + appUid + '.json?uid=' + userData.uid +
-                "&apptoken=" + userData.appToken).then(handleSuccess, handleError('Error in deleting an Application'));*/
+        function DeleteApplicationById(id, userData) {
+            return $http.post(Base_URL + '/a/application/delete/' + id + '/?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting an Application'));
         }
         function ExtractApp(app){ 
             return {"id": app.id, "appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,

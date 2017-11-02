@@ -25,7 +25,7 @@
                     "default" : {"valid_children" : ["folder", "tag", "file"]},
                     "folder": {"valid_children" : ["folder","file"]},
                     "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
-                    "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
+                    "file" : { "icon" : "fa fa-file-pdf-o", "valid_children" : []}
                 },
                 "search": {
                     "case_insensitive": true,
@@ -112,7 +112,7 @@
                 },
                 "types" : { "#" : { "valid_children" : ["root"]},
                     "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["file"] },
-                    "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
+                    "file" : { "icon" : "fa fa-file-pdf-o", "valid_children" : []}
                 },
                 "plugins" : ["contextmenu", "dnd", "types", "state"],
                 'contextmenu' : {
@@ -125,7 +125,7 @@
             }).on('changed.jstree', function (e, data) { 
                 $(this).jstree().open_node('up1');
             }).bind("dblclick.jstree", function(event){
-                _this.dblclickEventHandler(event);
+                _this.dblclickEventHandler(event, _this.uptree);
             });
         },
         subtreeMenu: function(node) {                                           //can not read this (Jstree object itself)// console.log(this.tree);
@@ -135,12 +135,7 @@
                     'action': function(data){
                         var inst = $.jstree.reference(data.reference), obj = inst.get_node(data.reference);            //console.log(inst)
                         inst.create_node(obj, {"text": "new_folder", "type": "folder"}, "last", function (new_node) { //console.log("new node", new_node)
-				try {
-                                    inst.edit(new_node);
-				} catch (ex) {
-                                    setTimeout(function () { inst.edit(new_node); },0);
-				}
-			});
+				        try { inst.edit(new_node); } catch (ex) { setTimeout(function () { inst.edit(new_node); },0); } });
                     }
                 },
                 'rename': { // The "rename" menu item
@@ -171,7 +166,7 @@
                             }
                     }
                 },
-                "duplicate": {
+                /*"duplicate": {
                     "label": "Duplicate",
                     "action": function(data){
                          var inst = $.jstree.reference(data.reference),
@@ -180,7 +175,7 @@
                             angular.element("#FileUploadCtrl").scope().duplicateNode(obj);
                         }
                     }
-                },
+                },*/
                 'remove': { // The "delete" menu item
                     'label': "Delete",
                     'action': function (data) { //console.log(data);
@@ -191,11 +186,7 @@
                                 //toastr.warning("Can not delete eCTD structure folder!!!");
                                 return;
                             }
-			if(inst.is_selected(obj)) {
-				inst.delete_node(inst.get_selected());
-			}else {
-                            inst.delete_node(obj);
-			}
+			            if(inst.is_selected(obj)) { inst.delete_node(inst.get_selected()); } else { inst.delete_node(obj); }
                     }
                 }
             };
@@ -220,7 +211,7 @@
                     'action': function (data) { 
                         var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference); 
-                        showWarningModal("Delete Item", "Are you sure to delete the item ?", "Delete", function(){
+                        showWarningModal(function(){
                             $('#uploadFileTree').jstree(true).hide_node(obj.id);                        //console.log( data);
                             angular.element("#FileUploadCtrl").scope().deleteFileNode(obj.id);
                         });         
@@ -269,11 +260,11 @@
         }
     };
     
-    Jstree.prototype.__proto__ = Filetree.prototype;                            
+    Jstree.prototype.__proto__ = Filetree.prototype;            //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );             
    
 
-    function showWarningModal(title, body, btn, callback){
+    function showWarningModal(callback){
         $("#myModal").modal(); 
         $("#myModal").find("#confirmBtn").click(function(e){
             $("#myModal").modal("hide");

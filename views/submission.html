@@ -50,7 +50,7 @@
 <h3 class="page-title"><span class="title" translate>NEWSUB</span></h3>
 
 <div class="row" ng-controller="SubmissionCtrl">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -169,7 +169,7 @@
             
         </div>
     </div>
-     <div class="col-md-6">
+     <div class="col-md-7">
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -181,13 +181,13 @@
             </div>
             <div class="portlet-body portlet-submitted" >
                 
-                <table class="table table-striped" id="appTable" datatable="ng" dt-options="dtOptions">
+                <table class="table table-striped" id="appTable" >
                     <thead>
                         <tr>
                             <th><span class="title" translate>DESCRIPTION</span></th>
-                            <th><span class="title" translate>TITLE</span></th>
+                            <th><span class="title" translate>NUMBER</span></th>
                             <th><span class="title" translate>CREATEDATE</span></th>
-                            <th><span class="title" translate>SUBMITDATE</span></th>
+                            <!--<th><span class="title" translate>SUBMITDATE</span></th>-->
                             <th><span class="title" translate>ACTION</span></th>
                         </tr>
                     </thead>
@@ -198,9 +198,11 @@
                                 <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
                         <td>{{submission.folder}}</td>
                         <td>{{submission.createdAt}}</td>
-                        <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
+                        <!--<td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>-->
                         <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission)"><span class="title" translate>EDIT</span></button></span>
-                            <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission)"><span class="title" translate>VIEW</span></button></span></td>
+                            <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission)"><span class="title" translate>VIEW</span></button></span>
+                            <span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="delete(submission, $index)"><span class="title" translate>DELETE</span></button></span>
+                        </td>
                       </tr>
                     </tbody>
                     <!--<tbody ng-if=" !submissions || submissions.length <=0 ">

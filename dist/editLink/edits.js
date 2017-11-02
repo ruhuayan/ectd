@@ -274,9 +274,11 @@
         onDragStart: function(e, $el, opts){ hideEditMenu(); },
         onDragEnd: function(e, $el, opts ){  
             for(var key in pdfFile){
-                var o = pdfFile[key];                                           console.log("pdfFile", o);
-                var fileZone = o.panel.find('.fileZone');
-                if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
+                var o = pdfFile[key];                                           //console.log("pdfFile", o);
+                if(o.panel){
+                    var fileZone = o.panel.find('.fileZone');
+                    if(o.panel.attr('data-loaded')=="true") render(o.pdf, fileZone, parseInt(fileZone.find(".page-wrap").attr("data-page-num")));
+                }
             }
             var ob = pdfFile['pdf-editor'];                         //console.log('ob: ', ob);
             if(ob){ 
@@ -806,9 +808,10 @@
         $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()}); 
     });
     $(".link-editable-menu select.pageList").on('change', function(){
-        var sOption= $(this).find('option:selected');                                //console.log($(this).find('option:selected').attr('id'));
-        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr("data-target-page", sOption.text()); 
-       
+        var sOption= $(this).find('option:selected');                                console.log(sOption.text());
+        $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr("data-target-page", sOption.text());
+        var ob = pdfFile["pdf-frame"]; if (pdfFrame.attr('data-loaded')=='true'){ render(ob.pdf, pdfFrame.find(".fileZone"), parseInt(sOption.text())); }
+
     });
     // selection for link
     (function() {
