@@ -38,10 +38,9 @@
                         <i class="fa fa-caret-up" title="close file tree" ng-show="open"></i>
                         <i class="fa fa-caret-down" title="open file tree" ng-hide="open"></i>
                     </a>
-                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
+                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();" style="margin-left: 20px;">
                         <i class="fa fa-exchange" aria-hidden="true"></i>
                     </a>
-                    
                 </div>
                 
                 <div id="jsECTDtree" class="scroller"> </div>
@@ -97,7 +96,7 @@
                         <script>
                             window.lastTextEditSettings = {
                                 size: 16,
-                                color: 'rgb(0,0,0)',
+                                color: 'rgb(0,0,255)',
                                 font: 'Times New Roman'
                             };
                             //$('.font-size-opts').attr('title',window.lastTextEditSettings.size);
@@ -311,7 +310,7 @@
 <script src="dist/jquery-resizable.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="dist/Filetree.js"></script>
-<script src="dist/editLink/edits.js"></script>
+<script src="dist/editLink/Panel.js"></script>
 <script>
     function togglePanel(){
         

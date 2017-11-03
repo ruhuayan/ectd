@@ -27,77 +27,6 @@
     Jstree.prototype.__proto__ = Filetree.prototype;
     var JsTree = new Jstree("#jsECTDtree", _EH );
 
-/*var JsTree = function (){
-        function dblclickEventHandler(event){
-            var nodeId = $(event.target).closest("li")[0].id;
-            var node = $('#jsECTDtree').jstree(true).get_node(nodeId);  //console.log(node);
-            
-            if(node && node.type=="file"){ 
-                var uuid = node.id;                                   
-                //var userData = angular.element("#AdinfoCtrl").scope().getUserData();  //console.log("UUID: ",uuid, userData );
-                //var portlet = pdfEditor || pdfFrame;       console.log("pdfEditor", pdfEditor.offset())
-                var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-                openIframe(url);
-            }
-        }
-        return {
-            //upFiles: [],
-            initTree: function(json){
-                $('#jsECTDtree').jstree({
-                    "core" : {
-                        //"animation" : 0,
-                        "multiple": false,
-                        "check_callback" : false,
-                        "themes" : { "stripes" : true },
-                        "data" : json
-                    },
-                    "types" : { "#" : {"max_children" : 8, "max_depth" :8, "valid_children" : ["root"]},
-                        "root" : { "icon" : "assets/tree_icon.png","valid_children" : ["default"] },
-                        "default" : {"valid_children" : ["default", "folder", "tag", "file"]},
-                        "folder": { "valid_children" : ["folder","file"]},
-                        "tag": {"icon" : "fa fa-file-o", "valid_children" : ["file"]},
-                        "file" : { "icon" : "glyphicon glyphicon-file", "valid_children" : []} 
-                    },
-                    "plugins" : ["dnd", "types", "state"]
-                }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
-                     $("#"+data.node.id).prop("title", data.node.text);
-                }).bind("loaded.jstree", function (event, data) {
-                    var $tree = $(this);
-                    $tree.css('height', _EH);
-                    $($tree.jstree().get_json("#", {flat: true}))
-                        .each(function(index, value) {
-                              var node = $tree.jstree().get_node(this.id);
-                              if(node.type === "tag" && node.children.length) 
-                                  $tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
-                        });
-                    //$(this).jstree('open_all');
-                    App.initSlimScroll("#jsECTDtree");
-                }).bind("dblclick.jstree", function(event){
-                    dblclickEventHandler(event);
-                });
-            },
-            closeSidebar: function(){
-                if(!$('.page-sidebar-menu').hasClass('page-sidebar-menu-closed'))
-                    $('.sidebar-toggler').click();
-            },
-            toggle: function(open){
-                if (open)
-                    $('#jsECTDtree').jstree().close_node(["m1", "m2", "m3", "m4", "m5"]); 
-                else
-                    $('#jsECTDtree').jstree("open_all");
-            },
-            setSelectList: function(json){
-                for(var i in json){
-                    var node = json[i];
-                    if(node['type']==="file") {
-                        $('select.fileList').append('<option id="'+node['id']+'">'+node['text']+'</option>');
-                        //$('select.fileList').find('#'+node['parent']).append('<option id="'+node['id']+'">'+node['text']+'</option>');
-                    }   
-                    //else  $('select.fileList').append('<optgroup label="'+node['text']+'" id="'+node['id']+'"></optgroup>');
-                } 
-            }
-        };   
-    }();*/
     //////////////////////////////////////////////
     //        load pdf 2 html
     //////////////////////////////////////////////
@@ -172,8 +101,7 @@
             }
         };
         xhr.send();
-        
-        
+
         /*var path = "http://192.168.88.187:8080/ectd"+JsTree.getPathById(fileId);
         var loadingTask = PDFJS.getDocument(path+"?nc="+Math.random());
         loadingTask.onProgress = function(progress){
@@ -191,6 +119,7 @@
     }
     function loadEdits(fileId){
             angular.element("#JstreeCtrl").scope().getFileByUuid(fileId).then(function(result){       console.log("file: ", result);
+                if(result.errors) return;
                 if(result && result.state.length>0){
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
                    
@@ -1154,7 +1083,7 @@
         return t.replace(kt, "").replace(/\u3000/g, " ").replace(/\u2003/g, " ").replace(/\u2002/g, " ").replace(/\u2005/g, " ").replace(/\u2006/g, " ").replace(/\u2000/g, " ").replace(/\u202F/g, " ").replace(/\u0009/g, "").replace(/\u200B/g, "").replace(/\u2028/g, "")
     }
    
-    
+    /*
     $("#download-btn").click(function(){                                        
         var appUid = angular.element("#JstreeCtrl").scope().getAppUid();         
         var userData = angular.element("#JstreeCtrl").scope().getUserData();        console.log("downloading .....", appUid, userData);
@@ -1178,5 +1107,5 @@
         };
         xhr.send();
         
-    });
+    });*/
 

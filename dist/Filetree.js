@@ -56,7 +56,7 @@ Filetree.prototype ={
             .each(function(index, value) {
                   var node = _this.tree.jstree().get_node(this.id);
                   if(node.type === "tag" && node.children.length) 
-                      _this.tree.jstree().set_icon(node.id, "glyphicon glyphicon-file");
+                      _this.tree.jstree().set_icon(node.id, "fa fa-file");
                   if(node.type ==="file") _this.paintParents(node.parents);
             });
         
@@ -104,7 +104,7 @@ Filetree.prototype ={
     openIframe: function(url){
         var w = $(window).width(), h = $(window).height(), gap = 100;
         var layer = $("<div>").attr("id", "layer")
-                .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 1001 })
+                .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 10001 })
                 .appendTo($("body"));
         var progressbar = $('<div class="load-process">Loading...</div>')
             .css({"position": "absolute","top":gap-2, "left":w/4 ,"width": w/2, "height": 2, "background": "#ff0000"}).appendTo(layer);
