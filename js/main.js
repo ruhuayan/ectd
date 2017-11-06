@@ -1078,8 +1078,6 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
             //   console.log("in iffff");
         }
     });
-
-
 });
 
 // To logout user forcibly after certain time if no action is performed on application
