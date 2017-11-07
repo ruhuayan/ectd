@@ -48,15 +48,15 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 $scope.formData.template = {'id': tid};                         //console.log("template", tid);
                 var jsonData = $scope.formData;                                 //console.log("appdata: ", jsonData);
                 
-                if(appData.id){
+                if(appData.appUid){
                     // for update to work, i have to get rid of unnecessary field
-                    jsonData ={"id": jsonData.id, "appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description, 
+                    jsonData ={"appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description,
                         "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
                     
                     ApplicationApiService.ApplicationUpdate($rootScope.userData, jsonData).then(function(result){                    console.log(result);
-                        if(result.id){
+                        if(result.appUid){
                             $rootScope.appData = ApplicationApiService.ExtractApp(result);
-                            toastr.success("Create Application id: " + result.id);
+                            toastr.success("Create Application id: " + result.appUid);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
                             $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
@@ -65,9 +65,9 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                     });
                 }else{
                     ApplicationApiService.ApplicationCreate($rootScope.userData, jsonData).then(function(result){                      console.log(result);      // res.success ==false
-                        if(result.id){
+                        if(result.appUid){
                             $rootScope.appData = ApplicationApiService.ExtractApp(result);
-                            toastr.success("Save Application id: " + result.id);
+                            toastr.success("Save Application id: " + result.appUid);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
                             $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
@@ -141,7 +141,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                     if(result.appNumber !== submission.folder) return;
                     toastr.success("Application ID " + submission.id + " deleted");     //console.log(index);
                     $scope.submissions.splice(index, 1);
-                    if($rootScope.appData && $rootScope.appData.id === submission.id) $scope.exitApp();
+                    if($rootScope.appData && $rootScope.appData.appUid === submission.appUid) $scope.exitApp();
                     //ApplicationApiService.DeleteApplicationById(submission.id, $rootScope.userData).then(function(result){});
                 });
             });

@@ -53,7 +53,7 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting an Application'));
         }
         function ExtractApp(app){ 
-            return {"id": app.id, "appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,
+            return {"appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,
                           "sequence": app.sequence, "createdAt": app.createdAt, "updatedAt": app.updatedAt,
                           "template": {"id": app.template.id, "name": app.template.name}};
         }
