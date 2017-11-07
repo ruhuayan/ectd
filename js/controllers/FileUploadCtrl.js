@@ -112,7 +112,7 @@
                     }
                 } 
                
-                var treeNode = {'id': res.uuid, 'parent': 'up1', 'text': res.name, 'type': 'file', 'fileId': res.fileId, "path": res.path};
+                var treeNode = {'id': res.fileId, 'parent': 'up1', 'text': res.name, 'type': 'file'/*, 'fileId': res.fileId*/};
                 upFiles.push(treeNode);                                         //console.log("on complete", upFiles)                                                                 
             }else console.log(res);
         };
@@ -266,7 +266,7 @@
         function setFileNodes(upFiles){
             $rootScope.uploadFiles = [];
            for(var i=0; i<upFiles.length; i++){
-               $rootScope.uploadFiles.push({'id': upFiles[i].uuid, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file', 'fileId': upFiles[i].fileId, "path": upFiles[i].path});
+               $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file'});
            }
         }
     };

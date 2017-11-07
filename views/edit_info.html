@@ -586,10 +586,12 @@ END PAGE HEADER-->
         var rightPanel = $(".rightPanel");
         if(leftPanel.hasClass("col-md-4")){
             leftPanel.removeClass("col-md-4").addClass("col-md-6");
-            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
+            rightPanel.removeClass("col-md-8").addClass("col-md-6");
+            rightPanel.find("#TagCtrl").css({"width": "100%"});
         }else {
             leftPanel.removeClass("col-md-6").addClass("col-md-4");
             rightPanel.removeClass("col-md-6").addClass("col-md-8");
+            rightPanel.find("#TagCtrl").css({"width": "60%"});
         }
     }
 </script>

@@ -37,35 +37,43 @@
             this.fileZone.show();
 
             var userData = angular.element("#JstreeCtrl").scope().getUserData();
-            var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.responseType = 'blob';
-            
-            var _this = this;                                                   //console.log(_this.panel);
-            xhr.onprogress = function(e){        //console.log (e);
-                if (e.lengthComputable) {}
-            };
-            xhr.onload = function() {
-                if (this.status === 200) {
-                    var blob = new Blob([this.response], {type: 'application/pdf'}),
-                    pdfBlob = URL.createObjectURL(blob);           
-                    var loadingTask = PDFJS.getDocument(pdfBlob);
-                    loadingTask.onProgress = function(progress){
-                        _this.panel.find('div.load-process').show();
-                        _this.panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
-                    };
-                    loadingTask.promise.then(function(pdf){
-                        _this.fileName = file, _this.fid = fileId, _this.pdf = pdf;
-                        //_this.pdfCache[fileId] = {'name': file, 'pdf': pdf};
-                        _this.panel.find('div.load-process').fadeOut(1000);  
-                        _this.pdf2html(callback);
-                    }).catch(function(error){                                   //console.log(error);
-                        alert(error);
-                    });
-                }
-            };
-            xhr.send();
+            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+            //var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+
+            var _this = this;
+            $.get(url, function(result){
+                if(!result || !result.ectdFileStateList.length ) return;
+                var uuid = result.ectdFileStateList[0].uuid;
+                var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              console.log(fileURL);
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', fileURL, true);
+                xhr.responseType = 'blob';
+                xhr.onprogress = function(e){        //console.log (e);
+                    if (e.lengthComputable) {}
+                };
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        var blob = new Blob([this.response], {type: 'application/pdf'}),
+                            pdfBlob = URL.createObjectURL(blob);
+                        var loadingTask = PDFJS.getDocument(pdfBlob);
+                        loadingTask.onProgress = function(progress){
+                            _this.panel.find('div.load-process').show();
+                            _this.panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
+                        };
+                        loadingTask.promise.then(function(pdf){
+                            _this.fileName = file, _this.fid = fileId, _this.pdf = pdf;
+                            //_this.pdfCache[fileId] = {'name': file, 'pdf': pdf};
+                            _this.panel.find('div.load-process').fadeOut(1000);
+                            _this.pdf2html(callback);
+                        }).catch(function(error){                                   //console.log(error);
+                            alert(error);
+                        });
+                    }
+                };
+                xhr.send();
+            });
+                                                            //console.log(_this.panel);
+
             return this;
         },
         pdf2html: function(callback){
@@ -226,7 +234,7 @@
         },
         scaleEdits: function(){
             if(this.hasValidOP()){
-                var opList = this.getOpList();
+                var opList = this.getEditList();
                 for(var op in opList){
                     if(opList[op].length>0){
                         var operations = opList[op];                                //console.log(operations);
@@ -261,7 +269,7 @@
             }
             return false;
         },
-        getOpList: function(){
+        getEditList: function(){
             var _this = this, edits = {'linkOperations':[], 'textOperations': []}, pageWrap = this.pageWrap;
             this.panel.find(".target-editable").each(function(index, value){       //console.log('inside at function - target', new Big(1, 5));
                 var n = parseFloat(pageWrap.attr("data-scale")),
@@ -290,11 +298,11 @@
                 var //i = pageWrap.find("canvas.page"),
                     n = pageWrap.attr("data-scale"),
                     r = e.css("font-family").split(",")[0].trim().toLowerCase(),
-                    u = "times_roman";                                                  //console.log('font-fam: ',r)
+                    u = "Times New Roman";                                                  //console.log('font-fam: ',r)
                 r.indexOf("helvetica") >= 0 && (u = "helvetica"),
-                r.indexOf("Courier New") >= 0 && (u = "courier");
+                r.indexOf("Courier") >= 0 && (u = "courier");
                 var s = e.css("font-size").slice(0, -2),
-                    d = s/n,
+                    d = parseInt(s/n),
                     f = {
                         id: $(this)[0].id,
                         text: _this._getText(e.text()),
@@ -332,13 +340,14 @@
         },
         loadEdits: function(fid){
             var _this = this;
-            angular.element("#JstreeCtrl").scope().getFileByUuid(fid).then(function(result){       console.log("file: ", result);
+            angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){       console.log("file: ", result);
                 if(result.errors) return;
-                if(result && result.state.length>0){
+                if(result && result.state){
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
                     _this.edits = JSON.parse(lastState.action);                         //console.log("edits: ", pdfFile['pdf-editor'].edits);
                 }
             });
+            //angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){});
             return this;
         },
         replaceEdits: function(_this){                                                                 console.log("edits", _this.edits);
@@ -461,8 +470,7 @@
                 var t=$('#link-editable-menu');
                 target.hasClass("active") || t.is(":visible") && t.attr("data-target-id") == target.attr("id") || target.find(".ui-resizable-handle").hide()
             });
-            if(select)
-                target.attr({"data-uri": pdfFrame.fileName, "data-target-fid":_this.fid });
+            //if(select) target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid });
 
             pageWrap.append(target);                                            //console.log("append edit: ", pageWrap);
             //pdfFile["pdf-editor"].saved = false;
@@ -470,23 +478,17 @@
         },
         openLinkEdit: function(target, select){
             var fileListSelect = $('.link-editable-menu select.fileList'), pageList =$('.link-editable-menu select.pageList');
-            if(select) {
-                if(target.attr('data-target-fid') && target.attr('data-uri'))                   // pageList is not first time loaded
-                    fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
-                else
-                    fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');        // pageList is loaded first time
+            if(select) {                                                 //console.log("select", select)
+                fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');        // pageList is loaded first time always
                                                                                                 //console.log(pdfFrame.fileName);
-                if(target.attr("data-numpages")){
-                    this.createPageList(target.attr("data-numpages"), pageList);           //pageList
-                    pageList.val(target.attr('data-target-page'));
-                }else if(pageList.attr("data-numpages")){
-                    this.createPageList(pageList.attr("data-numpages"), pageList);
-                    target.attr("data-numpages", pageList.attr("data-numpages"));
-                }else
-                    pageList.val(target.attr('data-target-page')).attr('disabled', 'disabled');
-                pageList.show();
-            }else {
-                if(target.attr('data-target-page')>1 && target.attr('data-uri')){             //console.log(target.attr('data-target-page'));
+                if(pdfFrame.pdf.numPages>1){
+                    this.createPageList(pdfFrame.pdf.numPages, pageList);
+                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid":pdfFrame.fid,"data-numpages": pdfFrame.pdf.numPages });
+                    pageList.show().removeAttr("disabled");
+                }else pageList.hide();
+
+            }else {                                                                          // target-fid >1 (select) or target-fid =1 (link)
+                if(target.attr('data-target-page')>1 && target.attr('data-uri')){
                     fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
                     this.createPageList( target.attr('data-target-page'), pageList);
                     pageList.val(target.attr('data-target-page')).attr('disabled', 'disabled').show();
@@ -525,7 +527,7 @@
                     void n.removeClass("active");
             }
         },
-
+        // working with tools Menu
         isTool: function(t) {
             return this.panel.attr("data-tool") == t;
         },
@@ -544,6 +546,7 @@
             if(!this.isTool(t))
                 this.setTool(t);
         },
+
         setToolsMenuListener: function(){
             var _this = this;
             _this.toolsMenu.find("[data-tool=text]").click(function() {
@@ -588,34 +591,31 @@
             $(".text-editable-menu .font-size-opts input[name=fontSize]").on("input change", function(t) {
                 var e = $(this),
                     a = parseInt(this.value),
-                    i = _this.getTextTarget($(this)),
+                    i = _this._getTextTarget($(this)),
                     r = parseFloat(i.parents(".page-wrap").attr("data-scale"));
-                _this.setStyle(e, "font-size", r * a + "px"),
-                    _this.setStyle(e, "line-height", r * a + "px"),
-                    _this.setStyle(e, "height", ""),
+                _this._setStyle(e, "font-size", r * a + "px"),
+                    _this._setStyle(e, "line-height", r * a + "px"),
+                    _this._setStyle(e, "height", ""),
                     window.lastTextEditSettings.size = a
                 $('.font-size-opts').attr('title',window.lastTextEditSettings.size);
             });
             $(".text-editable-menu .color-opts a").click(function() {
                     var t = $(this),
                         e = t.css("background-color");
-                    _this.setStyle(t, "color", e),
+                    _this._setStyle(t, "color", e),
                         window.lastTextEditSettings.color = e;
                 });
             $(".text-editable-menu .font-family-opts a").click(function(){
                     var t = $(this),
                         e = t.attr("data-font");
-                    _this.setStyle(t, "font-family", e),
+                    _this._setStyle(t, "font-family", e),
                         window.lastTextEditSettings.font = e
                 });
             $(".text-editable-menu .font-bold-opts").click(function() {
-                window.lastTextEditSettings.weight = _this.checkStyle($(this), "font-weight", "bold", "400")
+                window.lastTextEditSettings.weight = _this._checkStyle($(this), "font-weight", "bold", "400")
             });
             $(".text-editable-menu .font-italic-opts").click(function() {
-                    window.lastTextEditSettings.style = _this.checkStyle($(this), "font-style", "italic", "normal")
-                /*var r = getTextTarget($(this)).css("font-style");
-                if(r=="normal") _this.setStyle($(this), "font-style", "normal");
-                else _this.setStyle($(this),"font-style", "italic");*/
+                    window.lastTextEditSettings.style = _this._checkStyle($(this), "font-style", "italic", "normal")
             });
             $(".text-editable-menu .delete-opts").click(function() {
                     var t = $(this),
@@ -625,19 +625,20 @@
             });
             return _this;
         },
-        getTextTarget: function(t) {
+        _getTextTarget: function(t) {
             return $("#" + t.parents(".text-editable-menu").attr("data-target-id"));
         },
-        checkStyle: function(t, e, a, i){
-            var r = this.getTextTarget(t).css(e);
-            return r == i ? (this.setStyle(t, e, a),
-                a) : (this.setStyle(t, e, i),
+        _checkStyle: function(t, e, a, i){
+            var r = this._getTextTarget(t).css(e);
+            return r == i ? (this._setStyle(t, e, a),
+                a) : (this._setStyle(t, e, i),
                 i);
         },
-        setStyle: function (t, e, a) {
+        _setStyle: function (t, e, a) {
             var i = {};
-            i[e] = a, this.getTextTarget(t).css(i).focus();
+            i[e] = a, this._getTextTarget(t).css(i).focus();
         },
+
         setDrawListener: function(){
             var el, x1 = 0,  x2 = 0,                // el - element $(this)
                 y1 = 0, y2 = 0,
@@ -703,7 +704,7 @@
                 if(!$(this).attr('data-target-fid')) $(this).remove();
             });
 
-            var opl = this.getOpList();
+            var opl = this.getEditList();
             for(var op in opl){
                 if(opl[op].length<=0) delete opl[op];
             }
@@ -824,11 +825,11 @@
             u = parseFloat(r.attr("data-scale")),
             weight = void 0,
             size = obj? obj.style.fontSize : 0,
-            color = obj? obj.style.color : 0,
-            font = 0,
-            d = void 0;                                                     //console.log("color: ", color);
+            color = obj? "rgb(" + obj.style.color.toString()+")" : 0,
+            font = obj? obj.style.font: "Times New Roman"
+            d = void 0;                                                     console.log("font: ", font);
         (size = size || u * window.lastTextEditSettings.size + "px",
-            font = font || window.lastTextEditSettings.font,
+            //font = font || window.lastTextEditSettings.font,
             color = color || window.lastTextEditSettings.color,
             weight = weight || window.lastTextEditSettings.weight,
             d = d || window.lastTextEditSettings.style),

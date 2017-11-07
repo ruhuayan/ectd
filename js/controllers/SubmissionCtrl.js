@@ -11,12 +11,12 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
         
         $scope.submissions = [{}];                    // to make sure data-table has json data
         if($rootScope.applications)                                             
-            $scope.submissions = $rootScope.applications;     
+            $scope.submissions = $rootScope.applications.slice(0,8);
         else 
             ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){                          //console.log("api service", data.list); 
             if(!data.list) {$rootScope.applications=[]; return;} 
-            $scope.submissions = $rootScope.applications = data.list;                                //console.log($rootScope.applications)
-            //if(data.list.length>1) $scope.submissions = data.list.slice(0,5);
+            $scope.submissions = $rootScope.applications = data.list.list.slice(0,8);                                //console.log($rootScope.applications)
+            //if(data.list.length>1) $scope.submissions = data;
         });                           
                                                                                 
 //        $scope.dtOptions = DTOptionsBuilder.newOptions()

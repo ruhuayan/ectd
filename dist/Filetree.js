@@ -94,14 +94,14 @@ Filetree.prototype ={
         var nodeId = $(event.target).closest("li")[0].id;
         var node = tree.jstree(true).get_node(nodeId);             //console.log("node", nodeId);
         if(node && node.type=="file"){ 
-            var uuid = node.id;                                   
+            var fileId = node.id;
             var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );
-
-            var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
-            this.openIframe( url);
+            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
+            //var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //
+            this.openIframe( url, userData);
         }
     },
-    openIframe: function(url){
+    openIframe: function(url, userData){
         var w = $(window).width(), h = $(window).height(), gap = 100;
         var layer = $("<div>").attr("id", "layer")
                 .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 10001 })
@@ -115,26 +115,34 @@ Filetree.prototype ={
         $("#layer").click(function(){
             $(this).remove();
         });
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'blob';
 
-        xhr.onprogress = function(e){        //console.log (e);
-            if (e.lengthComputable) {
-                var progress = e.loaded/e.total; 
-                progressbar.show().css("width", progress +"%");                                                              //console.log(progress); 
-            }
-        };
-        xhr.onload = function(e) {
-            if (this.status === 200) {
-                var blob = new Blob([this.response], {type: 'application/pdf'}),
-                file = URL.createObjectURL(blob);                               //console.log(file);
-                progressbar.hide();
-                //layer.append(iframe);
-                $("#frame").attr("src", file);
-            }
-        };
-        xhr.send();
+        $.get(url, function(result){                               console.log("file", result.ectdFileStateList[0].uuid);
+            if(!result || !result.ectdFileStateList.length ) return;
+
+            var uuid = result.ectdFileStateList[0].uuid;
+            var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              console.log(fileURL);
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', fileURL, true);
+            xhr.responseType = 'blob';
+
+            xhr.onprogress = function(e){        //console.log (e);
+                if (e.lengthComputable) {
+                    var progress = e.loaded/e.total;
+                    progressbar.show().css("width", progress +"%");                                                              //console.log(progress);
+                }
+            };
+            xhr.onload = function(e) {
+                if (this.status === 200) {
+                    var blob = new Blob([this.response], {type: 'application/pdf'}),
+                        file = URL.createObjectURL(blob);                               //console.log(file);
+                    progressbar.hide();
+                    //layer.append(iframe);
+                    $("#frame").attr("src", file);
+                }
+            };
+            xhr.send();
+        });
+
     }
 };
 

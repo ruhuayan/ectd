@@ -15,7 +15,7 @@
         service.GetFileList = GetFileList;
         service.GetAppFileList = GetAppFileList;
         service.GetClientFileList = GetClientFileList; 
-        service.GetFile = GetFile;
+        service.GetFileById = GetFileById;
         service.FileCreate = FileCreate;
         service.FileUpdate = FileUpdate;
         service.FileDelete = FileDelete;
@@ -46,7 +46,12 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
         }
 
-        function FileCreate(userData, appUid, postData) {
+        function GetFileById(fileId, userData) {
+            return $http.get(Base_URL + '/a/application/file/get_by_file_id/' + fileId + '?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
+        }
+
+        function FileCreate(userData, appUid, postData) {                             // it is used to upload file
             return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
         }
