@@ -2,6 +2,7 @@
         Filetree.call(this, id, height);
         this.ctrlId = "#FileUploadCtrl";
         this.uptree = $('#uploadFileTree');                                     //console.log("this.height: ", this.height);
+        this.treeChanged = false;
     }
     Jstree.prototype = {
         constructor: Jstree,
@@ -55,10 +56,11 @@
                         toastr.warning("One tag can't contain two files!"); 
                         return;
                     }
-                    _this.setTagNode(parentNode, data.node.text, data.original.id, jsECTDtree);                                   //console.log(parentNode);                                  
+                    _this.setTagNode(parentNode, data.node.text, data.original.id, jsECTDtree);                                   //console.log(parentNode);
                 }
                 jsECTDtree.open_node(parentNode.id);                                             
                 jsECTDtree.set_id(data.node, data.original.id);                                       // to keep original file id
+                _this.treeChanged = true;
                 _this.uptree.jstree(true).hide_node(data.original.id);                        //console.log( 'path', data.original.original.path);
 
                 angular.element(_this.ctrlId).scope().hideUpfileNode(data.original.id);
@@ -75,7 +77,7 @@
                     if(parentNode.type=="tag" && parentNode.children.length==0){                 //check if its parent is tag
                         _this.resetTagNode(parentNode, jsECTDtree);
                     }                                                                            //console.log(parentNode);
-
+                    _this.treeChanged = true;
                     _this.uptree.jstree(true).show_node(data.node.id);
                     angular.element(_this.ctrlId).scope().showUpfileNode(data.node.id);
                 }  
@@ -96,7 +98,7 @@
                 if(old_parentNode.type=="tag"){ 
                     _this.resetTagNode(old_parentNode, jsECTDtree);
                 }
-
+                _this.treeChanged = true;
                 jsECTDtree.open_node(data.parent);
 
             }).on('open_node.jstree', function (event, data) {});    
@@ -130,6 +132,21 @@
         },
         subtreeMenu: function(node) {                                           //can not read this (Jstree object itself)// console.log(this.tree);
             var items = {
+                /*'open':{
+                    'label': 'open',
+                    'action': function(data){
+                        var inst = $.jstree.reference(data.reference),
+                            obj = inst.get_node(data.reference);
+                        if(obj.type == "default"){                                 console.log(obj);
+                            if(!obj.children_d ||!obj.children_d.length ) return;
+                            $('#jsECTDtree').jstree(true).open_node(obj.id);
+                            for(var i=0; i<obj.children_d.length; i++){
+                                //this.tree.jstree(true).open_node(node.children_d[i]);
+                                $('#jsECTDtree').jstree(true).open_node(obj.children_d[i]);
+                            }
+                        }
+                    }
+                },*/
                 'create':{  //create new node
                     'label': 'create',
                     'action': function(data){
@@ -210,7 +227,8 @@
                     'label': "Delete",
                     'action': function (data) { 
                         var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference); 
+                            obj = inst.get_node(data.reference);
+                        if(obj.type!=="file") return;
                         showWarningModal(function(){
                             $('#uploadFileTree').jstree(true).hide_node(obj.id);                        //console.log( data);
                             angular.element("#FileUploadCtrl").scope().deleteFileNode(obj.id);
@@ -245,7 +263,10 @@
                     fileArray.push(node);
                 }
             }
-            if(fileArray.length>0) return fileArray;
+            if(fileArray.length>0){
+                //angular.element(this.ctrlId).scope().saveFileJson(fileArray);
+                return fileArray;
+            }
             else return false;
         },
         resetTagNode: function(node, tree){     
@@ -261,8 +282,7 @@
     };
     
     Jstree.prototype.__proto__ = Filetree.prototype;            //Jstree.prototype = Object.create(Filetree.prototype);
-    var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );             
-   
+    var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
 
     function showWarningModal(callback){
         $("#myModal").modal(); 

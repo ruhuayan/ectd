@@ -6,7 +6,8 @@
                 <h4 class="modal-title">{{title}}</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <p>{{ body }}</p>
+                <form class="form-horizontal" role="form" ng-hide="hideForm">
                     <div class="form-group">
                         <label for="appNumber" class="col-sm-4 control-label">Application Number</label>
                         <div class="col-sm-8">
@@ -16,8 +17,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" ng-click="close()" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                <button type="button" ng-click="close(false)" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" ng-click="close(true)" class="btn btn-primary" data-dismiss="modal">Yes</button>
             </div>
         </div>
     </div>

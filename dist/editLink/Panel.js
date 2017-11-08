@@ -581,7 +581,11 @@
                 var sOption= $(this).find('option:selected');                                //console.log(sOption.text());
                 $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr("data-target-page", sOption.text());
                 if (pdfFrame.panel.attr('data-loaded')=='true'){
-                    pdfFrame.render(parseInt(sOption.text()));
+                    var pageNum = sOption.text();
+                    pdfFrame.render(parseInt(pageNum));
+                    pdfFrame.panel.find('.right-tabs select.pageList').val(pageNum);
+                    pdfFrame.panel.find('.right-tabs .pageNum').val(pageNum)
+
                 }
             });
             return this;

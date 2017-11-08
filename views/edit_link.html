@@ -298,7 +298,36 @@
         $scope.getAppUid = function(){
             return appUid;
         }
+        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+
+        });
+        $scope.$on("$destroy", function(){
+
+            ModalService.showModal({
+                templateUrl: "tpl/modal.html",
+                controller: "SaveEditYesNoCtrl",
+                preClose: function(modal){ modal.element.modal('hide'); },
+                inputs:{
+                    title: "Save File ?",
+                    body: "Edits have been made in the file. Do you want to save them? "
+                }
+            }).then(function(modal) {
+                //it's a bootstrap element, use 'modal' to show it
+                modal.element.modal();
+                modal.close.then(function(result) {                                           //console.log(result);
+                    if(result) {}
+                });
+            });
+        });
      }
+    function SaveEditYesNoCtrl($scope, $element, title, body, close){
+        $scope.title = title;
+        $scope.body = body;
+        $scope.hideForm = true;
+        $scope.close = function(result) {
+            close(result, 300); // close, but give 500ms for bootstrap to animate
+        };
+    }
 </script>
 <script src="dist/pdfjs/pdf.min.js"></script>
     <script>

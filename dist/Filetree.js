@@ -93,23 +93,35 @@ Filetree.prototype ={
         var tree = uptree || this.tree;
         var nodeId = $(event.target).closest("li")[0].id;
         var node = tree.jstree(true).get_node(nodeId);             //console.log("node", nodeId);
-        if(node && node.type=="file"){ 
+        if(!node) return;
+        if(node.type=="file"){
             var fileId = node.id;
             var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );
             var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
             //var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //
             this.openIframe( url, userData);
+        }else if(node.type=="default"){                                         //console.log(node.state);
+            if(!node.state.opened){
+                tree.jstree().close_node(nodeId);
+            } else{
+                if(!node.children_d ||!node.children_d.length ) return;
+                tree.jstree(true).open_node(nodeId);
+                for(var i=0; i<node.children_d.length; i++){
+                    //this.tree.jstree(true).open_node(node.children_d[i]);
+                    tree.jstree(true).open_node(node.children_d[i]);
+                }
+            }
         }
     },
     openIframe: function(url, userData){
-        var w = $(window).width(), h = $(window).height(), gap = 100;
+        var w = $(window).width(), h = $(window).height(), gap = 50;
         var layer = $("<div>").attr("id", "layer")
                 .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 10001 })
                 .appendTo($("body"));
         var progressbar = $('<div class="load-process">Loading...</div>')
-            .css({"position": "absolute","top":gap-2, "left":w/4 ,"width": w/2, "height": 2, "background": "#ff0000"}).appendTo(layer);
+            .css({"position": "absolute","top":gap-2, "left":w/6 ,"width": w*2/3, "height": 2, "background": "#ff0000"}).appendTo(layer);
         var iframe = $("<iframe>").attr("id", "frame")
-                .css({"position": "absolute","top":gap,"left":w/4 ,"width": w/2, "height": h-gap*2, "border": "solid 1px #999"}).appendTo(layer);        
+                .css({"position": "absolute","top":gap,"left":w/6 ,"width": w*2/3, "height": h-gap*2, "border": "solid 1px #999"}).appendTo(layer);
 
         //$("body").append(layer);
         $("#layer").click(function(){

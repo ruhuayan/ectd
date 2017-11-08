@@ -3,7 +3,7 @@
         
     }]);*/
 
-    function FileUploadCtrl($rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService){ //$http does not use
+    function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
         
         var appUid, toasts = {};                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
@@ -158,45 +158,49 @@
                 });
                 return;
             }
+            if(!JsTree.treeChanged){
+                toastr.warning("No change has been made to file tree");
+                return;
+            }
+
             var json = JsTree.get_fileJson();
             if(json){                                                           //console.log("save files: ", json) 
-                                                                                 
-                $translate("INFO_WAIT").then(function(translation){
-                    toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
-                });
-                //toastr.info("It may take a minute or two to save the ECTD structure files.", "Please be patient");
-               
-                App.blockUI({
-                    target: $("#FileUploadCtrl"),
-                    message: " Load ...",
-                    //animate: true,
-                    overlayColor: "#999"//'#d9534f'
-                });
-                
-                //for(var i=0; i<json.length; i++ ){                                                  console.log("file: ", json[i]);}
-                FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
-                    
-                    if(result){
-                        toastr.remove();
-                        App.unblockUI($("#FileUploadCtrl"));
-                        
-                        $rootScope.subFiles = [];
-                        $state.go("editinfo").then(function() {
-                            toastr.success("Stucture save in app");
-                            $rootScope.tagEdit = true;
-                        });
-                     }
-                });
-
-            }else { 
+                batchUpdata(json)
+            }else {
                 $translate("NO_FILE").then(function(translation){
                     toastr.warning(translation);
                 });
-                //toastr.warning("There is no file to save"); 
-                return; 
+                //toastr.warning("There is no file to save");
+                return;
             }
         };
-      
+        function batchUpdata(json) {
+
+            $translate("INFO_WAIT").then(function(translation){
+                toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
+            });
+            //toastr.info("It may take a minute or two to save the ECTD structure files.", "Please be patient");
+            App.blockUI({
+                target: $("body"),
+                message: " Load ...",
+                //animate: true,
+                overlayColor: "#999"//'#d9534f'
+            });
+
+            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
+
+                if(result){
+                    toastr.remove();
+                    App.unblockUI($("body"));
+
+                    $rootScope.subFiles = [];
+                    //$state.go("editinfo").then(function() {
+                    toastr.success("Stucture save in app");
+                    $rootScope.tagEdit = true;
+                    JsTree.treeChanged = false;
+                }
+            });
+        }
         
         if(!$rootScope.open) $rootScope.open = false;
         $scope.toggleTree = function(){
@@ -210,6 +214,10 @@
         $scope.deleteFileNode = function(id){
             var node = getUpfileNodeById(id);   
             $rootScope.uploadFiles.splice( $.inArray(node, $rootScope.uploadFiles), 1 );                                                //console.log($scope.uploadFiles);
+
+            FileApiService.FileDelete(id, $rootScope.userData ).then(function(result){ console.log(result);
+                //toasts.success("File deleted");
+            });
         }
         $scope.showUpfileNode = function(id){
             var node = getUpfileNodeById(id); 
@@ -254,7 +262,8 @@
             $translate(msg).then(function(translation){
                 toastr.warning(translation);
             });
-        }
+        };
+
         /*$scope.downloadFile = function(uuid){ console.log(uuid, userData)
             $http.get('http://192.168.88.187:8080/ectd' + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid + "&apptoken=" + userData.access_token).then(function(res){
                     console.log(res);
@@ -269,6 +278,38 @@
                $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file'});
            }
         }
+        $scope.$on("$destroy", function(){
+            if( !$scope.fileJson) return;
+             ModalService.showModal({
+                templateUrl: "tpl/modal.html",
+                controller: "SaveTreeYesNoCtrl",
+                preClose: function(modal){ modal.element.modal('hide'); },
+                inputs:{
+                    title: "Save File Tree ?",
+                    body: "Changes have been made in the file tree. Do you want to save them? "
+                }
+            }).then(function(modal) {
+                //it's a bootstrap element, use 'modal' to show it
+                modal.element.modal();
+                modal.close.then(function(result) {                                           //console.log(result);
+                    if(result) batchUpdata($scope.fileJson);
+                });
+            });
+        });
+
+        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            if(JsTree.treeChanged)
+                $scope.fileJson = JsTree.get_fileJson();
+            //if($scope.fileJson) batchUpdata($scope.fileJson);
+        });
     };
-    
+
+function SaveTreeYesNoCtrl($scope, $element, title, body, close){
+    $scope.title = title;
+    $scope.body = body;
+    $scope.hideForm = true;
+    $scope.close = function(result) {
+        close(result, 300); // close, but give 500ms for bootstrap to animate
+    };
+}
 

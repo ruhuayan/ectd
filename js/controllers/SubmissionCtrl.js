@@ -51,7 +51,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 if(appData.appUid){
                     // for update to work, i have to get rid of unnecessary field
                     jsonData ={"appUid": jsonData.appUid, "version":jsonData.version, "description": jsonData.description,
-                        "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence}; 
+                        "template": jsonData.template, "folder": jsonData.folder, "sequence": jsonData.sequence};                console.log(jsonData);
                     
                     ApplicationApiService.ApplicationUpdate($rootScope.userData, jsonData).then(function(result){                    console.log(result);
                         if(result.appUid){
@@ -128,7 +128,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
 
             ModalService.showModal({
                 templateUrl: "tpl/modal.html",
-                controller: "YesNoController",
+                controller: "DelYesNoCtrl",
                 preClose: function(modal){ modal.element.modal('hide'); },
                 inputs:{
                     title: "Delete an Application? "
@@ -139,10 +139,14 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 modal.close.then(function(result) {                                           //console.log(result);
                     if(!result) return;
                     if(result.appNumber !== submission.folder) return;
-                    toastr.success("Application ID " + submission.id + " deleted");     //console.log(index);
+
                     $scope.submissions.splice(index, 1);
                     if($rootScope.appData && $rootScope.appData.appUid === submission.appUid) $scope.exitApp();
-                    //ApplicationApiService.DeleteApplicationById(submission.id, $rootScope.userData).then(function(result){});
+                    ApplicationApiService.DeleteApplication(submission.appUid, $rootScope.userData).then(function(result){
+                                                                                                console.log(result);
+                        toastr.success("Application " + submission.folder + " deleted");
+                    });
+
                 });
             });
         };
@@ -159,7 +163,7 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
             close(result, 500); // close, but give 500ms for bootstrap to animate
         };
     }]);*/
-    function YesNoController($scope, $element, title, close){
+    function DelYesNoCtrl($scope, $element, title, close){
         $scope.title = title;
         $scope.close = function(result) {
             close({appNumber: $scope.appNumber}, 300); // close, but give 500ms for bootstrap to animate

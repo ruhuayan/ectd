@@ -18,7 +18,7 @@
         service.GetApplication = GetApplication;
         service.ApplicationCreate = ApplicationCreate;
         service.ApplicationUpdate = ApplicationUpdate;
-        service.DeleteApplicationById = DeleteApplicationById;
+        service.DeleteApplication = DeleteApplication;
         service.ExtractApp = ExtractApp;
         service.GetApplicationById = GetApplicationById;
 
@@ -48,8 +48,8 @@
                 "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in updating an Application'));
         }
 
-        function DeleteApplicationById(id, userData) {
-            return $http.post(Base_URL + '/a/application/delete/' + id + '/?uid=' + userData.uid +
+        function DeleteApplication(appUid, userData) {
+            return $http.get(Base_URL + '/a/application/delete/' + appUid + '/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting an Application'));
         }
         function ExtractApp(app){ 
