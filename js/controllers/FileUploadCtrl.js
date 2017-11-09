@@ -1,14 +1,11 @@
-/*MetronicApp.controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state', '$cookies', '$translate', 'FileUploader','FileApiService'
-    function($scope, $rootScope, $state, $cookies, $translate, FileUploader, FileApiService ) {
-        
-    }]);*/
+    MetronicApp.controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state',  '$translate', 'FileUploader', 'CookiesApiService', 'FileApiService', 'ApplicationApiService','ModalService',
+        function($scope, $rootScope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService ) {
 
-    function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
-        
+    //function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
         var appUid, toasts = {};                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;                                 
-            //$scope.appCreated = true;
+            appUid = $rootScope.appData.appUid;
+            JsTree.userData = $rootScope.userData;
         }                                                                       
 
         var uploader = $scope.uploader = new FileUploader({
@@ -302,8 +299,8 @@
                 $scope.fileJson = JsTree.get_fileJson();
             //if($scope.fileJson) batchUpdata($scope.fileJson);
         });
-    };
-
+    //};
+    }]);
 function SaveTreeYesNoCtrl($scope, $element, title, body, close){
     $scope.title = title;
     $scope.body = body;

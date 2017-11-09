@@ -670,7 +670,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'css/edit.css',
                         'js/services/cookiesApiService.js',
                         'js/services/templateApiService.js',
-                        'js/services/applicationApiService.js'
+                        'js/services/applicationApiService.js',
+                        'js/controllers/SubmissionCtrl.js',
                     ]
                 });
             }]
@@ -693,7 +694,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'css/edit.css',
                         "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
                         'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js"
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js'
                     ]
                 });
             }]
@@ -710,13 +712,15 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
                         'dist/location.js',
-                        //'dist/openFrame.js',
                         'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js", 
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
                         'js/services/genInfoApiService.js',
-                        'js/services/tagApiService.js'
+                        'js/services/tagApiService.js',
+                        'js/controllers/EditInfoCtrls.js',
+                        //'dist/InfoFiletree.js'
                     ]
                 });
             }]
@@ -729,28 +733,21 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         controller: "",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load([{
+                return $ocLazyLoad.load({
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        'assets/global/plugins/angularjs/plugins/angular-file-upload/angular-file-upload.min.js',
+                        'dist/location.js',
+                        'dist/themes/default/style.min.css',
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
-                        'js/services/fileApiService.js'
+                        'js/services/fileApiService.js',
+                        'js/controllers/FileUploadCtrl.js'
                     ]   
-                },{
-                    name: 'angularFileUpload',
-                    files: [
-                        'assets/global/plugins/angularjs/plugins/angular-file-upload/angular-file-upload.min.js'
-                    ]
-                }, {
-                    name: 'Jstree',
-                    files: [
-                        'dist/location.js',
-                        //'dist/openFrame.js',
-                        'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js"
-                    ]
-                }]);
+                });
             }]
         }
     }).state('publish', {
@@ -767,6 +764,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'dist/location.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js",
+                        'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js'
                     ]

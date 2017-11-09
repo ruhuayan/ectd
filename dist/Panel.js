@@ -1,8 +1,9 @@
-    var _EH = $(window).height()-200; 
+    if(JsTree) delete JsTree;
+    var _EH = $(window).height()-200;
     function Jstree(id, height){
-        this.tree = $(id); 
+        this.tree = $(id);
         this.height = height;
-        this.ctrlId = "#JstreeCtrl";
+        this.ctrlId = "#EditTreeCtrl";
     }
     Jstree.prototype = {
         constructor: Jstree,
@@ -15,12 +16,60 @@
                 var node = json[i];
                 if(node['type']==="file") {
                     $('select.fileList').append('<option id="'+node['id']+'">'+node['text']+'</option>');
-                }   
-            } 
+                }
+            }
+        },
+        setFileDragListener: function(){
+            var _this = this;
+            $(document).on('dnd_move.vakata', function (e, data) {                    //console.log(data.element.text.indexOf(".pdf"))
+                if(data.element.text.indexOf(".pdf")<1) return;
+
+                var t = $(data.event.target);
+                if(t.parents('div.pdf-editor').length && t.parents('div.pdf-editor').attr('data-loaded')=='false' )
+                    data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+                if(t.parents('div.pdf-frame').length )
+                    data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+                var nodeId = $(data.element);
+                var preNode = $('#jsECTDtree').jstree(true).get_selected(true);
+                if(preNode) $('#jsECTDtree').jstree(true).deselect_node(preNode);
+                $('#jsECTDtree').jstree("select_node", nodeId, true);
+
+            }).on('dnd_stop.vakata', function (e, data) {
+
+                var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
+                if(fileName.indexOf('.pdf')<1) return;
+
+                var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length);
+                //if(fileName.indexOf('.pdf')>0) {
+                console.log(data);
+                if(t.parents('div.pdf-editor').length && pdfEditor.panel.attr('data-loaded')=='false')
+                    pdfEditor.setEditCount()
+                        .loadEdits(fileId)
+                        .openPanel(fileName, fileId, function(_this){
+                            pdfEditor.replaceEdits(_this);
+                        });
+                else if(t.parents('div.pdf-frame').length && pdfFrame.panel.attr('data-loaded')=='false'){
+                    pdfFrame.panel.attr("data-replace", "false");
+                    pdfFrame.openPanel(fileName, fileId, function(){
+                        pdfFrame.panel.attr("data-replace", "true");
+                    });
+                } else if(t.parents('div.pdf-frame').length && pdfFrame.panel.attr("data-replace")!="false"){
+                    if(pdfFrame.fileName == fileName) return;
+                                                //console.log(pdfEditor.panel.find(".link-editable-menu").is(":hidden"));
+                    //if(pdfEditor.panel.find(".link-editable-menu").is(":visible")) console.log("link menu");
+                    $(".link-editable-menu select.pageList").val(1);
+                    $(".link-editable-menu select.fileList").removeAttr("disabled").val(pdfFrame.fileName);
+                    pdfFrame.fileZone.empty().append('<div class="load-process">Loading...</div>');
+                    pdfFrame.openPanel(fileName, fileId, function(){ console.log("replaced")});
+
+                }
+                //}
+            }).keyup(function(e) {27 == e.keyCode && pdfEditor.removeTool() });
         }
     };
     Jstree.prototype.__proto__ = Filetree.prototype;
     var JsTree = new Jstree("#jsECTDtree", _EH );
+    JsTree.setFileDragListener();
 
     //super class PdfPanel
     function PdfPanel(id){
@@ -34,17 +83,17 @@
         openPanel: function(file, fileId, callback){
             this.panel.find('.drop-file-zone').hide();
             this.panel.attr('data-loaded', 'true');
-            this.fileZone.show();
+            this.fileZone.show();                              //console.log(JsTree.userData);
 
-            var userData = angular.element("#JstreeCtrl").scope().getUserData();
-            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
+            //this.__userData = this.__userData || angular.element(JsTree.ctrlId).scope().getUserData();
+            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
             //var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
 
             var _this = this;
             $.get(url, function(result){
                 if(!result || !result.ectdFileStateList.length ) return;
                 var uuid = result.ectdFileStateList[0].uuid;
-                var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              console.log(fileURL);
+                var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', fileURL, true);
                 xhr.responseType = 'blob';
@@ -201,10 +250,10 @@
         closeFile: function(tabText){
             var panel = this.panel.attr('data-loaded', 'false');
             panel.find('.pdfTab').html(tabText);
+            panel.find('.right-tabs .pageNum').val("");
             panel.find('span.pageControl').hide();
 
             this.fileZone.fadeOut(100, function(){
-
                 $(this).empty().append('<div class="load-process">Loading...</div>');
             });
             panel.find('.drop-file-zone').fadeIn(300, function(){});
@@ -340,7 +389,7 @@
         },
         loadEdits: function(fid){
             var _this = this;
-            angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){       console.log("file: ", result);
+            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){       console.log("file: ", result);
                 if(result.errors) return;
                 if(result && result.state){
                     var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
@@ -476,22 +525,33 @@
             //pdfFile["pdf-editor"].saved = false;
             return target;
         },
-        openLinkEdit: function(target, select){
+        openLinkEdit: function(target, select){                        //console.log(select)
             var fileListSelect = $('.link-editable-menu select.fileList'), pageList =$('.link-editable-menu select.pageList');
-            if(select) {                                                 //console.log("select", select)
-                fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');        // pageList is loaded first time always
-                                                                                                //console.log(pdfFrame.fileName);
-                if(pdfFrame.pdf.numPages>1){
+            if(select) {
+                if(target.attr('data-target-fid') && target.attr('data-uri'))                                     // pageList is not first time open edit
+                    fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
+                else {
+                    fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');
+                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});
+                }                                                                                // pageList is loaded first time open edit
+
+                if(target.attr("data-numPages")) {                                          //  pageList is not first time loaded
+                    this.createPageList( target.attr("data-numPages"), pageList);
+                    pageList.val(target.attr('data-target-page')).show().attr('disabled', 'disabled');              console.log(pdfFrame.fileName,target.attr('data-uri' ));
+                    if( pdfFrame.fileName == target.attr('data-uri' )) pageList.removeAttr("disabled");
+                }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
-                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid":pdfFrame.fid,"data-numpages": pdfFrame.pdf.numPages });
+                    target.attr({"data-numpages": pdfFrame.pdf.numPages, "data-target-page": 1});
                     pageList.show().removeAttr("disabled");
                 }else pageList.hide();
+
 
             }else {                                                                          // target-fid >1 (select) or target-fid =1 (link)
                 if(target.attr('data-target-page')>1 && target.attr('data-uri')){
                     fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
                     this.createPageList( target.attr('data-target-page'), pageList);
                     pageList.val(target.attr('data-target-page')).attr('disabled', 'disabled').show();
+                    if( pdfFrame.fileName == target.attr('data-uri' )) pageList.removeAttr("disabled");
                 }else{
                     var sText;
                     $("select.fileList option").each(function(){
@@ -574,17 +634,17 @@
                     t.parents(".link-editable-menu").hide();
             });
             $(".link-editable-menu select.fileList").on('change', function(){
-                var sOption= $(this).find('option:selected');
+                var sOption= $(this).find('option:selected');                            console.log("file", sOption);
                 $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()});
             });
             $(".link-editable-menu select.pageList").on('change', function(){
                 var sOption= $(this).find('option:selected');                                //console.log(sOption.text());
-                $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr("data-target-page", sOption.text());
+                $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-page": sOption.text()});
                 if (pdfFrame.panel.attr('data-loaded')=='true'){
                     var pageNum = sOption.text();
                     pdfFrame.render(parseInt(pageNum));
                     pdfFrame.panel.find('.right-tabs select.pageList').val(pageNum);
-                    pdfFrame.panel.find('.right-tabs .pageNum').val(pageNum)
+                    pdfFrame.panel.find('.right-tabs .pageNum').val(pageNum);
 
                 }
             });
@@ -713,8 +773,8 @@
                 if(opl[op].length<=0) delete opl[op];
             }
 
-            var postData = {"action": JSON.stringify(opl), "state": "0"};
-            angular.element("#JstreeCtrl").scope().saveEdits(this.fid, postData).then(function(result){ console.log(result);
+            var postData = JSON.stringify(opl);                   console.log(postData)
+            angular.element(JsTree.ctrlId).scope().saveEdits(this.fid, postData).then(function(result){ console.log(result);
                 if(result && result.id) toastr.success("edits saved");
             });
         }
@@ -744,35 +804,6 @@
             }
         }
     });
-
-    
-    $(document).on('dnd_move.vakata', function (e, data) {  
-            var t = $(data.event.target);                                      
-            if(t.parents('div.pdf-editor').length && t.parents('div.pdf-editor').attr('data-loaded')=='false' )
-                data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
-            if(t.parents('div.pdf-frame').length && t.parents('div.pdf-frame').attr('data-loaded')=='false')
-                data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); 
-            var nodeId = $(data.element);
-            var preNode = $('#jsECTDtree').jstree(true).get_selected(true);
-            if(preNode) $('#jsECTDtree').jstree(true).deselect_node(preNode);
-            $('#jsECTDtree').jstree("select_node", nodeId, true);               
-            
-        }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data);
-                var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
-                var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
-                if(fileName.indexOf('.pdf')>0) {                                                
-                    if(t.parents('div.pdf-editor').length && pdfEditor.panel.attr('data-loaded')=='false')
-                        pdfEditor.setEditCount()
-                            .loadEdits(fileId)
-                            .openPanel(fileName, fileId, function(_this){
-                                pdfEditor.replaceEdits(_this);
-                            });
-                    else if(t.parents('div.pdf-frame').length && pdfFrame.panel.attr('data-loaded')=='false')
-                        pdfFrame.openPanel(fileName, fileId, function(){
-                            $('.link-editable-menu select.pageList').attr("data-numpages", pdfFrame.pdf.numPages);
-                        });
-                }   
-       }).keyup(function(e) {27 == e.keyCode && pdfEditor.removeTool() });
 
     var Et = !1;
     pdfEditor.panel.on("click", function(evt) {

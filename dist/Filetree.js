@@ -96,7 +96,7 @@ Filetree.prototype ={
         if(!node) return;
         if(node.type=="file"){
             var fileId = node.id;
-            var userData = angular.element(this.ctrlId).scope().getUserData();  //console.log("UUID: ",uuid, userData );
+            var userData = this.userData || angular.element(this.ctrlId).scope().getUserData();  console.log("userData: ",this.userData );
             var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
             //var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //
             this.openIframe( url, userData);

@@ -31,7 +31,7 @@
 
 <div class="rightPanel">
         <div class="row" >
-            <div class="col-sm-3 sidebar" ng-controller="JstreeCtrl" id="JstreeCtrl">
+            <div class="col-sm-3 sidebar" ng-controller="EditTreeCtrl" id="EditTreeCtrl">
                 <div class="caption font-green-sharp" style="font-size:14px; margin: 15px 0px 10px 10px;">
                     <span class="caption-subject bold uppercase">Application</span>
                     <a class="btn-circle" ng-click="toggleTree()">
@@ -261,18 +261,19 @@
 <!--<script src="dist/jsECTDtree.js"></script>-->
 <script> 
     //"use strict";
-    
-    function JstreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, FileApiService){
-        
+
+    function EditTreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, FileApiService, ModalService){
+
         var appUid, userData;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;                                 
+            appUid = $rootScope.appData.appUid;
             userData = $rootScope.userData;
+            JsTree.userData = userData;
         }
-        userData = JSON.parse($cookies.get('globals'));
+        userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
         if(!$rootScope.subFiles){
            //JsTree.initTree(fileTree);
-           $state.go("fileupload").then(function() {}); 
+           $state.go("fileupload").then(function() {});
         }else{
             //var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
             JsTree.initTree($rootScope.subFiles);
@@ -281,9 +282,9 @@
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
-            $rootScope.open = ! $rootScope.open; 
+            $rootScope.open = ! $rootScope.open;
         };
-       
+
         JsTree.closeSidebar();
         //$rootScope.settings.layout.pageSidebarClosed = true;
         $scope.saveEdits = function(fid, editData){
@@ -303,7 +304,7 @@
         });
         $scope.$on("$destroy", function(){
 
-            ModalService.showModal({
+            /*ModalService.showModal({
                 templateUrl: "tpl/modal.html",
                 controller: "SaveEditYesNoCtrl",
                 preClose: function(modal){ modal.element.modal('hide'); },
@@ -317,7 +318,7 @@
                 modal.close.then(function(result) {                                           //console.log(result);
                     if(result) {}
                 });
-            });
+            });*/
         });
      }
     function SaveEditYesNoCtrl($scope, $element, title, body, close){
@@ -338,11 +339,7 @@
     </script>
 <script src="dist/jquery-resizable.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="dist/Filetree.js"></script>
-<script src="dist/editLink/Panel.js"></script>
-<script>
-    function togglePanel(){
-        
-    }
-</script>
+
+<script src="dist/Panel.js"></script>
+
 <!--<script src="https://use.fontawesome.com/572e7c8d9e.js" async="async"></script>-->

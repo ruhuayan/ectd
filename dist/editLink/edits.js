@@ -47,7 +47,7 @@
         }).on('dnd_stop.vakata', function (e, data) {                                 //console.log(data);
             var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
             var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length); 
-            if(fileName.indexOf('.pdf')>0) {                                                
+            if(fileName.indexOf('.pdf')>0) {                                        console.log(data)
                 if(t.parents('div.pdf-editor').length && pdfEditor.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfEditor);
                 else if(t.parents('div.pdf-frame').length && pdfFrame.attr('data-loaded')=='false') openPanel(fileName, fileId, pdfFrame);
             }   

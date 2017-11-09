@@ -1,7 +1,9 @@
-//angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService','TemplateApiService', 'ModalService',
-//    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService ) {
+angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService','TemplateApiService', 'ModalService',
+    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService ) {
 
-function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
+
+
+//function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
         var appData; 
         if(CookiesApiService.GetCookies())
             appData = $rootScope.appData;
@@ -156,8 +158,8 @@ function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService,
                 $scope.templates = result; 
             });
         }
-    };
-    //}]);
+    //};
+    }]);
     /*angular.module('MetronicApp').controller('YesNoController', ['$scope', 'close', function($scope, close) {
         $scope.close = function(result) {
             close(result, 500); // close, but give 500ms for bootstrap to animate

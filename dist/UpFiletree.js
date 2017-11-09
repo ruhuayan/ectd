@@ -1,3 +1,4 @@
+    //console.log(JsTree);
     function Jstree(id, height){
         Filetree.call(this, id, height);
         this.ctrlId = "#FileUploadCtrl";
@@ -291,3 +292,4 @@
             callback(); 
         });
     }
+    //console.log(JsTree);
