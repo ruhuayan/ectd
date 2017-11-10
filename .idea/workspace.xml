@@ -2,21 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38c38acb-0955-454b-9dd0-da4adc2836aa" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dist/editLink/UpFiletree.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dist/editLink/edits.js" afterPath="$PROJECT_DIR$/dist/edits.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/Filetree.js" afterPath="$PROJECT_DIR$/dist/Filetree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/InfoFiletree.js" afterPath="$PROJECT_DIR$/dist/InfoFiletree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/Panel.js" afterPath="$PROJECT_DIR$/dist/Panel.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/UpFiletree.js" afterPath="$PROJECT_DIR$/dist/UpFiletree.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/location.js" afterPath="$PROJECT_DIR$/dist/location.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/controllers/EditTreeCtrl.js" afterPath="$PROJECT_DIR$/js/controllers/EditTreeCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/controllers/FileUploadCtrl.js" afterPath="$PROJECT_DIR$/js/controllers/FileUploadCtrl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/main.js" afterPath="$PROJECT_DIR$/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/edit_info.html" afterPath="$PROJECT_DIR$/views/edit_info.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/edit_link.html" afterPath="$PROJECT_DIR$/views/edit_link.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/file_upload.html" afterPath="$PROJECT_DIR$/views/file_upload.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/publish.html" afterPath="$PROJECT_DIR$/views/publish.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/stickyDirective.js" afterPath="$PROJECT_DIR$/js/stickyDirective.js" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,13 +22,23 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="642">
-              <caret line="748" column="58" lean-forward="false" selection-start-line="748" selection-start-column="58" selection-end-line="748" selection-end-column="58" />
+            <state relative-caret-position="422">
+              <caret line="692" column="63" lean-forward="false" selection-start-line="692" selection-start-column="63" selection-end-line="692" selection-end-column="63" />
               <folding>
                 <element signature="e#829#7565#0" expanded="false" />
                 <element signature="e#7594#12842#0" expanded="false" />
-                <element signature="e#27290#34783#0" expanded="false" />
+                <element signature="e#27339#34832#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jquery.sticky.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/jquery.sticky.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="48" lean-forward="true" selection-start-line="4" selection-start-column="48" selection-end-line="4" selection-end-column="48" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -46,8 +46,8 @@
       <file leaf-file-name="file_upload.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/file_upload.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="106" column="42" lean-forward="true" selection-start-line="106" selection-start-column="42" selection-end-line="106" selection-end-column="42" />
+            <state relative-caret-position="595">
+              <caret line="140" column="40" lean-forward="true" selection-start-line="140" selection-start-column="40" selection-end-line="140" selection-end-column="40" />
               <folding>
                 <element signature="n#div#0;n#!!top" expanded="false" />
                 <element signature="e#2493#3281#0" expanded="false" />
@@ -59,8 +59,8 @@
       <file leaf-file-name="location.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/location.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
+            <state relative-caret-position="17">
+              <caret line="1" column="3" lean-forward="false" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -84,8 +84,8 @@
       <file leaf-file-name="UpFiletree.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/UpFiletree.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="766">
-              <caret line="345" column="11" lean-forward="true" selection-start-line="345" selection-start-column="11" selection-end-line="345" selection-end-column="11" />
+            <state relative-caret-position="511">
+              <caret line="336" column="60" lean-forward="false" selection-start-line="336" selection-start-column="60" selection-end-line="336" selection-end-column="60" />
               <folding>
                 <element signature="e#393#6099#0" expanded="false" />
                 <element signature="e#7507#12597#0" expanded="false" />
@@ -97,53 +97,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileUploadCtrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/controllers/FileUploadCtrl.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="558">
-              <caret line="286" column="15" lean-forward="true" selection-start-line="286" selection-start-column="15" selection-end-line="286" selection-end-column="15" />
-              <folding>
-                <element signature="e#940#1158#0" expanded="false" />
-                <element signature="e#2661#3194#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Filetree.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/Filetree.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="2" lean-forward="true" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#526#1545#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="InfoFiletree.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/InfoFiletree.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="477">
               <caret line="64" column="50" lean-forward="true" selection-start-line="64" selection-start-column="50" selection-end-line="64" selection-end-column="50" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit_link.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/edit_link.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="40" column="117" lean-forward="true" selection-start-line="40" selection-start-column="117" selection-end-line="40" selection-end-column="117" />
-              <folding>
-                <element signature="n#div#0;n#!!top" expanded="false" />
-                <element signature="n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-                <marker date="1510345480621" expanded="false" signature="23011:26176" ph="{...}" />
-                <marker date="1510345480621" expanded="false" signature="26245:26477" ph="{...}" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -249,8 +208,8 @@
       <find>fileSaved</find>
       <find>userData</find>
       <find>togglePanel</find>
-      <find>showWarningModal</find>
       <find>toggleUpload</find>
+      <find>showWarningModal</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -286,9 +245,10 @@
         <option value="$PROJECT_DIR$/dist/Filetree.js" />
         <option value="$PROJECT_DIR$/js/controllers/FileUploadCtrl.js" />
         <option value="$PROJECT_DIR$/dist/InfoFiletree.js" />
-        <option value="$PROJECT_DIR$/dist/UpFiletree.js" />
-        <option value="$PROJECT_DIR$/views/file_upload.html" />
         <option value="$PROJECT_DIR$/dist/location.js" />
+        <option value="$PROJECT_DIR$/js/stickyDirective.js" />
+        <option value="$PROJECT_DIR$/views/file_upload.html" />
+        <option value="$PROJECT_DIR$/dist/UpFiletree.js" />
         <option value="$PROJECT_DIR$/js/main.js" />
       </list>
     </option>
@@ -371,11 +331,12 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ngSticky-master/examples/demo.html" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\wamp64\www\pdf\js" />
       <recent name="C:\wamp64\www\pdf\dist" />
+      <recent name="C:\wamp64\www\pdf\js" />
       <recent name="C:\wamp64\www\pdf\js\services" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -797,12 +758,12 @@
       <workItem from="1509715897240" duration="29580000" />
       <workItem from="1509974085292" duration="26436000" />
       <workItem from="1510070633066" duration="46435000" />
-      <workItem from="1510238277241" duration="52346000" />
+      <workItem from="1510238277241" duration="55030000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182089000" />
+    <option name="totallyTimeSpent" value="184773000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1696" height="1066" extended-state="6" />
@@ -864,45 +825,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10115">
-          <caret line="1023" column="40" lean-forward="false" selection-start-line="1023" selection-start-column="40" selection-end-line="1023" selection-end-column="40" />
-          <folding>
-            <element signature="e#829#7565#0" expanded="false" />
-            <element signature="e#7594#12842#0" expanded="false" />
-            <element signature="e#27290#34783#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/edit_link.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5015">
-          <caret line="295" column="28" lean-forward="true" selection-start-line="295" selection-start-column="28" selection-end-line="295" selection-end-column="28" />
-          <folding>
-            <element signature="n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#!!top" expanded="false" />
-            <marker date="1510345480621" expanded="false" signature="23011:26176" ph="{...}" />
-            <marker date="1510345480621" expanded="false" signature="26245:26477" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/UpFiletree.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1139">
-          <caret line="67" column="38" lean-forward="true" selection-start-line="67" selection-start-column="38" selection-end-line="67" selection-end-column="38" />
-          <folding>
-            <element signature="e#393#6099#0" expanded="false" />
-            <element signature="e#7507#12597#0" expanded="false" />
-            <element signature="e#12652#12696#0" expanded="false" />
-            <element signature="e#16597#17570#0" expanded="false" />
-            <element signature="e#17623#18572#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/Filetree.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2023">
@@ -1089,7 +1011,7 @@
           <folding>
             <element signature="e#829#7565#0" expanded="false" />
             <element signature="e#7594#12842#0" expanded="false" />
-            <element signature="e#27290#34783#0" expanded="false" />
+            <element signature="e#27339#34832#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1223,13 +1145,6 @@
             <marker date="1510342303304" expanded="true" signature="51702:51791" ph="..." />
             <marker date="1510342303304" expanded="true" signature="51805:51831" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/directives.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="320" column="47" lean-forward="true" selection-start-line="320" selection-start-column="47" selection-end-line="320" selection-end-column="47" />
         </state>
       </provider>
     </entry>
@@ -1548,6 +1463,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dist/location.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="3" lean-forward="false" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ngSticky-master/examples/demo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="58" column="8" lean-forward="true" selection-start-line="53" selection-start-column="1" selection-end-line="58" selection-end-column="8" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/stickyDirective.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="21" column="10" lean-forward="true" selection-start-line="21" selection-start-column="10" selection-end-line="21" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/directives.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="32" lean-forward="true" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
+          <folding>
+            <marker date="1509636752877" expanded="true" signature="4130:4151" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/jquery.sticky.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="48" lean-forward="true" selection-start-line="4" selection-start-column="48" selection-end-line="4" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/file_upload.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="140" column="40" lean-forward="true" selection-start-line="140" selection-start-column="40" selection-end-line="140" selection-end-column="40" />
+          <folding>
+            <element signature="n#div#0;n#!!top" expanded="false" />
+            <element signature="e#2493#3281#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dist/Panel.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -1609,8 +1579,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dist/UpFiletree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="766">
-          <caret line="345" column="11" lean-forward="true" selection-start-line="345" selection-start-column="11" selection-end-line="345" selection-end-column="11" />
+        <state relative-caret-position="511">
+          <caret line="336" column="60" lean-forward="false" selection-start-line="336" selection-start-column="60" selection-end-line="336" selection-end-column="60" />
           <folding>
             <element signature="e#393#6099#0" expanded="false" />
             <element signature="e#7507#12597#0" expanded="false" />
@@ -1621,33 +1591,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/file_upload.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="106" column="42" lean-forward="true" selection-start-line="106" selection-start-column="42" selection-end-line="106" selection-end-column="42" />
-          <folding>
-            <element signature="n#div#0;n#!!top" expanded="false" />
-            <element signature="e#2493#3281#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/location.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="642">
-          <caret line="748" column="58" lean-forward="false" selection-start-line="748" selection-start-column="58" selection-end-line="748" selection-end-column="58" />
+        <state relative-caret-position="422">
+          <caret line="692" column="63" lean-forward="false" selection-start-line="692" selection-start-column="63" selection-end-line="692" selection-end-column="63" />
           <folding>
             <element signature="e#829#7565#0" expanded="false" />
             <element signature="e#7594#12842#0" expanded="false" />
-            <element signature="e#27290#34783#0" expanded="false" />
+            <element signature="e#27339#34832#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -331,12 +331,18 @@
                 }
             });
             return this;
+        },
+        setStickyUptree: function(){
+            $(document).ready(function() {                            console.log("sticky");
+                $("#uploadFileTree").sticky({topSpacing: 100});
+            });
         }
     };
     
     Jstree.prototype.__proto__ = Filetree.prototype;            //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
-    JsTree.setExpandTreeListener();
+    JsTree.setExpandTreeListener()
+        .setStickyUptree();
 
     /*function showWarningModal(callback){
         $("#myModal").modal(); 

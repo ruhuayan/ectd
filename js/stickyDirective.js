@@ -9,12 +9,12 @@
 (function() {
   'use strict';
 
-  var module = angular.module('sticky', []);
+  //var module = angular.module('sticky', []);
 
   /**
    * Directive: sticky
    */
-  module.directive('sticky', ['$window', '$timeout', function($window, $timeout) {
+  MetronicApp.directive('sticky', ['$window', '$timeout', function($window, $timeout) {
       return {
         restrict: 'A', // this directive can only be used as an attribute.
         scope: {
