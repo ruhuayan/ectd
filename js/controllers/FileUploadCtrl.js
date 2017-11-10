@@ -171,7 +171,7 @@
                 return;
             }
         };
-        function batchUpdata(json) {
+        function batchUpdata(json, callback) {
 
             $translate("INFO_WAIT").then(function(translation){
                 toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
@@ -195,6 +195,7 @@
                     toastr.success("Stucture save in app");
                     $rootScope.tagEdit = true;
                     JsTree.treeChanged = false;
+                    if(callback) callback();
                 }
             });
         }
@@ -277,7 +278,14 @@
         }
         $scope.$on("$destroy", function(){
             if( !$scope.fileJson) return;
-             ModalService.showModal({
+            var title = "Save File Tree ?",
+                body = "Changes have been made in the file tree. Do you want to save them? ";
+            $scope.setModal(title, body, function(){
+                batchUpdata($scope.fileJson, function(){
+                    $state.go($state.current, {}, {reload: true});                     // to reload state to see the change
+                });
+            });
+             /*ModalService.showModal({
                 templateUrl: "tpl/modal.html",
                 controller: "SaveTreeYesNoCtrl",
                 preClose: function(modal){ modal.element.modal('hide'); },
@@ -289,9 +297,12 @@
                 //it's a bootstrap element, use 'modal' to show it
                 modal.element.modal();
                 modal.close.then(function(result) {                                           //console.log(result);
-                    if(result) batchUpdata($scope.fileJson);
+                    if(result)
+                        batchUpdata($scope.fileJson, function(){
+                            $state.go($state.current, {}, {reload: true});                     // to reload state to see the change
+                        });
                 });
-            });
+            });*/
         });
 
         $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
@@ -299,6 +310,26 @@
                 $scope.fileJson = JsTree.get_fileJson();
             //if($scope.fileJson) batchUpdata($scope.fileJson);
         });
+
+        $scope.setModal = function(title, body, callback){
+            ModalService.showModal({
+                templateUrl: "tpl/modal.html",
+                controller: "SaveTreeYesNoCtrl",
+                preClose: function(modal){ modal.element.modal('hide'); },
+                inputs:{
+                    title: title,
+                    body: body
+                }
+            }).then(function(modal) {
+                //it's a bootstrap element, use 'modal' to show it
+                modal.element.modal();
+                modal.close.then(function(result) {                                           //console.log(result);
+                    if(result)
+                        callback();
+
+                });
+            });
+        }
     //};
     }]);
 function SaveTreeYesNoCtrl($scope, $element, title, body, close){

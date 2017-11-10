@@ -65,7 +65,7 @@ END PAGE HEADER-->
                 </div>
                 <div class="actions">
                     <a class="btn btn-sm green" ng-click="togglePortlet()" ng-hide="tagEdit"><span class="title" translate>EDITTAG</span></a>
-                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
+                    <a class="btn btn-square btn-default btn-sm" href="#" id="expandTree">
                         <i class="fa fa-exchange" aria-hidden="true"></i></a>    
                 </div>
             </div>
@@ -580,21 +580,7 @@ END PAGE HEADER-->
 <!--<script src="dist/jsECTDtree.js"></script>
 <script src="dist/Filetree.js"></script>-->
 <script src="dist/InfoFiletree.js"></script>
-<script>
-    function togglePanel(){
-        var leftPanel = $(".leftPanel");
-        var rightPanel = $(".rightPanel");
-        if(leftPanel.hasClass("col-md-4")){
-            leftPanel.removeClass("col-md-4").addClass("col-md-6");
-            rightPanel.removeClass("col-md-8").addClass("col-md-6");
-            rightPanel.find("#TagCtrl").css({"width": "100%"});
-        }else {
-            leftPanel.removeClass("col-md-6").addClass("col-md-4");
-            rightPanel.removeClass("col-md-6").addClass("col-md-8");
-            rightPanel.find("#TagCtrl").css({"width": "60%"});
-        }
-    }
-</script>
+
 <!--<script>
     function Jstree(id, height){
         this.tree = $(id); 

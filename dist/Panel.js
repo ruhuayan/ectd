@@ -1,4 +1,4 @@
-    if(JsTree) delete JsTree;
+    //if(JsTree) delete JsTree;
     var _EH = $(window).height()-200;
     function Jstree(id, height){
         this.tree = $(id);
@@ -39,14 +39,15 @@
                 var fileName = $.trim(data.element.text), fileId = data.data.nodes[0]; // filePath = data;            console.log(filePath);
                 if(fileName.indexOf('.pdf')<1) return;
 
-                var t = $(data.event.target);                                           //console.log('parents: ',t.parents('div.pdf-editor').length);
+                var t = $(data.event.target);                             //console.log(data);
                 //if(fileName.indexOf('.pdf')>0) {
-                console.log(data);
+
                 if(t.parents('div.pdf-editor').length && pdfEditor.panel.attr('data-loaded')=='false')
                     pdfEditor.setEditCount()
                         .loadEdits(fileId)
                         .openPanel(fileName, fileId, function(_this){
                             pdfEditor.replaceEdits(_this);
+                            pdfEditor.fileUnsaved = false;
                         });
                 else if(t.parents('div.pdf-frame').length && pdfFrame.panel.attr('data-loaded')=='false'){
                     pdfFrame.panel.attr("data-replace", "false");
@@ -54,13 +55,18 @@
                         pdfFrame.panel.attr("data-replace", "true");
                     });
                 } else if(t.parents('div.pdf-frame').length && pdfFrame.panel.attr("data-replace")!="false"){
-                    if(pdfFrame.fileName == fileName) return;
-                                                //console.log(pdfEditor.panel.find(".link-editable-menu").is(":hidden"));
-                    //if(pdfEditor.panel.find(".link-editable-menu").is(":visible")) console.log("link menu");
-                    $(".link-editable-menu select.pageList").val(1);
-                    $(".link-editable-menu select.fileList").removeAttr("disabled").val(pdfFrame.fileName);
+                    if(pdfFrame.fileName == fileName) return;                             // prevent from opeing the same file
+
                     pdfFrame.fileZone.empty().append('<div class="load-process">Loading...</div>');
-                    pdfFrame.openPanel(fileName, fileId, function(){ console.log("replaced")});
+                    pdfFrame.openPanel(fileName, fileId, function(){
+                        var linkMenu = $(".link-editable-menu");
+                        if(linkMenu.css('display') == 'block'){                        // when link edit menu is on focus, change the file and page list
+                            var pageList = $(".link-editable-menu select.pageList"), target = $("#" + linkMenu.attr("data-target-id")) ;
+                            pdfEditor.createPageList(pdfFrame.pdf.numPages, pageList);
+                            $(".link-editable-menu select.fileList").val(fileName);               //console.log(target);
+                            target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid, "data-numpages": pdfFrame.pdf.numPages, "data-target-page": 1});
+                        }
+                    });
 
                 }
                 //}
@@ -248,6 +254,8 @@
             return this;
         },
         closeFile: function(tabText){
+            if(this.fileUnsaved) angular.element(JsTree.ctrlId).scope().setModal(this.fid, this.getEditList());
+
             var panel = this.panel.attr('data-loaded', 'false');
             panel.find('.pdfTab').html(tabText);
             panel.find('.right-tabs .pageNum').val("");
@@ -356,9 +364,9 @@
                         id: $(this)[0].id,
                         text: _this._getText(e.text()),
                         pw: parseInt(pageWrap.attr('data-pw')),
-                        position: {
+                        position: {                                                            // to add 10 px to text inlineHeight
                             x: parseInt(e.css("left").slice(0, -2)/n),//Big(e.css("left").slice(0, -2)).div(n),
-                            y: parseInt((e.offset().top-pageWrap.offset().top)/n) //Big(i.attr("height")).minus(Big((e.css("top")))).minus(l).plus(c).div(n)
+                            y: parseInt((e.offset().top-pageWrap.offset().top)/n)+10 //Big(i.attr("height")).minus(Big((e.css("top")))).minus(l).plus(c).div(n)
 
                         },
                         style:{
@@ -389,11 +397,11 @@
         },
         loadEdits: function(fid){
             var _this = this;
-            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){       console.log("file: ", result);
+            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){
                 if(result.errors) return;
-                if(result && result.state){
-                    var lastState = result.state[result.state.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
-                    _this.edits = JSON.parse(lastState.action);                         //console.log("edits: ", pdfFile['pdf-editor'].edits);
+                if(result && result.ectdFileStateList){
+                    var lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
+                    _this.edits = JSON.parse(lastState.action);                        console.log("actions: ", _this.edits);
                 }
             });
             //angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){});
@@ -433,7 +441,7 @@
                         if(_this.editCount<lastOpNum) _this.editCount = lastOpNum;
 
                         var scale = (editZone.width()-window.browserScrollbarWidth)/textEdits[i].pw;
-                        var t = textEdits[i].position.y * scale,
+                        var t = textEdits[i].position.y * scale -10,                     // to remove 10px inline height
                             l = textEdits[i].position.x * scale,
                             style = textEdits[i].style,
                             id = textEdits[i].id,
@@ -537,7 +545,7 @@
 
                 if(target.attr("data-numPages")) {                                          //  pageList is not first time loaded
                     this.createPageList( target.attr("data-numPages"), pageList);
-                    pageList.val(target.attr('data-target-page')).show().attr('disabled', 'disabled');              console.log(pdfFrame.fileName,target.attr('data-uri' ));
+                    pageList.val(target.attr('data-target-page')).show().attr('disabled', 'disabled');              //console.log(pdfFrame.fileName,target.attr('data-uri' ));
                     if( pdfFrame.fileName == target.attr('data-uri' )) pageList.removeAttr("disabled");
                 }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
@@ -627,15 +635,18 @@
             return this;
         },
         setLinkMenuListener: function(){
+            var _this = this;
             $(".link-editable-menu .delete-opts").click(function() {                     //console.log("delete")
                 var t = $(this),
                     e = $("#" + t.parents(".link-editable-menu").attr("data-target-id"));
                 e.remove(),
                     t.parents(".link-editable-menu").hide();
+                _this.fileUnsaved = true;
             });
             $(".link-editable-menu select.fileList").on('change', function(){
                 var sOption= $(this).find('option:selected');                            console.log("file", sOption);
                 $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()});
+                _this.fileUnsaved = true;
             });
             $(".link-editable-menu select.pageList").on('change', function(){
                 var sOption= $(this).find('option:selected');                                //console.log(sOption.text());
@@ -647,6 +658,7 @@
                     pdfFrame.panel.find('.right-tabs .pageNum').val(pageNum);
 
                 }
+                _this.fileUnsaved = true;
             });
             return this;
         },
@@ -702,7 +714,9 @@
             var i = {};
             i[e] = a, this._getTextTarget(t).css(i).focus();
         },
-
+        _isValidate: function(t, e){
+            return t.hasClass(e) || t.parents("." + e).length > 0;
+        },
         setDrawListener: function(){
             var el, x1 = 0,  x2 = 0,                // el - element $(this)
                 y1 = 0, y2 = 0,
@@ -759,7 +773,25 @@
             }
             return _this;
         },
+        setClickListener: function(){
+            var _this = this;
+            _this.panel.on("click", function(evt) {
+                var e = $(evt.target), u = $(this).find(".page-wrap");
+                if (!(_this._isValidate(e, "text-editable-menu") || _this._isValidate(e, "link-editable-menu") || _this._isValidate(e, "text-editable") || _this._isValidate(e, "target-editable"))) {
+                    _this.hideEditMenu();
+                    if ((e.hasClass("page") || e.hasClass("not-editable")) && _this.isTool('text')) {      //console.log('mouse click at canvas')
+                        if (Et) return;
+                        var top = evt.pageY - u.offset().top - window.lastTextEditSettings.size,
+                            left = evt.pageX - u.offset().left - 7;
+                        _this.createTextEdit(top, left, "www.sample.com");
+                        _this.removeTool();
+                    }
+                }
+            });
+            return _this;
+        },
         saveEdits: function(){
+            var _this = this;
             this.panel.find(".text-editable").each(function() {                  //console.log("text-editable: ", $(this));
                 if("www.sample.com" == $(this).text()) $(this).remove();
             });
@@ -774,8 +806,11 @@
             }
 
             var postData = JSON.stringify(opl);                   console.log(postData)
-            angular.element(JsTree.ctrlId).scope().saveEdits(this.fid, postData).then(function(result){ console.log(result);
-                if(result && result.id) toastr.success("edits saved");
+            angular.element(JsTree.ctrlId).scope().saveEdits(this.fid, postData).then(function(result){ //console.log(result);
+                if(result){
+                    toastr.success("edits saved");
+                    _this.fileUnsaved = false;
+                }
             });
         }
     };
@@ -787,8 +822,8 @@
         .setToolsMenuListener()
         .setTextMenuListener()
         .setLinkMenuListener()
-        .setDrawListener();
-
+        .setDrawListener()
+        .setClickListener();
     pdfEditor.panel.resize({
         minWidth: 350,
         maxWidth: $('.panel-container').width()-200,
@@ -806,21 +841,6 @@
     });
 
     var Et = !1;
-    pdfEditor.panel.on("click", function(evt) {
-        var e = $(evt.target), u = $(this).find(".page-wrap");
-        if (!(X(e, "text-editable-menu") || X(e, "link-editable-menu") || X(e, "text-editable") || X(e, "target-editable"))) {
-            pdfEditor.hideEditMenu();
-            if ((e.hasClass("page") || e.hasClass("not-editable")) && pdfEditor.isTool('text')) {      //console.log('mouse click at canvas')
-                if (Et) return;
-                var
-                    top = evt.pageY - u.offset().top - window.lastTextEditSettings.size,
-                    left = evt.pageX - u.offset().left - 7;
-                pdfEditor.createTextEdit(top, left, "www.sample.com");
-                pdfEditor.removeTool();
-            }
-        }
-    });
-
     jQuery.fn.inlineEditor = function(obj) {                //
         var o = $(this[0]);
         //removeOperationCache();
@@ -893,9 +913,7 @@
                 "left": textinput.offset().left
             }).attr("data-target-id", textinput.attr("id")).show();                               //console.log('text edit menu', textinput.offset().left);
     }
-    function X(t, e) {
-        return t.hasClass(e) || t.parents("." + e).length > 0;
-    }
+
     (function getScrollbarWidth() {
         var div, body, W = window.browserScrollbarWidth;
         if (W === undefined) {

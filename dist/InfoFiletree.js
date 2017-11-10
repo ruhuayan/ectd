@@ -57,12 +57,29 @@
                 var node = this.getSelectedNode();                        //console.log(node);
                 if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
             }
+        },
+        setExpandTreeListener: function(){
+            $("#expandTree").click(function (e){
+                e.preventDefault();
+                var leftPanel = $(".leftPanel");
+                var rightPanel = $(".rightPanel");
+                if(leftPanel.hasClass("col-md-4")){
+                    leftPanel.removeClass("col-md-4").addClass("col-md-6");
+                    rightPanel.removeClass("col-md-8").addClass("col-md-6");
+                    rightPanel.find("#TagCtrl").css({"width": "100%"});
+                }else {
+                    leftPanel.removeClass("col-md-6").addClass("col-md-4");
+                    rightPanel.removeClass("col-md-6").addClass("col-md-8");
+                    rightPanel.find("#TagCtrl").css({"width": "60%"});
+                }
+            });
+            return this;
         }
     };
     Jstree.prototype.__proto__ = Filetree.prototype;
     //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
-
-    JsTree.setSelectNodeHandler(function(data){
-        JsTree.getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id);
-    });
+    JsTree.setExpandTreeListener()
+        .setSelectNodeHandler(function(data){
+            JsTree.getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id);
+        });

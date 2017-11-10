@@ -1,6 +1,6 @@
 /*      ------ Super class -----          
- *     prototype of jstree for information and edit link page 
- *      upload file tree will use its own class, because it is too complicated
+ *     prototype of jstree for info page (InfoFiletree), upload page (UpFiletree) and edit link page tree
+ *     and publish page tree
  * 
  * ****/
 
@@ -128,11 +128,11 @@ Filetree.prototype ={
             $(this).remove();
         });
 
-        $.get(url, function(result){                               console.log("file", result.ectdFileStateList[0].uuid);
+        $.get(url, function(result){
             if(!result || !result.ectdFileStateList.length ) return;
 
-            var uuid = result.ectdFileStateList[0].uuid;
-            var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              console.log(fileURL);
+            var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             console.log("file", uuid);
+            var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(fileURL);
             var xhr = new XMLHttpRequest();
             xhr.open('GET', fileURL, true);
             xhr.responseType = 'blob';

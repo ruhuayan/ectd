@@ -38,7 +38,7 @@
                         <i class="fa fa-caret-up" title="close file tree" ng-show="open"></i>
                         <i class="fa fa-caret-down" title="open file tree" ng-hide="open"></i>
                     </a>
-                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();" style="margin-left: 20px;">
+                    <a class="btn btn-square btn-default btn-sm" href="#" style="margin-left: 20px;" id="expandTree">
                         <i class="fa fa-exchange" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -258,11 +258,9 @@
                 </div>
 
     </div>                        
-<!--<script src="dist/jsECTDtree.js"></script>-->
-<script> 
-    //"use strict";
-
-    function EditTreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, FileApiService, ModalService){
+<!--
+<script>
+    function EditTreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, ApplicationApiService, FileApiService, ModalService){
 
         var appUid, userData;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
@@ -270,10 +268,12 @@
             userData = $rootScope.userData;
             JsTree.userData = userData;
         }
-        userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
+        //userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
         if(!$rootScope.subFiles){
-           //JsTree.initTree(fileTree);
-           $state.go("fileupload").then(function() {});
+            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData ", JsTree);
+                $rootScope.subFiles = result.nodeList;            //$rootScope.appData.NumOfFiles = result.nodeList.length;
+                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+            });
         }else{
             //var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
             JsTree.initTree($rootScope.subFiles);
@@ -300,11 +300,16 @@
             return appUid;
         }
         $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-
+            if(pdfEditor.fileUnsaved) $scope.edits = pdfEditor.getEditList();   console.log(pdfEditor.getEditList());
         });
         $scope.$on("$destroy", function(){
+            if(pdfEditor.fileUnsaved){                                        //console.log(pdfEditor.getEditList());
+                $scope.setModal(pdfEditor.fid, $scope.edits);
+            }
+        });
+        $scope.setModal = function(fid, editData){
 
-            /*ModalService.showModal({
+            ModalService.showModal({
                 templateUrl: "tpl/modal.html",
                 controller: "SaveEditYesNoCtrl",
                 preClose: function(modal){ modal.element.modal('hide'); },
@@ -316,10 +321,12 @@
                 //it's a bootstrap element, use 'modal' to show it
                 modal.element.modal();
                 modal.close.then(function(result) {                                           //console.log(result);
-                    if(result) {}
+                    if(result) {
+                        $scope.saveEdits(fid, editData);
+                    }
                 });
-            });*/
-        });
+            });
+        };
      }
     function SaveEditYesNoCtrl($scope, $element, title, body, close){
         $scope.title = title;
@@ -330,6 +337,7 @@
         };
     }
 </script>
+-->
 <script src="dist/pdfjs/pdf.min.js"></script>
     <script>
         PDFJS.workerSrc = 'dist/pdfjs/pdf.worker.js';

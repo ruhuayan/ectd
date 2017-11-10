@@ -36,7 +36,7 @@ END PAGE HEADER-->
                     <div class="form-actions">
                             <div class="btn-group">
                                 <button type="submit" class="btn btn-sm green"><span class="title" translate>SAVE</span></button>
-                                 <a class="btn btn-square btn-default btn-sm" href="javascript:toggleUpload();" title="Toggle File Tree">
+                                 <a class="btn btn-square btn-default btn-sm" href="#" title="Expand/Shrink File Tree Panel" id="expandTree">
                                     <i class="fa fa-exchange" aria-hidden="true"></i>
                                  </a>  
                                     <!--<button type="button" class="btn btn-sm default" ng-click="canceltree()"><span class="title" translate>CANCEL</span></button>-->
@@ -116,7 +116,7 @@ END PAGE HEADER-->
                         
                     </div>
                     <div class="portlet-body upload-result-files" ><span ng-show="showHint">Uploaded file is empty.<br /> To upload files, click button Choose Files</span>
-                        <div id="uploadFileTree"></div> 
+                        <div id="uploadFileTree"></div>
                     </div>
                 </div>
                 <div class="col-sm-8 upload-queue">
@@ -189,7 +189,7 @@ END PAGE HEADER-->
     </div>
     
 </div>
-<div class="modal fade " id="myModal" tabindex="-1" role="dialog">
+<!-- <div class="modal fade " id="myModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content alert alert-warning">
       <div class="modal-header">
@@ -201,54 +201,11 @@ END PAGE HEADER-->
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="title" translate>CLOSE</span></button>
         <button type="button" class="btn btn-primary" id="confirmBtn"><span class="title" translate>DELETE</span></button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div> -->
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
 <script src="dist/UpFiletree.js"></script>
 <!--<script src="js/controllers/FileUploadCtrl.js"></script>-->
 
-<script>
-    function toggleUpload(){
-        var uploadTree = $(".uploadTree");
-        var leftPanel = $(".leftPanel");
-        var rightPanel = $(".rightPanel");
-        if(rightPanel.hasClass("col-md-8")){
-            leftPanel.removeClass("col-md-4").addClass("col-md-6");
-            rightPanel.removeClass("col-md-8").addClass("col-md-6").attr("data-col", "col-md-6");
-            $(".upload-queue").fadeOut(300,function(){
-                uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
-            });
-
-        }else {
-            leftPanel.removeClass("col-md-6").addClass("col-md-4");
-            rightPanel.removeClass("col-md-6").addClass("col-md-8").attr("data-col", "col-md-8");
-            uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
-            $(".upload-queue").fadeIn(300, function(){});
-        }
-    }
-
-    $("#expandScreen").click(function (e){
-        e.preventDefault();
-        var uploadTree = $(".uploadTree");
-        var leftPanel = $(".leftPanel");
-        var rightPanel = $(".rightPanel");
-
-        if(rightPanel.hasClass("expanded")){
-            rightPanel.removeClass("expanded")
-                .removeClass("col-md-12")
-                .addClass(rightPanel.attr("data-col"));
-            leftPanel.show();
-            if(leftPanel.hasClass("col-md-6")) $(".upload-queue").hide();
-
-        }else{
-            rightPanel.addClass("expanded");
-            leftPanel.fadeOut(300, function(){
-                rightPanel.removeClass(rightPanel.attr("data-col")).addClass("col-md-12");
-                uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
-                $(".upload-queue").show();
-            })
-        }
-    });
-</script>

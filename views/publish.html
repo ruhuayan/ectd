@@ -20,7 +20,7 @@ END PAGE HEADER-->
 </div>-->
 <div class="row">
     <div class="leftPanel col-md-4"> 
-        <div class="portlet light bordered jstree-portlet" ng-controller="JstreeCtrl" id="JstreeCtrl">
+        <div class="portlet light bordered jstree-portlet" ng-controller="PublishTreeCtrl" id="PublishTreeCtrl">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <!--<i class="icon-settings font-green-sharp"></i>-->
@@ -63,12 +63,10 @@ END PAGE HEADER-->
 </div>
 <!-- END MAIN CONTENT -->
 <!-- BEGIN MAIN JS-->
-<!--<script src="dist/jsECTDtree.js"></script>-->
-<script src="dist/Filetree.js"></script>
 
 <script>
 
-    function JstreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
+    function PublishTreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
         var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
@@ -97,7 +95,7 @@ END PAGE HEADER-->
 
     function Jstree(id, height){
         Filetree.call(this, id, height);
-        this.ctrlId = "#JstreeCtrl";
+        this.ctrlId = "#PublishTreeCtrl";
     }
     /*Jstree.prototype = {
         constructor: Jstree,
@@ -143,8 +141,8 @@ END PAGE HEADER-->
     }
 
     $("#download-btn").click(function(){
-        var appUid = angular.element("#JstreeCtrl").scope().getAppUid();
-        var userData = angular.element("#JstreeCtrl").scope().getUserData();        console.log("downloading .....", appUid, userData);
+        var appUid = angular.element(JsTree.ctrlId).scope().getAppUid();
+        var userData = angular.element(JsTree.ctrlId).scope().getUserData();        console.log("downloading .....", appUid, userData);
 
         var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();

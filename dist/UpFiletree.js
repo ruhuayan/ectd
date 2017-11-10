@@ -230,10 +230,17 @@
                         var inst = $.jstree.reference(data.reference),
                             obj = inst.get_node(data.reference);
                         if(obj.type!=="file") return;
-                        showWarningModal(function(){
+                        var title = "Delete File ?";
+                        var body = "Are you sure to delete the file ?";
+                        var scope = angular.element("#FileUploadCtrl").scope();
+                        scope.setModal(title, body, function(){
+                            $('#uploadFileTree').jstree(true).hide_node(obj.id);                        //console.log( data);
+                            scope.deleteFileNode(obj.id);
+                        });
+                        /*showWarningModal(function(){
                             $('#uploadFileTree').jstree(true).hide_node(obj.id);                        //console.log( data);
                             angular.element("#FileUploadCtrl").scope().deleteFileNode(obj.id);
-                        });         
+                        });*/
                     }
                 }
             };
@@ -279,17 +286,63 @@
             tree.set_icon(node.id, "glyphicon glyphicon-file");
             node.original.name = name;
             node.original.fileId= fileId;        
+        },
+        setExpandTreeListener: function(){
+            $("#expandTree").click(function (e){
+                e.preventDefault();
+                var uploadTree = $(".uploadTree");
+                var leftPanel = $(".leftPanel");
+                var rightPanel = $(".rightPanel");
+                if(rightPanel.hasClass("col-md-8")){
+                    leftPanel.removeClass("col-md-4").addClass("col-md-6");
+                    rightPanel.removeClass("col-md-8").addClass("col-md-6").attr("data-col", "col-md-6");
+                    $(".upload-queue").fadeOut(300,function(){
+                        uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
+                    });
+
+                }else {
+                    leftPanel.removeClass("col-md-6").addClass("col-md-4");
+                    rightPanel.removeClass("col-md-6").addClass("col-md-8").attr("data-col", "col-md-8");
+                    uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
+                    $(".upload-queue").fadeIn(300, function(){});
+                }
+            });
+
+            $("#expandScreen").click(function (e){
+                e.preventDefault();
+                var uploadTree = $(".uploadTree");
+                var leftPanel = $(".leftPanel");
+                var rightPanel = $(".rightPanel");
+
+                if(rightPanel.hasClass("expanded")){
+                    rightPanel.removeClass("expanded")
+                        .removeClass("col-md-12")
+                        .addClass(rightPanel.attr("data-col"));
+                    leftPanel.show();
+                    if(leftPanel.hasClass("col-md-6")) $(".upload-queue").hide();
+
+                }else{
+                    rightPanel.addClass("expanded");
+                    leftPanel.fadeOut(300, function(){
+                        rightPanel.removeClass(rightPanel.attr("data-col")).addClass("col-md-12");
+                        uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
+                        $(".upload-queue").show();
+                    })
+                }
+            });
+            return this;
         }
     };
     
     Jstree.prototype.__proto__ = Filetree.prototype;            //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
+    JsTree.setExpandTreeListener();
 
-    function showWarningModal(callback){
+    /*function showWarningModal(callback){
         $("#myModal").modal(); 
         $("#myModal").find("#confirmBtn").click(function(e){
             $("#myModal").modal("hide");
             callback(); 
         });
-    }
+    }*/
     //console.log(JsTree);
