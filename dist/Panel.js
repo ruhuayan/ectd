@@ -1,8 +1,7 @@
     //if(JsTree) delete JsTree;
     var _EH = $(window).height()-200;
     function Jstree(id, height){
-        this.tree = $(id);
-        this.height = height;
+        Filetree.call(this, id, height);
         this.ctrlId = "#EditTreeCtrl";
     }
     Jstree.prototype = {

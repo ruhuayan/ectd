@@ -333,8 +333,8 @@
             return this;
         },
         setStickyUptree: function(){
-            $(document).ready(function() {                            console.log("sticky");
-                $("#uploadFileTree").sticky({topSpacing: 100});
+            $(document).ready(function() {                            //console.log("sticky");
+                $("#uploadFileTree").sticky({topSpacing: 80});
             });
         }
     };

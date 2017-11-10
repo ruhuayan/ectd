@@ -6,7 +6,7 @@
 
 function Filetree(id, height){
     this.tree = $(id); 
-    this.height = height >650 ? height: 650; ;
+    this.height = height >650 ? height: 650;                   console.log(this.height);
 };
 Filetree.prototype ={
     constructor: Filetree,
