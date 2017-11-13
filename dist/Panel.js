@@ -18,6 +18,28 @@
                 }
             }
         },
+        setExpandTreeListener: function() {
+            $("#expandTree").click(function (e) {                                                                      // console.log($(".EditTreeCtrl").hasClass("col-md-3"))
+                e.preventDefault();
+                var EditTreeCtrl = $(".EditTreeCtrl");
+                var panelContainer = $(".panel-container");
+
+                if (EditTreeCtrl.hasClass("col-md-3")) {
+                    EditTreeCtrl.removeClass("col-md-3").addClass("col-md-5");
+                    panelContainer.removeClass("col-md-9").addClass("col-md-7");
+                    pdfFrame.panel.hide();
+                    //$(".splitter").hide();
+                    pdfEditor.panel.css("width", "100%");
+
+                } else {
+                    EditTreeCtrl.removeClass("col-md-5").addClass("col-md-3");
+                    panelContainer.removeClass("col-md-7").addClass("col-md-9");
+                    pdfFrame.panel.show();
+                    pdfEditor.panel.css("width", "60%");
+                }
+            });
+            return this;
+        },
         setFileDragListener: function(){
             var _this = this;
             $(document).on('dnd_move.vakata', function (e, data) {                    //console.log(data.element.text.indexOf(".pdf"))
@@ -43,7 +65,7 @@
 
                 if(t.parents('div.pdf-editor').length && pdfEditor.panel.attr('data-loaded')=='false')
                     pdfEditor.setEditCount()
-                        .loadEdits(fileId)
+                        //.loadEdits(fileId)
                         .openPanel(fileName, fileId, function(_this){
                             pdfEditor.replaceEdits(_this);
                             pdfEditor.fileUnsaved = false;
@@ -74,7 +96,8 @@
     };
     Jstree.prototype.__proto__ = Filetree.prototype;
     var JsTree = new Jstree("#jsECTDtree", _EH );
-    JsTree.setFileDragListener();
+    JsTree.setExpandTreeListener()
+          .setFileDragListener();
 
     //super class PdfPanel
     function PdfPanel(id){
@@ -90,14 +113,19 @@
             this.panel.attr('data-loaded', 'true');
             this.fileZone.show();                              //console.log(JsTree.userData);
 
-            //this.__userData = this.__userData || angular.element(JsTree.ctrlId).scope().getUserData();
             var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
-            //var url = Base_URL + "/a/application/file/download/" + fileId +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
 
             var _this = this;
-            $.get(url, function(result){
-                if(!result || !result.ectdFileStateList.length ) return;
-                var uuid = result.ectdFileStateList[0].uuid;
+            $.get(url, function(result){                                        console.log(result);
+                if(!result.ectdFileStateList || !result.ectdFileStateList.length ) return;
+
+                var uuid, lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];
+                if(_this.id =="pdf-frame")
+                    uuid = lastState.uuid
+                else {
+                    uuid = result.ectdFileStateList[0].uuid;
+                    if(lastState.action) _this.edits = JSON.parse(lastState.action);
+                }
                 var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', fileURL, true);
@@ -267,7 +295,7 @@
             if(this.partner.attr('data-loaded')=='false'){
                     this.toggleSplitter(false);
             }
-            delete this.pdf; delete this.fid; delete this.fileName;
+            delete this.pdf; delete this.fid; delete this.fileName; delete this.edits;
         },
         toggleSplitter: function(show){
             if(show){ $('.splitter').show(); } else { $('.splitter').hide(); }
@@ -278,8 +306,8 @@
     var pdfFrame = new PdfPanel("pdf-frame");
     pdfFrame.setPageControlHandler();
 
-    function PdfEditor(id){
-        PdfPanel.call(this, id);
+    function PdfEditor(id){                           // super class properties: this.fileZone, this.pageWrap, this.id
+        PdfPanel.call(this, id);                     // own properties: this.pdf, this.fid, this.fileName, this.edit, this.fileUnsaved
         this.editCount = 0;
         this.toolsMenu = $("#tools-menu");
     }
@@ -396,11 +424,11 @@
         },
         loadEdits: function(fid){
             var _this = this;
-            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){
+            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){                                  console.log("loadEdits", result);
                 if(result.errors) return;
                 if(result && result.ectdFileStateList){
                     var lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
-                    _this.edits = JSON.parse(lastState.action);                        console.log("actions: ", _this.edits);
+                    _this.edits = JSON.parse(lastState.action);                        //console.log("actions: ", _this.edits);
                 }
             });
             //angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){});
@@ -881,7 +909,7 @@
             size = obj? obj.style.fontSize : 0,
             color = obj? "rgb(" + obj.style.color.toString()+")" : 0,
             font = obj? obj.style.font: "Times New Roman"
-            d = void 0;                                                     console.log("font: ", font);
+            d = void 0;                                                     //console.log("font: ", font);
         (size = size || u * window.lastTextEditSettings.size + "px",
             //font = font || window.lastTextEditSettings.font,
             color = color || window.lastTextEditSettings.color,

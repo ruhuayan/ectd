@@ -167,7 +167,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             }
         };
         $scope.cancelReference = function(){
-            $scope.referenceData = angular.copy(contactData);
+            $scope.referenceData = angular.copy(referenceData);
             $scope.referenceForm.$setPristine();
             $scope.referenceForm.$setUntouched();
             $scope.referenceForm.$setValidity();

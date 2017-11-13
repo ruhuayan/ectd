@@ -6,7 +6,8 @@
 
 function Filetree(id, height){
     this.tree = $(id); 
-    this.height = height >650 ? height: 650;                   console.log(this.height);
+    this.height = height >650 ? height: 650;                   //console.log(this.height);
+    this.isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
 };
 Filetree.prototype ={
     constructor: Filetree,
@@ -96,7 +97,7 @@ Filetree.prototype ={
         if(!node) return;
         if(node.type=="file"){
             var fileId = node.id;
-            var userData = this.userData || angular.element(this.ctrlId).scope().getUserData();  console.log("userData: ",this.userData );
+            var userData = this.userData || angular.element(this.ctrlId).scope().getUserData();                         //console.log("userData: ",this.userData );
             var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
             //var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //
             this.openIframe( url, userData);
@@ -122,17 +123,27 @@ Filetree.prototype ={
             .css({"position": "absolute","top":gap-2, "left":w/6 ,"width": w*2/3, "height": 2, "background": "#ff0000"}).appendTo(layer);
         var iframe = $("<iframe>").attr("id", "frame")
                 .css({"position": "absolute","top":gap,"left":w/6 ,"width": w*2/3, "height": h-gap*2, "border": "solid 1px #999"}).appendTo(layer);
-
+        var closeTab = $('<a><i class="fa fa-times" aria-hidden="true"></i></a>')
+                        .css({"position": "absolute", "color": "#fff", "top": 10, "left": w*5/6-25, "font-size": "25px"}).appendTo(layer);
         //$("body").append(layer);
         $("#layer").click(function(){
             $(this).remove();
         });
+        var _this = this;
+        $.when($.ajax(url)).then(function(result, textStatus, jqXHR){                         console.log("result", result);
+            if(jqXHR.status !== 200) return;
+            if(!result.ectdFileStateList) return;
 
-        $.get(url, function(result){
-            if(!result || !result.ectdFileStateList.length ) return;
-
-            var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             console.log("file", uuid);
+            // for IE browser
+            if(_this.isIE){
+                var fileURL = Base_URL + result.ectdFileStateList[result.ectdFileStateList.length-1].path;
+                $("#frame").attr("src", fileURL);
+                return;
+            }
+            // for other browser
+            var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             //console.log("file", uuid);
             var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(fileURL);
+
             var xhr = new XMLHttpRequest();
             xhr.open('GET', fileURL, true);
             xhr.responseType = 'blob';
@@ -154,6 +165,9 @@ Filetree.prototype ={
             };
             xhr.send();
         });
+        /*$.get(url, function(result){
+            if(!result || !result.ectdFileStateList.length ) return;
+        });*/
 
     }
 };
