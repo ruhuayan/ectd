@@ -1,8 +1,6 @@
 angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService','TemplateApiService', 'ModalService',
     function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService ) {
 
-
-
 //function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
         var appData; 
         if(CookiesApiService.GetCookies())
@@ -109,7 +107,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
             //$state.go("fileupload").then(function() {});    
         };
         $scope.edit = function(submission){                                             //console.log(submission)
-            toastr.success('Application ID: '+submission.id);
+            toastr.success('Application ID: '+submission.appUid);
             delete $rootScope.subFiles;
             delete $rootScope.uploadFiles;
             //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   

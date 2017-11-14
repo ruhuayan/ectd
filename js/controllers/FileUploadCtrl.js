@@ -171,7 +171,7 @@
                 return;
             }
         };
-        function batchUpdata(json, callback) {
+        function batchUpdata(json, callback) {                                       //console.log(json);
 
             $translate("INFO_WAIT").then(function(translation){
                 toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
@@ -184,7 +184,7 @@
                 overlayColor: "#999"//'#d9534f'
             });
 
-            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
+            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            console.log(result);
 
                 if(result){
                     toastr.remove();

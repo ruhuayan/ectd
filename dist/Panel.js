@@ -91,7 +91,7 @@
 
                 }
                 //}
-            }).keyup(function(e) {27 == e.keyCode && pdfEditor.removeTool() });
+            });
         }
     };
     Jstree.prototype.__proto__ = Filetree.prototype;
@@ -306,8 +306,8 @@
     var pdfFrame = new PdfPanel("pdf-frame");
     pdfFrame.setPageControlHandler();
 
-    function PdfEditor(id){                           // super class properties: this.fileZone, this.pageWrap, this.id
-        PdfPanel.call(this, id);                     // own properties: this.pdf, this.fid, this.fileName, this.edit, this.fileUnsaved
+    function PdfEditor(id){                           // super class properties: this.fileZone, this.pageWrap, this.id, this.fileLoaded
+        PdfPanel.call(this, id);                     // own properties: this.pdf, this.fid, this.fileName, this.edits, this.fileUnsaved
         this.editCount = 0;
         this.toolsMenu = $("#tools-menu");
     }
@@ -373,7 +373,7 @@
                     page: $(this).attr("data-page-num"),
                     tfid: $(this).attr('data-target-fid'),         // target-fid
                     uri:  $(this).attr("data-uri"),           //$(this).attr('data-fid');               no need in real application because of tfid
-                    tpage: $(this).attr("data-target-page")?$(this).attr("data-target-page"):1
+                    tpage: $(this).attr("data-target-page") || 1
                 };
                 p.id && edits.linkOperations.push(p);                    //console.log(c); to JSON.stringify(p) before sending to server
             });
@@ -567,7 +567,7 @@
                     fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
                 else {
                     fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');
-                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});
+                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});    //console.log(fileListSelect.val( pdfFrame.fileName), target.attr("data-uri") )
                 }                                                                                // pageList is loaded first time open edit
 
                 if(target.attr("data-numPages")) {                                          //  pageList is not first time loaded
@@ -582,11 +582,15 @@
 
 
             }else {                                                                          // target-fid >1 (select) or target-fid =1 (link)
-                if(target.attr('data-target-page')>1 && target.attr('data-uri')){
+                if(parseInt(target.attr('data-target-page'))>1 && target.attr('data-uri')){
                     fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
-                    this.createPageList( target.attr('data-target-page'), pageList);
-                    pageList.val(target.attr('data-target-page')).attr('disabled', 'disabled').show();
-                    if( pdfFrame.fileName == target.attr('data-uri' )) pageList.removeAttr("disabled");
+                    if( pdfFrame.fileName == target.attr('data-uri' )) {                    // to show page list with numPages
+                        this.createPageList(pdfFrame.pdf.numPages, pageList);
+                        pageList.removeAttr("disabled");
+                    }else
+                        this.createPageList( target.attr('data-target-page'), pageList.attr('disabled', 'disabled'));
+                    pageList.val(target.attr('data-target-page')).show();
+
                 }else{
                     var sText;
                     $("select.fileList option").each(function(){
@@ -659,6 +663,12 @@
                 if(!_this.hasValidOP()) {alert('file not edited!!!'); return;}
                 _this.saveEdits();
             });
+            _this.toolsMenu.find("[data-tool=backward]").click(function(){
+                 _this._backwardHandler()
+            });
+            _this.toolsMenu.find("[data-tool=forward]").click(function(){
+                _this._forwardHandler()
+            });
             return this;
         },
         setLinkMenuListener: function(){
@@ -727,6 +737,24 @@
                         t.parents(".text-editable-menu").hide();
             });
             return _this;
+        },
+        setShortcutListener: function(){
+            var _this = this;
+            $(document).keydown(function(e){                 // hand undo/redo hotkey
+                if( e.which === 89 && e.ctrlKey ){
+                    if(_this.panel.attr('data-loaded')==='true') _this._forwardHandler();                                                   //alert('control + y');
+                }else if( e.which === 90 && e.ctrlKey ){
+                    if(_this.panel.attr('data-loaded')==='true') _this._backwardHandler();                                                      //alert('control + z');
+                }
+            }).keyup(function(e) {27 == e.keyCode && _this.removeTool() });
+        },
+        _forwardHandler: function(){
+            this.removeTool("forward");
+            this.toolsMenu.find("[data-tool=forward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});
+        },
+        _backwardHandler: function(){
+            this.removeTool("backward");
+            this.toolsMenu.find("[data-tool=backward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});
         },
         _getTextTarget: function(t) {
             return $("#" + t.parents(".text-editable-menu").attr("data-target-id"));
@@ -850,7 +878,8 @@
         .setTextMenuListener()
         .setLinkMenuListener()
         .setDrawListener()
-        .setClickListener();
+        .setClickListener()
+        .setShortcutListener();
     pdfEditor.panel.resize({
         minWidth: 350,
         maxWidth: $('.panel-container').width()-200,

@@ -58,7 +58,14 @@ Filetree.prototype ={
                   var node = _this.tree.jstree().get_node(this.id);
                   if(node.type === "tag" && node.children.length) 
                       _this.tree.jstree().set_icon(node.id, "fa fa-file");
-                  if(node.type ==="file") _this.paintParents(node.parents);
+                  else if(node.type ==="file") _this.paintParents(node.parents);
+                  else if(node.id=="m32s"|| node.id=="m23S"){                                //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
+
+
+                  }else if(node.id=="m32p"||node.id=="m23P"){                              //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
+
+                  }
+
             });
         
         App.initSlimScroll(_this.tree);
@@ -86,7 +93,7 @@ Filetree.prototype ={
     paintParents: function(parents){                                              //console.log(parents);
         for(var i =0; i<parents.length-2; i++){
             var parent = this.tree.jstree(true).get_node(parents[i]);
-            if(parent.type!=="tag" && parent.text.indexOf("<b>")<0) this.tree.jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
+            if( parent.text.indexOf("<b>")<0) this.tree.jstree(true).set_text(parent, "<b>"+parent.text+"</b>");
             //$("#"+parent.id+"_anchor").addClass("hasFile"); //console.log($("#"+parent.id+"_anchor"))
         }
     },

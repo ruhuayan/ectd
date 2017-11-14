@@ -267,7 +267,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         };
         $scope.setTagTitle = function(node, edit){                                 //console.log(node);
 
-            var sNumber =node.type=="tag"? node.text.split(" ")[0] : node.original.sNumber;
+            var sNumber = node.original.sNumber; // node.type=="tag"? node.text.split(" ")[0].replace(/<\/?[^>]+(>|$)/g, "") :
             nodeId = node.id;                                                                  //console.log('id',nodeId)
             var studyTag = showTags(node);
 
