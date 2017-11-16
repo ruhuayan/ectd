@@ -51,8 +51,9 @@
                 if(t.parents('div.pdf-frame').length )
                     data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
                 var nodeId = $(data.element);
-                var preNode = $('#jsECTDtree').jstree(true).get_selected(true);
-                if(preNode) $('#jsECTDtree').jstree(true).deselect_node(preNode);
+                /*var preNode = $('#jsECTDtree').jstree(true).get_selected(true);
+                if(preNode) $('#jsECTDtree').jstree(true).deselect_node(preNode);*/
+                $('#jsECTDtree').jstree("deselect_all", true);
                 $('#jsECTDtree').jstree("select_node", nodeId, true);
 
             }).on('dnd_stop.vakata', function (e, data) {
@@ -194,14 +195,11 @@
             });
             this.panel.find("span#fileName").click(function(){
                 JsTree.tree.jstree(true)._open_to(_this.fid);
-                JsTree.tree.jstree(true).select_node(_this.id);
-                document.getElementById(_this.fid).scrollIntoView();
-                /*var node = JsTree.tree.jstree(true).get_node(_this.fid);
-                  for(var i=0; i<node.parents.length; i++){
-                    JsTree.tree.jstree(true).open_node(node.parents[i]);
-                }
-                JsTree.tree.jstree(true).select_node(node.id);
-                //node.children('.jstree-anchor').focus();*/
+                JsTree.tree.jstree("deselect_all", true);
+                JsTree.tree.jstree("select_node", _this.fid, true);;
+                var nHeight = $("li#"+_this.fid).offset().top;                                    //console.log(nHeight, JsTree.height);
+                if(nHeight< 0) JsTree.tree.scrollTop(0).scrollTop(parseInt( $("li#"+_this.fid).offset().top/JsTree.height) * JsTree.height);
+                else if(nHeight>JsTree.height) JsTree.tree.scrollTop(parseInt(nHeight/JsTree.height) * JsTree.height);
 
             });
             return this;
@@ -592,9 +590,11 @@
                 }                                                                                // pageList is loaded first time open edit
 
                 if(numPages) {                                          //  pageList is not first time loaded
-                    this.createPageList( numPages, pageList);
                     pageList.val(tPageNum).show().attr('disabled', 'disabled');              //console.log(pdfFrame.fileName,target.attr('data-uri' ));
-                    if( pdfFrame.fileName == tFileName) pageList.removeAttr("disabled");
+                    if( pdfFrame.fileName == tFileName) {
+                        this.createPageList( numPages, pageList);
+                        pageList.removeAttr("disabled");
+                    }
                 }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
                     target.attr({"data-numpages": pdfFrame.pdf.numPages, "data-target-page": 1});
@@ -605,6 +605,7 @@
             }else {                                                                          // target-fid >1 (select) or target-fid =1 (link)
 
                 if(tPageNum>1 && tFileName){
+
                     fileListSelect.val(tFileName).attr('disabled', 'disabled');                //console.log(fileListSelect.val(), tPageNum);
                     if( pdfFrame.fileName == tFileName) {                    // to show page list with numPages
                         this.createPageList(pdfFrame.pdf.numPages, pageList);
@@ -617,7 +618,20 @@
                         this.createPageList( tPageNum, pageList.attr('disabled', 'disabled'));
                     pageList.val(tPageNum).show();
 
-                }else{
+                }else if(tPageNum==1 && tFileName){
+                    if( pdfFrame.fileName == tFileName && pdfFrame.pdf.numPages>1) {
+                        fileListSelect.val(tFileName).attr('disabled', 'disabled');
+                        this.createPageList(pdfFrame.pdf.numPages, pageList.removeAttr("disabled").show());
+                        if(tPageNum!= pdfFrame.cPage){
+                            pdfFrame.render(parseInt(tPageNum));
+                            pdfFrame.panel.find('.right-tabs select.pageList').val(tPageNum);
+                        }
+
+                    }else{
+                        fileListSelect.val(tFileName).removeAttr('disabled');
+                        pageList.hide();
+                    }
+                } else{
                     var sText;
                     $("select.fileList option").each(function(){
                         if(tfid && $(this).attr('id')==tfid) {
@@ -682,6 +696,9 @@
             });
             _this.toolsMenu.find("[data-tool=select]").click(function() {
                 if(pdfFrame.panel.attr('data-loaded')=='true') _this.toggleTool("select");
+                if(_this.isTool("select")){
+
+                }
             });
             _this.toolsMenu.find("[data-tool=save]").click(function(t) {
                 t.preventDefault();
@@ -698,22 +715,23 @@
             return this;
         },
         setLinkMenuListener: function(){
-            var _this = this;
+            var _this = this, linkMenu =  $(".link-editable-menu");
+            $(".link-editable-menu #save-link").click(function() {
+                linkMenu.hide();
+            });
             $(".link-editable-menu .delete-opts").click(function() {                     //console.log("delete")
-                var t = $(this),
-                    e = $("#" + t.parents(".link-editable-menu").attr("data-target-id"));
-                e.remove(),
-                    t.parents(".link-editable-menu").hide();
+                $("#" + linkMenu.attr("data-target-id")).remove(),
+                    linkMenu.hide();
                 _this.fileUnsaved = true;
             });
             $(".link-editable-menu select.fileList").on('change', function(){
-                var sOption= $(this).find('option:selected');                            console.log("file", sOption);
-                $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()});
+                var sOption= $(this).find('option:selected');                            //console.log("file", sOption);
+                $("#" + linkMenu.attr("data-target-id")).attr({"data-target-fid":sOption.attr('id'), "data-uri": sOption.text()});
                 _this.fileUnsaved = true;
             });
             $(".link-editable-menu select.pageList").on('change', function(){
                 var sOption= $(this).find('option:selected');                                //console.log(sOption.text());
-                $("#" + $(this).parents(".link-editable-menu").attr("data-target-id")).attr({"data-target-page": sOption.text()});
+                $("#" + linkMenu.attr("data-target-id")).attr({"data-target-page": sOption.text()});
                 if (pdfFrame.panel.attr('data-loaded')=='true'){
                     var pageNum = sOption.text();
                     pdfFrame.render(parseInt(pageNum));
