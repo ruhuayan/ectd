@@ -2,7 +2,7 @@
         function($scope, $rootScope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService ) {
 
     //function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
-        var appUid, toasts = {};                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appUid, toasts = {};                                                console.log("upload ctrl");
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
             JsTree.userData = $rootScope.userData;

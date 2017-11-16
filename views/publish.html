@@ -124,8 +124,8 @@ END PAGE HEADER-->
             }
         }
     };*/
-    Jstree.prototype.__proto__ = Filetree.prototype;
-    //Jstree.prototype = Object.create(Filetree.prototype);
+
+    Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
 
     function togglePanel(){
@@ -143,12 +143,22 @@ END PAGE HEADER-->
     $("#download-btn").click(function(){
         var appUid = angular.element(JsTree.ctrlId).scope().getAppUid();
         var userData = angular.element(JsTree.ctrlId).scope().getUserData();        console.log("downloading .....", appUid, userData);
+        var _button = $(this), progressbar;
+        _button.fadeOut(300, function(){
+                progressbar = $('<div class="load-process">Loading...</div>')
+                    .css({"width": "5%", "height": 2, "background": "#ff0000", "margin-bottom": "25px"}).appendTo(_button.parents(".portlet-body"));
+        });
 
         var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
-
+        xhr.onprogress = function(e){        //console.log (e);
+            if (e.lengthComputable) {
+                var progress = e.loaded/e.total;
+                progressbar.show().css("width", progress +"%");                                                              //console.log(progress);
+            }
+        };
         xhr.onload = function(e) {
             if (this.status === 200) {                                          //console.log("zip file: ",this.response);
                 var blob = new Blob([this.response], {type: 'application/zip'}),
@@ -159,6 +169,8 @@ END PAGE HEADER-->
                 link.download = "ectd";
                 link.click();
                 window.URL.revokeObjectURL(link.href);
+                progressbar.hide();
+                _button.show();
             }
         };
         xhr.send();

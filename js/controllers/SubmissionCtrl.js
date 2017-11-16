@@ -15,7 +15,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         else 
             ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){                          //console.log("api service", data.list); 
             if(!data.list) {$rootScope.applications=[]; return;} 
-            $scope.submissions = $rootScope.applications = data.list.list.slice(0,8);                                //console.log($rootScope.applications)
+            $scope.submissions = $rootScope.applications = data.list.list;//.slice(0,8);                                //console.log($rootScope.applications)
             //if(data.list.length>1) $scope.submissions = data;
         });                           
                                                                                 

@@ -15,6 +15,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
             }
             //userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
             if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
+                //$state.go("fileupload").then(function(){});
                 ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData ", JsTree);
                     $rootScope.subFiles = result.nodeList;            //$rootScope.appData.NumOfFiles = result.nodeList.length;
                     JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
@@ -45,7 +46,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
                 return appUid;
             }
             $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-                if(pdfEditor.fileUnsaved) $scope.edits = pdfEditor.getEditList();   console.log(pdfEditor.getEditList());
+                if(pdfEditor.fileUnsaved) $scope.edits = pdfEditor.getEditList();   //console.log(pdfEditor.getEditList());
             });
             $scope.$on("$destroy", function(){
                 if(pdfEditor.fileUnsaved){                                        //console.log(pdfEditor.getEditList());

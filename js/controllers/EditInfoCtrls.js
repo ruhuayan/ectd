@@ -5,7 +5,7 @@
 angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$state', 'CookiesApiService', 'ApplicationApiService',
     function($rootScope, $scope, $state,  CookiesApiService, ApplicationApiService) {
         //function JstreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
-        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appUid;                                                console.log("edit info");
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
             JsTree.userData = $rootScope.userData;

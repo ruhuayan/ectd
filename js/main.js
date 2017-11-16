@@ -713,14 +713,14 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
                         'dist/location.js',
-                        'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js",
-                        'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
                         'js/services/genInfoApiService.js',
                         'js/services/tagApiService.js',
                         'js/controllers/EditInfoCtrls.js',
+                        'dist/themes/default/style.min.css',
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js'
                         //'dist/InfoFiletree.js'
                     ]
                 });
@@ -740,14 +740,14 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     files: [
                         'assets/global/plugins/angularjs/plugins/angular-file-upload/angular-file-upload.min.js',
                         'dist/location.js',
-                        'dist/themes/default/style.min.css',
-                        "dist/jstree.min.js",
-                        'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
                         'js/services/applicationApiService.js',
                         'js/services/fileApiService.js',
                         'js/controllers/FileUploadCtrl.js',
-                        'dist/jquery.sticky.js'
+                        'dist/jquery.sticky.js',
+                        'dist/themes/default/style.min.css',         // style for jstree
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js',
                     ]   
                 });
             }]
