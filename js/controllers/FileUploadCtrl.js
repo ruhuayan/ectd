@@ -114,7 +114,10 @@
             }else console.log(res);
         };
         uploader.onCompleteAll = function(){
-            if($scope.noUpfile) JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+            if($scope.noUpfile) {
+                JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+                $scope.noUpfile = false;
+            }
             else JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));
             $scope.showHint = false;
             

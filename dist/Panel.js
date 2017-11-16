@@ -100,10 +100,11 @@
           .setFileDragListener();
 
     //super class PdfPanel
-    function PdfPanel(id){
+    function PdfPanel(id){                          //this.pageWrap = $('.page-wrap')
         this.id = id; 
         this.panel = $("#"+id);
         this.fileZone = this.panel.find(".fileZone");
+        this.cPage = 0;                             // current page
         this.partner = this.id == "pdf-editor"? $("#pdf-frame"): $("#pdf-editor");
     }
     PdfPanel.prototype = {
@@ -182,16 +183,32 @@
         },
         setTab: function(){
             var _this = this;
-            this.panel.find('.pdfTab').html( _this.fileName+'<span class="closeFile"><i class="fa fa-times" aria-hidden="true" style="margin-left: 15px; margin-right: 1em;"></i></span>');
+            var len = _this.fileName.length, fileName;
+            if(len>18){
+                fileName = "..." + _this.fileName.substr(len-15, 15);
+            }else fileName = _this.fileName;
+            this.panel.find('.pdfTab').html('<span id="fileName">' + fileName+'</span><span class="closeFile"><i class="fa fa-times" aria-hidden="true" style="margin-left: 15px; margin-right: 1em;"></i></span>');
             this.panel.find("span.closeFile").click(function(){
                 var tabText = _this.id =="pdf-editor" ? "PDF file to editor": "PDF file to view";
                 _this.closeFile(tabText);
+            });
+            this.panel.find("span#fileName").click(function(){
+                JsTree.tree.jstree(true)._open_to(_this.fid);
+                JsTree.tree.jstree(true).select_node(_this.id);
+                document.getElementById(_this.fid).scrollIntoView();
+                /*var node = JsTree.tree.jstree(true).get_node(_this.fid);
+                  for(var i=0; i<node.parents.length; i++){
+                    JsTree.tree.jstree(true).open_node(node.parents[i]);
+                }
+                JsTree.tree.jstree(true).select_node(node.id);
+                //node.children('.jstree-anchor').focus();*/
+
             });
             return this;
         }, 
         render: function(e) {                                          //console.log("panel: ",this.panel, this.fileName);
 
-            var _this = this; 
+            var _this = this;
             this.pdf.getPage(e).then(function(page) {
                 var n = page.getViewport(1),                                          
                     scale = (_this.fileZone.width()-window.browserScrollbarWidth)/ n.width,                                                 
@@ -212,6 +229,7 @@
                     _this.scaleFileZone(canvas.height);
                     _this.pageWrap.find("canvas.page").css("visibility", "visible");
                 });
+                _this.cPage = e;
 
             }).catch(function(error){
                     alert(error);
@@ -272,6 +290,7 @@
                 if(event.keyCode==13){
                     var pageNum = parseInt($(this).val());
                     if(!pageNum || pageNum<=0){ toastr.warning("Invalid page number !"); return;}
+                    if(pageNum == _this.cPage) return;
                     if(_this.showEdits) _this.showEdits(pageNum);
                     _this.render(pageNum);
                     pageList.val(pageNum);
@@ -562,18 +581,20 @@
         },
         openLinkEdit: function(target, select){                        //console.log(select)
             var fileListSelect = $('.link-editable-menu select.fileList'), pageList =$('.link-editable-menu select.pageList');
+            var tfid = target.attr('data-target-fid'), tFileName = target.attr('data-uri'), numPages = target.attr("data-numPages");
+            var tPageNum = target.attr('data-target-page');                                       console.log(tFileName, tPageNum)
             if(select) {
-                if(target.attr('data-target-fid') && target.attr('data-uri'))                                     // pageList is not first time open edit
-                    fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
+                if(tfid && tFileName)                                     // pageList is not first time open edit
+                    fileListSelect.val( tFileName).attr('disabled', 'disabled');
                 else {
-                    fileListSelect.val( pdfFrame.fileName).attr('disabled', 'disabled');
-                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});    //console.log(fileListSelect.val( pdfFrame.fileName), target.attr("data-uri") )
+                    fileListSelect.val(pdfFrame.fileName).attr('disabled', 'disabled');
+                    target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});    console.log(fileListSelect.val( pdfFrame.fileName) )
                 }                                                                                // pageList is loaded first time open edit
 
-                if(target.attr("data-numPages")) {                                          //  pageList is not first time loaded
-                    this.createPageList( target.attr("data-numPages"), pageList);
-                    pageList.val(target.attr('data-target-page')).show().attr('disabled', 'disabled');              //console.log(pdfFrame.fileName,target.attr('data-uri' ));
-                    if( pdfFrame.fileName == target.attr('data-uri' )) pageList.removeAttr("disabled");
+                if(numPages) {                                          //  pageList is not first time loaded
+                    this.createPageList( numPages, pageList);
+                    pageList.val(tPageNum).show().attr('disabled', 'disabled');              //console.log(pdfFrame.fileName,target.attr('data-uri' ));
+                    if( pdfFrame.fileName == tFileName) pageList.removeAttr("disabled");
                 }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
                     target.attr({"data-numpages": pdfFrame.pdf.numPages, "data-target-page": 1});
@@ -582,19 +603,24 @@
 
 
             }else {                                                                          // target-fid >1 (select) or target-fid =1 (link)
-                if(parseInt(target.attr('data-target-page'))>1 && target.attr('data-uri')){
-                    fileListSelect.val( target.attr('data-uri')).attr('disabled', 'disabled');
-                    if( pdfFrame.fileName == target.attr('data-uri' )) {                    // to show page list with numPages
+
+                if(tPageNum>1 && tFileName){
+                    fileListSelect.val(tFileName).attr('disabled', 'disabled');                //console.log(fileListSelect.val(), tPageNum);
+                    if( pdfFrame.fileName == tFileName) {                    // to show page list with numPages
                         this.createPageList(pdfFrame.pdf.numPages, pageList);
+                        if(tPageNum!= pdfFrame.cPage){
+                            pdfFrame.render(parseInt(tPageNum));
+                            pdfFrame.panel.find('.right-tabs select.pageList').val(tPageNum);
+                        }
                         pageList.removeAttr("disabled");
                     }else
-                        this.createPageList( target.attr('data-target-page'), pageList.attr('disabled', 'disabled'));
-                    pageList.val(target.attr('data-target-page')).show();
+                        this.createPageList( tPageNum, pageList.attr('disabled', 'disabled'));
+                    pageList.val(tPageNum).show();
 
                 }else{
                     var sText;
                     $("select.fileList option").each(function(){
-                        if(target.attr('data-target-fid') && $(this).attr('id')==target.attr('data-target-fid')) {
+                        if(tfid && $(this).attr('id')==tfid) {
                             $(this).attr('selected' ,'selected'); sText = $(this).text();
                         }else $(this).removeAttr('selected');
                     });

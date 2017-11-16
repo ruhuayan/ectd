@@ -122,7 +122,10 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
 
                 GenInfoApiService.CreateContact(appUid, $rootScope.userData, jsonData).then(
                     function(result){                                       console.log(result);
-                        if(result && result.id) contact = result;
+                        if(result && result.id){
+                            contact = result;
+                            toastr.success('Contact info Saved');
+                        }
                         $scope.uneditable = true;
                         updateContact(contact);
                     });

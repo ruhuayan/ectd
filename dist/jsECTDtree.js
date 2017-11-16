@@ -154,9 +154,9 @@ var fileTree = [
             { "id" : "m117", "parent" : "m1us", "text" : "1.17 Postmarketing Studies", "name" : "117-Postmarketing-Studies", "sNumber" : "1.17"},
           { "id" : "m1171", "parent" : "m117", "text" : "1.17.1 Correspondence Regarding Postmarketing Commitments", "sNumber": "1.17.1", "type" : "tag"},
           { "id" : "m1172", "parent" : "m117", "text" : "1.17.2 Correspondence Regarding Postmarketing Requirements", "sNumber": "1.17.2", "type" : "tag"},
-        { "id" : "m118", "parent" : "m1us", "text" : "1.18 Proprietary Names", "sNumber" : "1.18", "type": "tag"},
-        { "id" : "m119", "parent" : "m1us", "text" : "1.19 Pre-EUA and EUA", "sNumber" : "1.19", "type": "tag"},
-        { "id" : "m120", "parent" : "m1us", "text" : "1.20 General Investigational Plan for Initial IND", "sNumber": "1.20", "type" : "tag"},
+        { "id" : "m118", "parent" : "m1us", "text" : "1.18 Proprietary Names", "sNumber" : "1.18"},
+        { "id" : "m119", "parent" : "m1us", "text" : "1.19 Pre-EUA and EUA", "sNumber" : "1.19"},
+        { "id" : "m120", "parent" : "m1us", "text" : "1.20 General Investigational Plan for Initial IND", "sNumber": "1.20"},
 
         { "id" : "m2", "parent" : "sub1", "text" : "2 Common Technical Document Summaries", "name" : "m2", "sNumber": "2"},
         { "id" : "m21", "parent" : "m2", "text" : "2.1 Common Technical Document Table of Contents (Module 2 - 5)", "sNumber": "2.1", "type" : "tag"},
