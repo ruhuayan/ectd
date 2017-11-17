@@ -188,7 +188,7 @@
             if(len>18){
                 fileName = "..." + _this.fileName.substr(len-15, 15);
             }else fileName = _this.fileName;
-            this.panel.find('.pdfTab').html('<span id="fileName">' + fileName+'</span><span class="closeFile"><i class="fa fa-times" aria-hidden="true" style="margin-left: 15px; margin-right: 1em;"></i></span>');
+            this.panel.find('.pdfTab').html('<span id="fileName" title="'+ _this.fileName +'">' + fileName+'</span><span class="closeFile"><i class="fa fa-times" aria-hidden="true" style="margin-left: 15px; margin-right: 1em;"></i></span>');
             this.panel.find("span.closeFile").click(function(){
                 var tabText = _this.id =="pdf-editor" ? "PDF file to editor": "PDF file to view";
                 _this.closeFile(tabText);
@@ -332,7 +332,7 @@
         setEditCount: function(){
             this.editCount = 0;
             return this;
-        },
+        },                            //one to upgrade to one loop
         scaleEdits: function(){
             if(this.hasValidOP()){
                 var opList = this.getEditList();
@@ -696,9 +696,6 @@
             });
             _this.toolsMenu.find("[data-tool=select]").click(function() {
                 if(pdfFrame.panel.attr('data-loaded')=='true') _this.toggleTool("select");
-                if(_this.isTool("select")){
-
-                }
             });
             _this.toolsMenu.find("[data-tool=save]").click(function(t) {
                 t.preventDefault();
@@ -711,6 +708,16 @@
             });
             _this.toolsMenu.find("[data-tool=forward]").click(function(){
                 _this._forwardHandler()
+            });
+            _this.toolsMenu.find("[data-tool=highlight]").click(function(){                                             // console.log("highlight")
+                _this.removeTool("highlight");
+                if(_this.editCount==0) return;
+                _this.panel.find(".target-editable").each(function(index){                         // console.log($(this))
+                    if(parseInt($(this).attr("data-page-num")) === _this.cPage ) $(this).addClass("active").addClass("shape-rectangle");;
+                });
+                _this.panel.find(".text-editable").each(function(index){                         // console.log($(this))
+                    if(parseInt($(this).attr("data-page-num")) === _this.cPage ) $(this).css({"border-color": "#089de3"});
+                });
             });
             return this;
         },
@@ -799,6 +806,16 @@
         _backwardHandler: function(){
             this.removeTool("backward");
             this.toolsMenu.find("[data-tool=backward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});
+        },
+        _setEditFocus: function(action){
+            switch (action){
+                case "select":
+                    break;
+                case "link":
+                    break;
+                case "text":
+                    break;
+            }
         },
         _getTextTarget: function(t) {
             return $("#" + t.parents(".text-editable-menu").attr("data-target-id"));
@@ -964,7 +981,8 @@
                 Et = !0,
                     setTimeout(function() {
                         Et = !1
-                    }, 100)
+                    }, 100);
+                o.css({"border-color": "transparent"});
             }),
             o.on("paste", function(t) {
                 t.preventDefault();

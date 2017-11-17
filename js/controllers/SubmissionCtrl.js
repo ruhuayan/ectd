@@ -9,15 +9,17 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
         //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
         
-        $scope.submissions = [{}];                    // to make sure data-table has json data
+        $scope.submissions = [{"anything": "anything"}];                    // to make sure data-table has json data
         if($rootScope.applications)                                             
-            $scope.submissions = $rootScope.applications.slice(0,8);
-        else 
-            ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){                          //console.log("api service", data.list); 
-            if(!data.list) {$rootScope.applications=[]; return;} 
-            $scope.submissions = $rootScope.applications = data.list.list;//.slice(0,8);                                //console.log($rootScope.applications)
-            //if(data.list.length>1) $scope.submissions = data;
-        });                           
+            $scope.submissions = $rootScope.applications;
+        else {                                                                                          console.log("Applications loading...");
+            ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){     //console.log("api service", data.list);
+                if(!data.list) {$rootScope.applications=[]; return;}
+                $scope.submissions =  $rootScope.applications = data.list;//.slice(0,8);        //console.log($rootScope.applications)
+                //if(data.list.length>1) $scope.submissions = data;
+            });
+        }
+
                                                                                 
 //        $scope.dtOptions = DTOptionsBuilder.newOptions()
 //                .withOption('order', [1, 'asc'])
@@ -44,6 +46,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         
         $scope.createApp = function(){                                          //console.log($scope.subForm.$valid);                               
             if($scope.subForm.$valid){
+
                 var tid =  $scope.template.id || JSON.parse($scope.template).id;
                 $scope.formData.template = {'id': tid};                         //console.log("template", tid);
                 var jsonData = $scope.formData;                                 //console.log("appdata: ", jsonData);
@@ -64,13 +67,21 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                         }
                     });
                 }else{
+                    App.blockUI({
+                        target: $("body"),
+                        message: " Load ...",
+                        //animate: true,
+                        overlayColor: "#999"//'#d9534f'
+                    });
                     ApplicationApiService.ApplicationCreate($rootScope.userData, jsonData).then(function(result){                      console.log(result);      // res.success ==false
                         if(result.appUid){
+                            App.unblockUI($("body"));
                             $rootScope.appData = ApplicationApiService.ExtractApp(result);
                             toastr.success("Save Application id: " + result.appUid);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
-                            $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
+                            $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});
+                            delete $rootScope.applications; //$rootScope.applications.unshift(jsonData);
                             $state.go("editinfo").then(function() {}); 
                         } 
                     })
@@ -142,8 +153,8 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
 
                     $scope.submissions.splice(index, 1);
                     if($rootScope.appData && $rootScope.appData.appUid === submission.appUid) $scope.exitApp();
-                    ApplicationApiService.DeleteApplication(submission.appUid, $rootScope.userData).then(function(result){
-                                                                                                console.log(result);
+                    ApplicationApiService.DeleteApplication(submission.appUid, $rootScope.userData).then(function(result){ console.log(result);
+                        //$rootScope.applications.
                         toastr.success("Application " + submission.folder + " deleted");
                     });
 
