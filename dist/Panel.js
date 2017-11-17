@@ -196,11 +196,12 @@
             this.panel.find("span#fileName").click(function(){
                 JsTree.tree.jstree(true)._open_to(_this.fid);
                 JsTree.tree.jstree("deselect_all", true);
-                JsTree.tree.jstree("select_node", _this.fid, true);;
-                var nHeight = $("li#"+_this.fid).offset().top;                                    //console.log(nHeight, JsTree.height);
-                if(nHeight< 0) JsTree.tree.scrollTop(0).scrollTop(parseInt( $("li#"+_this.fid).offset().top/JsTree.height) * JsTree.height);
-                else if(nHeight>JsTree.height) JsTree.tree.scrollTop(parseInt(nHeight/JsTree.height) * JsTree.height);
-
+                JsTree.tree.jstree("select_node", _this.fid, true);
+                setTimeout(function(){
+                    var nHeight = $("li#"+_this.fid).offset().top;                                    //console.log(nHeight, JsTree.height);
+                    if(nHeight< 0) JsTree.tree.scrollTop(0).scrollTop(parseInt( $("li#"+_this.fid).offset().top/JsTree.height) * JsTree.height);
+                    else if(nHeight>JsTree.height) JsTree.tree.scrollTop(parseInt(nHeight/JsTree.height) * JsTree.height);
+                }, 300);
             });
             return this;
         }, 
@@ -288,6 +289,7 @@
                 if(event.keyCode==13){
                     var pageNum = parseInt($(this).val());
                     if(!pageNum || pageNum<=0){ toastr.warning("Invalid page number !"); return;}
+                    if(pageNum > _this.pdf.numPages) { toastr.warning("Page number out of range !"); return;}
                     if(pageNum == _this.cPage) return;
                     if(_this.showEdits) _this.showEdits(pageNum);
                     _this.render(pageNum);
@@ -583,7 +585,7 @@
             var tPageNum = target.attr('data-target-page');                                       console.log(tFileName, tPageNum)
             if(select) {
                 if(tfid && tFileName)                                     // pageList is not first time open edit
-                    fileListSelect.val( tFileName).attr('disabled', 'disabled');
+                    fileListSelect.val(tFileName).attr('disabled', 'disabled');
                 else {
                     fileListSelect.val(pdfFrame.fileName).attr('disabled', 'disabled');
                     target.attr({"data-uri": pdfFrame.fileName, "data-target-fid": pdfFrame.fid});    console.log(fileListSelect.val( pdfFrame.fileName) )
@@ -593,12 +595,12 @@
                     pageList.val(tPageNum).show().attr('disabled', 'disabled');              //console.log(pdfFrame.fileName,target.attr('data-uri' ));
                     if( pdfFrame.fileName == tFileName) {
                         this.createPageList( numPages, pageList);
-                        pageList.removeAttr("disabled");
+                        pageList.removeAttr("disabled").val(tPageNum);
                     }
                 }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
                     target.attr({"data-numpages": pdfFrame.pdf.numPages, "data-target-page": 1});
-                    pageList.show().removeAttr("disabled");
+                    pageList.show().removeAttr("disabled").val(tPageNum);
                 }else pageList.hide();
 
 
@@ -793,9 +795,26 @@
             var _this = this;
             $(document).keydown(function(e){                 // hand undo/redo hotkey
                 if( e.which === 89 && e.ctrlKey ){
+                    e.preventDefault();
                     if(_this.panel.attr('data-loaded')==='true') _this._forwardHandler();                                                   //alert('control + y');
                 }else if( e.which === 90 && e.ctrlKey ){
+                    e.preventDefault();
                     if(_this.panel.attr('data-loaded')==='true') _this._backwardHandler();                                                      //alert('control + z');
+                }else if(e.which === 77 && e.ctrlKey){     // m
+                    e.preventDefault();
+                    _this.toolsMenu.find("[data-tool=highlight]")
+                        .addClass('active', {duration: 100}).removeClass('active', {duration: 100})
+                        .click();
+                }else if(e.which ===83 && e.ctrlKey){      // s
+                    e.preventDefault();
+                    _this.toolsMenu.find("[data-tool=save]").click();
+                }else if(e.which ===84 && e.ctrlKey){      //t
+                    e.preventDefault();
+                    _this.toolsMenu.find("[data-tool=text]").click();
+                }else if(e.which ===76 && e.ctrlKey){       //l
+                    e.preventDefault();
+                    if(pdfFrame.fid) _this.toolsMenu.find("[data-tool=select]").click();
+                    else _this.toolsMenu.find("[data-tool=link]").click();
                 }
             }).keyup(function(e) {27 == e.keyCode && _this.removeTool() });
         },
@@ -806,16 +825,6 @@
         _backwardHandler: function(){
             this.removeTool("backward");
             this.toolsMenu.find("[data-tool=backward]").addClass('active', {duration: 100}).removeClass('active', {duration: 100});
-        },
-        _setEditFocus: function(action){
-            switch (action){
-                case "select":
-                    break;
-                case "link":
-                    break;
-                case "text":
-                    break;
-            }
         },
         _getTextTarget: function(t) {
             return $("#" + t.parents(".text-editable-menu").attr("data-target-id"));

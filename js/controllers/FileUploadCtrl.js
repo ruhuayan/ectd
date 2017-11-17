@@ -1,4 +1,5 @@
-    MetronicApp.controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state',  '$translate', 'FileUploader', 'CookiesApiService', 'FileApiService', 'ApplicationApiService','ModalService',
+angular.module('MetronicApp')
+    .controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state',  '$translate', 'FileUploader', 'CookiesApiService', 'FileApiService', 'ApplicationApiService','ModalService',
         function($scope, $rootScope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService ) {
 
     //function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
@@ -279,6 +280,15 @@
                $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file'});
            }
         }
+
+        $scope.sortUptree = function(){                             //console.log($scope.uploadFiles);
+            if(!$scope.uploadFiles || !$scope.uploadFiles.length) return;
+
+            $scope.uploadFiles.sort(function(a, b){
+                 return a.text < b.text ? -1: 1;
+            });
+            JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));                                      //console.log($scope.uploadFiles);
+        };
         $scope.$on("$destroy", function(){
             if( !$scope.fileJson) return;
             var title = "Save File Tree ?",

@@ -59,7 +59,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                     ApplicationApiService.ApplicationUpdate($rootScope.userData, jsonData).then(function(result){                    console.log(result);
                         if(result.appUid){
                             $rootScope.appData = ApplicationApiService.ExtractApp(result);
-                            toastr.success("Create Application id: " + result.appUid);
+                            toastr.success("Updated Application number: " + result.folder);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
                             $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});          
@@ -77,7 +77,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                         if(result.appUid){
                             App.unblockUI($("body"));
                             $rootScope.appData = ApplicationApiService.ExtractApp(result);
-                            toastr.success("Save Application id: " + result.appUid);
+                            toastr.success("Create Application number: " + result.folder);
                             var cookieExp = new Date();
                             cookieExp.setDate(cookieExp.getDate() + 1);
                             $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});
@@ -118,7 +118,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
             //$state.go("fileupload").then(function() {});    
         };
         $scope.edit = function(submission){                                             //console.log(submission)
-            toastr.success('Application ID: '+submission.appUid);
+            toastr.success("Application number: " + submission.folder);
             delete $rootScope.subFiles;
             delete $rootScope.uploadFiles;
             //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);         //getSubById(id);                                                                   

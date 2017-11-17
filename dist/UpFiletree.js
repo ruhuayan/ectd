@@ -287,6 +287,17 @@
             node.original.name = name;
             node.original.fileId= fileId;        
         },
+        /*setSortListener: function(){
+            var _this = this;
+            $("#sortTree").click(function(e){                          console.log("sort")
+                e.preventDefault();
+                _this.uptree.jstree({
+                    'sort' :  function (a, b) {
+                        return this.get_text(a) < this.get_text(b) ? -1 : 1;
+                    }
+                });
+            });
+        },*/
         setExpandTreeListener: function(){
             $("#expandTree").click(function (e){
                 e.preventDefault();
@@ -336,6 +347,7 @@
             $(document).ready(function() {                            //console.log("sticky");
                 $("#uploadFileTree").sticky({topSpacing: 80});
             });
+            return this;
         }
     };
     

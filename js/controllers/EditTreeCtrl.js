@@ -15,7 +15,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
             }
             //userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
             if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-                //$state.go("fileupload").then(function(){});
+                //$state.go("submission").then(function(){});
                 ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData ", JsTree);
                     $rootScope.subFiles = result.nodeList;            //$rootScope.appData.NumOfFiles = result.nodeList.length;
                     JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
@@ -74,7 +74,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
                     });
                 });
             };
-        }]);
+    }]);
         function SaveEditYesNoCtrl($scope, $element, title, body, close){
             $scope.title = title;
             $scope.body = body;

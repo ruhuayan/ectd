@@ -47,7 +47,8 @@
         addNodeText:function(id, text){
             //var node = $('#jsECTDtree').find("[id="+id+"]"); console.log(node);
             var node = this.tree.jstree(true).get_node(id);                     console.log(node);
-            this.tree.jstree(true).set_text(node, node.text+' '+text);
+            //if(node.text.slice(0, ))
+            this.tree.jstree(true).set_text(node, node.text.slice(0, node.text.indexOf("["))+' '+text);
         },
         getNodeContent: function(selectedNode){
             if(selectedNode){
