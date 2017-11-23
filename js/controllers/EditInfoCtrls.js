@@ -297,7 +297,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
              } */
 
         };
-        function showTags(node){
+        function showTags(node){ //console.log(node);
 
             if(node.id==="m32S"||node.id==="m23S"){
                 $scope.substanceTag = true;
@@ -307,7 +307,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 $scope.productTag = true;
                 $scope.stfTag = false;
                 $scope.substanceTag = false;
-            }else if(node.type==="file" && (node.parents.includes("m4")||node.parents.includes("m5"))){
+            }else if(node.type==="file" && (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){             //array.includes only IE>=12
                 $scope.substanceTag = false;
                 $scope.productTag = false;
                 $scope.stfTag = true;

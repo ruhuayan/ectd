@@ -1,5 +1,6 @@
-angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService','TemplateApiService', 'ModalService',
-    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService ) {
+angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService',
+'TemplateApiService', 'ModalService', "DTOptionsBuilder",
+    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService, DTOptionsBuilder) {
 
 //function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
         var appData; 
@@ -8,25 +9,39 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         else appData = {"version": "0000"};                                     //console.log('app data:', appData);
         //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
         //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
-        
-        $scope.submissions = [{"anything": "anything"}];                    // to make sure data-table has json data
-        if($rootScope.applications)                                             
+        var dtOptions = {
+                    sEmptyTable: "Empty Table",
+                    order: [2, 'desc'],                   
+                    lengthMenu: [5, 10],
+                    columnDefs: [{
+                         targets: 3,
+                         responsivePriority: 1,
+                         filterable: false,
+                         sortable: false,
+                         orderable: false
+                     }]
+                };
+        $scope.submissions = [{}];                    // to make sure data-table has json data
+        if($rootScope.applications) {
             $scope.submissions = $rootScope.applications;
-        else {                                                                                          console.log("Applications loading...");
+            $scope.dtOptions = dtOptions;
+            //Portlet.setDataTable();
+        } else {                                                                                          console.log("Applications loading...");
             ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){     //console.log("api service", data.list);
                 if(!data.list) {$rootScope.applications=[]; return;}
                 $scope.submissions =  $rootScope.applications = data.list;//.slice(0,8);        //console.log($rootScope.applications)
+                $scope.dtOptions = dtOptions;
+                //Portlet.setDataTable();
                 //if(data.list.length>1) $scope.submissions = data;
             });
         }
-
-                                                                                
+        
+                                                                         
 //        $scope.dtOptions = DTOptionsBuilder.newOptions()
 //                .withOption('order', [1, 'asc'])
 //                .withOption('lengthMenu', [5,10])
 //                .withLanguage({"sEmptyTable":"Empty"});
            
-        //var table = $("#appTable").DataTable();
         if(appData.appUid){                                         
             $scope.submitLabel = "EDITAPP";
             $scope.template = appData.template;                                 //console.log("template", appData);
@@ -181,3 +196,24 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         };
     }
 
+    
+    var Portlet = function(){
+        return{
+            setDataTable: function(){
+                $("#appTable").dataTable({
+                     aaSorting: [[2, 'asc']],
+                     //bPaginate: false,
+                     bFilter: false,
+                     bInfo: false,
+                     bSortable: true,
+                     bRetrieve: true,
+                     aoColumnDefs: [
+                         { "aTargets": [0], "bSortable": true },
+                         { "aTargets": [1], "bSortable": true },
+                         { "aTargets": [2], "bSortable": true },
+                         { "aTargets": [3], "bSortable": false }
+                     ]
+                });
+            }
+        };
+    }();

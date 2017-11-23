@@ -7,7 +7,7 @@
 function Filetree(id, height){
     this.tree = $(id); 
     this.height = height >650 ? height: 650;                   //console.log(this.height);
-    this.isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
+    //this.isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
 };
 Filetree.prototype ={
     constructor: Filetree,
@@ -33,8 +33,10 @@ Filetree.prototype ={
                     "show_only_matches" : true
                 },
                 "plugins" : _this.plugins || ["types", "state", "dnd", "search"]
-            }).bind("hover_node.jstree", function(event, data){                            //console.log(data);
-                 $("#"+data.node.id).prop("title", data.node.text);
+            }).bind("hover_node.jstree", function(event, data){
+                 //$("li#"+data.node.id).prop("title", data.node.text);               // selector for id with dot does not work
+                var title = data.node.text.replace(/<\/?[^>]+(>|$)/g, "");
+                $('li[id="'+ data.node.id + '"]').prop("title", title);
             }).bind("loaded.jstree", function (event, data) {                               //console.log(_this.height);
                 //$(this).css("height", _this.height);       
                 _this.loadedHandler();
@@ -59,12 +61,11 @@ Filetree.prototype ={
                   if(node.type === "tag" && node.children.length) 
                       _this.tree.jstree().set_icon(node.id, "fa fa-file");
                   else if(node.type ==="file") _this.paintParents(node.parents);
-                  else if(node.id=="m32s"|| node.id=="m23S"){                                //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
+                 /*else if(node.id=="m32s"|| node.id=="m23S"){                     //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
 
+                  }else if(node.id=="m32p"||node.id=="m23P"){                      //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
 
-                  }else if(node.id=="m32p"||node.id=="m23P"){                              //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
-
-                  }
+                  }*/
 
             });
         
@@ -142,7 +143,8 @@ Filetree.prototype ={
             if(!result.ectdFileStateList) return;
 
             // for IE browser
-            if(_this.isIE){
+            var isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
+            if(isIE){
                 var fileURL = Base_URL + result.ectdFileStateList[result.ectdFileStateList.length-1].path;
                 $("#frame").attr("src", fileURL);
                 return;

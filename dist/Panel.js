@@ -198,9 +198,17 @@
                 JsTree.tree.jstree("deselect_all", true);
                 JsTree.tree.jstree("select_node", _this.fid, true);
                 setTimeout(function(){
-                    var nHeight = $("li#"+_this.fid).offset().top;                                    //console.log(nHeight, JsTree.height);
+                    var element = $("li#"+_this.fid), nHeight = element.offset().top; 
+                    if(nHeight< 0 || nHeight>JsTree.height)
+                        element[0].scrollIntoView({
+                            behavior: "smooth", // or "auto" or "instant" or "smooth"
+                            block: "end", //  "end/start"
+                            inline: "nearest"
+                        });
+                    /*var nHeight = $("li#"+_this.fid).offset().top;                                    console.log(nHeight, JsTree.height);
                     if(nHeight< 0) JsTree.tree.scrollTop(0).scrollTop(parseInt( $("li#"+_this.fid).offset().top/JsTree.height) * JsTree.height);
-                    else if(nHeight>JsTree.height) JsTree.tree.scrollTop(parseInt(nHeight/JsTree.height) * JsTree.height);
+                    else if(nHeight>JsTree.height) JsTree.tree.scrollTop(nHeight-50);                    
+                                                                                                       console.log(nHeight);*/
                 }, 300);
             });
             return this;
@@ -596,6 +604,8 @@
                     if( pdfFrame.fileName == tFileName) {
                         this.createPageList( numPages, pageList);
                         pageList.removeAttr("disabled").val(tPageNum);
+                        if(tPageNum!=pdfFrame.cPage) pdfFrame.render(parseInt(tPageNum));
+                        pdfFrame.panel.find('.right-tabs select.pageList').val(tPageNum);
                     }
                 }else if(pdfFrame.pdf.numPages>1){
                     this.createPageList(pdfFrame.pdf.numPages, pageList);
@@ -1053,6 +1063,5 @@
         }
         return W;
     })();
-
 
 

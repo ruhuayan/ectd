@@ -71,6 +71,8 @@
                     if(response.uid) callback(response);
                     else toastr.error('Login Failed');
                     
+            }).fail(function(jqXHR){ console.log(jqXHR);
+                toastr.error("Login Failed: " + jqXHR.responseText);
             });
         }
 

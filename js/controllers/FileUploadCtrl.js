@@ -110,7 +110,7 @@ angular.module('MetronicApp')
                     }
                 } 
                
-                var treeNode = {'id': res.fileId, 'parent': 'up1', 'text': res.name, 'type': 'file'/*, 'fileId': res.fileId*/};
+                var treeNode = {'id': res.fileId, 'parent': 'up1', 'text': res.name, 'type': 'file', 'createdAt': res.createdAt/*, 'fileId': res.fileId*/};
                 upFiles.push(treeNode);                                         //console.log("on complete", upFiles)                                                                 
             }else console.log(res);
         };
@@ -277,16 +277,23 @@ angular.module('MetronicApp')
         function setFileNodes(upFiles){
             $rootScope.uploadFiles = [];
            for(var i=0; i<upFiles.length; i++){
-               $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file'});
+               $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file', 'createdAt': upFiles[i].createdAt});
            }
         }
-
+        var uptreeSortAsce = false;
         $scope.sortUptree = function(){                             //console.log($scope.uploadFiles);
             if(!$scope.uploadFiles || !$scope.uploadFiles.length) return;
-
-            $scope.uploadFiles.sort(function(a, b){
-                 return a.text < b.text ? -1: 1;
-            });
+            if(!uptreeSortAsce){
+                $scope.uploadFiles.sort(function(a, b){
+                    return a.text < b.text ? -1: 1;
+                });
+                uptreeSortAsce = true;
+            } else {
+                $scope.uploadFiles.sort(function(a, b){
+                    return new Date(a.createdAt) - new Date(b.createdAt);
+                });
+                uptreeSortAsce = false;
+            }
             JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));                                      //console.log($scope.uploadFiles);
         };
         $scope.$on("$destroy", function(){
