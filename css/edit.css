@@ -60,7 +60,9 @@ ul.navbar-nav.navbar-tools{
     }nav.right-tabs span.pageControl i{
         color: rgb(56,148,210);
     }
+    
     nav.right-tabs a.pdfTab{
+        float: left;
         mid-width: 180px;
         z-index: 2;
     }
@@ -79,6 +81,7 @@ ul.navbar-nav.navbar-tools{
     }
  
     .drop-file-zone{
+            clear: both;
             width: 98%; 
             text-align: center; 
             border: 2px dashed #999; 

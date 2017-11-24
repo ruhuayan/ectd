@@ -18,9 +18,9 @@ END PAGE HEADER-->
         <span class="label label-danger">Edit Admin info and STF</span>
     </h3>
 </div>-->
-<div class="row">
+<div class="row" ng-controller="PublishTreeCtrl" id="PublishTreeCtrl">
     <div class="leftPanel col-md-4"> 
-        <div class="portlet light bordered jstree-portlet" ng-controller="PublishTreeCtrl" id="PublishTreeCtrl">
+        <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <!--<i class="icon-settings font-green-sharp"></i>-->
@@ -32,8 +32,8 @@ END PAGE HEADER-->
                 </div>
                 <div class="actions">
                     <!--<a class="btn btn-sm green" ng-click="togglePortlet()" ng-hide="tagEdit"><span class="title" translate>EDITTAG</span></a>-->
-                    <a class="btn btn-square btn-default btn-sm" href="javascript:togglePanel();">
-                        <i class="fa fa-exchange" aria-hidden="true"></i></a>    
+                   <a class="btn btn-square btn-default btn-sm" href="#" id="expandTree">
+                        <i class="fa fa-exchange" aria-hidden="true"></i></a>     
                 </div>
             </div>
             <div class="portlet-body"><div id="jsECTDtree" class="scroller"> </div>
@@ -50,12 +50,15 @@ END PAGE HEADER-->
                 </div>
 
                 <div class="actions">
-
                 </div>
             </div>
             <div class="portlet-body">
-                <div><a class="btn btn-sm green" href="#" id="download-btn"><span class="title" translate>PUBLISH</span></a>
+                 <div><a class="btn btn-sm green" href="#" id="validate-btn" ng-click="validateApp()"><span class="title" translate>VALIDATE</span></a>
+                    <a class="btn btn-sm green" href="#" id="download-btn" ng-click="downloadApp()"><span class="title" translate>PUBLISH</span></a>
                 </div>
+            </div>
+            <div class="portlet-footer">
+               
             </div>
         </div>
     </div>
@@ -66,16 +69,17 @@ END PAGE HEADER-->
 
 <script>
 
-    function PublishTreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
+    function PublishTreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService, GenInfoApiService, TagApiService, ModalService){
         var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
         }
 
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", appUid);
+            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     console.log("appData infopage", result);
                 $rootScope.subFiles = result.nodeList;
-                $rootScope.appData.NumOfFiles = result.nodeList.length;
+                $scope.fileList = result.ectdFileList;
+                //$rootScope.appData.NumOfFiles = result.nodeList.length;
                 JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
             });
         }else{
@@ -90,57 +94,167 @@ END PAGE HEADER-->
         };
         $scope.getAppUid = function(){
             return appUid;
+        };
+        $scope.downloadApp = function(){
+            JsTree.downloadTree(appUid, $rootScope.userData);
+        };
+        $scope.validateApp = function(){
+            JsTree.validateTree($rootScope.subFiles);
+            GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        console.log("geninfo: ",result);
+                if(!result || !result.id) JsTree._writeMsg("Application", " does not have general information");
+            });
+            GenInfoApiService.GetContacts(appUid, $rootScope.userData).then(function(result){        console.log("contact info: ", result);
+                if(!result || !result.length) JsTree._writeMsg("Application", " does not have contact information");
+            });
+            angular.forEach($scope.fileList, function(value, index){                                //console.log(value);
+                var fileLastState = value.ectdFileStateList[value.ectdFileStateList.length-1];
+                if(fileLastState.type !="pdf") JsTree._writeMsg(value.name, " file type error");
+                JsTree.checkfile(value.name, fileLastState.path); 
+                if(fileLastState.action){
+                    var actions = JSON.parse(fileLastState.action);
+                    if(actions.linkOperations){
+                        var links = actions.linkOperations;
+                        for (var i=0; i<links.length; i++){
+                            if(!links[0].tfid || !links[i].uri) JsTree._writeMsg(value.name, " no link URL");
+                            if(!fileExits(links[0].uri)) JsTree._writeMsg(value.name, " link file no exits");
+                        }
+                    }
+                }
+            });
+        };
+        function fileExits(url){
+            
+            angular.forEach($scope.fileList, function(value, index){ 
+                if(value.name == url) return true; 
+            });
+            return false;
         }
+
+        $scope.validateTag = function(nodeId){
+            return TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData);
+        }
+    
     }
 
     function Jstree(id, height){
         Filetree.call(this, id, height);
         this.ctrlId = "#PublishTreeCtrl";
     }
-    /*Jstree.prototype = {
+    Jstree.prototype = {
         constructor: Jstree,
-        setHandler: function(){
+        setExpandTreeListener: function(){
+            $("#expandTree").click(function (e){
+                e.preventDefault();
+                var leftPanel = $(".leftPanel");
+                var rightPanel = $(".rightPanel");
+                if(leftPanel.hasClass("col-md-4")){
+                    leftPanel.removeClass("col-md-4").addClass("col-md-6");
+                    rightPanel.removeClass("col-md-8").addClass("col-md-6");
+                    rightPanel.find("#TagCtrl").css({"width": "100%"});
+                }else {
+                    leftPanel.removeClass("col-md-6").addClass("col-md-4");
+                    rightPanel.removeClass("col-md-6").addClass("col-md-8");
+                    rightPanel.find("#TagCtrl").css({"width": "60%"});
+                }
+            });
+            return this;
+        },
+        validateTree: function(subFiles){
+            var _downloadBtn = $("#download-btn"), _validateBtn = $("#validate-btn"), progressbar;
             var _this = this;
-            this.tree.jstree(true).bind("select_node.jstree", function (e, data) {
-                _this.tree.jstree(true).getNodeContent(data.node);                                      //console.log("node_id: " + data.node.id);
+            _validateBtn.fadeOut(300);
+            _downloadBtn.fadeOut(300, function () {
+                progressbar = $('<div class="load-process">Validating...</div>')
+                    .css({ "width": "5%", "height": 2, "background": "#ff0000", "margin-bottom": "25px" }).appendTo(_downloadBtn.parents(".portlet-body"));
+            });
+            $.each(subFiles, function(index, value){                //console.log(value);
+                var node = _this.tree.jstree().get_node(value.id), parentNode;
+                var nodeArray = ["m1", "m12", "m2", "m3", "m4", "m5"];
+                
+                if(value.id!=="sub1"){
+                    parentNode = _this.tree.jstree().get_node(value.parent);
+                    if(!parentNode) _this._writeMsg(value.id, " is lost");
+                } 
+                if($.inArray(value.id, nodeArray)>=0) {
+                    if(node.text.indexOf("<b>")<0) _this._writeMsg(value.text, " does not contain files");                      //console.log(value.id +"does contain files");
+                }else if($.inArray(value.id, ["m32P", "m32S", "m23S", "m23P"])>=0){
+                    angular.element(JsTree.ctrlId).scope().validateTag(node.id).then(function(result){
+                         if(!result || !result.id) _this._writeMsg(node.id, " does not have tag file");
+                     });
+                }else if(node.type==="file" && (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){
+                     angular.element(JsTree.ctrlId).scope().validateTag(node.id).then(function(result){
+                         if(!result || !result.id) _this._writeMsg(node.text, " does not have tag file");
+                     });
+                }
+                if(node.type != "tag" && (/[A-Z]/.test(value.name))){
+                    _this._writeMsg(value.name, " contains upper letter");
+                }
+                    
+            });
+
+        },
+        checkfile: function(fileName, path){
+            var _this = this;
+            $.ajax({
+                url:Base_URL+path,
+                success: function (data) {
+                    console.log(fileName, 'exists');
+                },
+                error: function (data) {
+                    _this._writeMsg(fileName, 'does not exist');
+                }
             });
         },
-        getSelectedNode: function(){
-            var node = this.tree.jstree(true).get_selected(true);
-            return node.length ? node[0] : false;
-        },
-        addNodeText:function(id, text){
-            //var node = $('#jsECTDtree').find("[id="+id+"]"); console.log(node);
-            var node = this.tree.jstree(true).get_node(id);                     console.log(node);
-            this.tree.jstree(true).set_text(node, node.text+' '+text);
-        },
-        getNodeContent: function(selectedNode){
-            if(selectedNode){
-                var node = selectedNode;
-                angular.element("#TagCtrl").scope().setTagTitle(node, true);
-            }else{
-                var node = this.getSelectedNode();                        //console.log(node);
-                if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
-            }
-        }
-    };*/
+        downloadTree: function(appUid, userData){
+            var _downloadBtn = $("#download-btn"), _validateBtn = $("#validate-btn"), progressbar;
+            _validateBtn.fadeOut(300);
+            _downloadBtn.fadeOut(300, function () {
+                progressbar = $('<div class="load-process">Loading...</div>')
+                    .css({ "width": "5%", "height": 2, "background": "#ff0000", "margin-bottom": "25px" }).appendTo(_downloadBtn.parents(".portlet-body"));
+            });
 
-    Jstree.prototype = Object.create(Filetree.prototype);
+            var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid + "/?uid=" + userData.uid + "&apptoken=" + userData.access_token;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            xhr.onprogress = function (e) {        //console.log (e);
+                if (e.lengthComputable) {
+                    var progress = e.loaded / e.total;
+                    progressbar.show().css("width", progress + "%");                                                              //console.log(progress);
+                }
+            };
+            xhr.onload = function (e) {
+                if (this.status === 200) {                                          //console.log("zip file: ",this.response);
+                    var blob = new Blob([this.response], { type: 'application/zip' }),
+                        file = URL.createObjectURL(blob);
+
+                    var link = document.createElement('a');
+                    link.href = file;
+                    link.download = "ectd";
+                    link.click();
+                    window.URL.revokeObjectURL(link.href);
+                    progressbar.hide();
+                    _downloadBtn.show();
+                    _validateBtn.show();
+                }
+            };
+            xhr.send();
+            return this; 
+        },
+        _setProgressbar: function(msg){
+
+        },
+        _writeMsg: function(nodeText, msg){
+            var msgDiv = $('<div class="errorMsg"><span>'+nodeText+'</span><span style="color:red">'+msg+'</span></div>')
+                    .css({"font-weight":"bold",  "width":"100%" }).appendTo($(".rightPanel .portlet-footer"));
+        }
+    };
+    Jstree.prototype.__proto__ = Filetree.prototype;
+    //Jstree.prototype = Object.create(Filetree.prototype);
     var JsTree = new Jstree("#jsECTDtree", $(window).height()-250 );
+    JsTree.setExpandTreeListener();
 
-    function togglePanel(){
-        var leftPanel = $(".leftPanel");
-        var rightPanel = $(".rightPanel");
-        if(leftPanel.hasClass("col-md-4")){
-            leftPanel.removeClass("col-md-4").addClass("col-md-6");
-            rightPanel.removeClass("col-md-8").addClass("col-md-6");   
-        }else {
-            leftPanel.removeClass("col-md-6").addClass("col-md-4");
-            rightPanel.removeClass("col-md-6").addClass("col-md-8");
-        }
-    }
-
-    $("#download-btn").click(function(){
+    /*$("#download-btn").click(function(){
         var appUid = angular.element(JsTree.ctrlId).scope().getAppUid();
         var userData = angular.element(JsTree.ctrlId).scope().getUserData();        console.log("downloading .....", appUid, userData);
         var _button = $(this), progressbar;
@@ -175,6 +289,6 @@ END PAGE HEADER-->
         };
         xhr.send();
 
-    });
+    });*/
 </script>
 

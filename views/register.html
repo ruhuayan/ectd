@@ -68,7 +68,7 @@
                                     <label for="phone" class="col-sm-3"><span class="form-label bold" translate>PHONE</span></label>
                                     <div class="col-sm-9">
                                         <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="userData.phone" placeholder="(139)0000-0000" 
-                                                ng-required="true" numberic-check>
+                                                ng-required="true" phone-input>
                                         <!--<p>{{formData.phone | phonenumber}}</p>-->
                                         <p ng-show="userForm.phone.$touched && userForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
                                         <p ng-show="userForm.phone.$error.numberic" class="help-block">Telephone number should be all digits.</p>

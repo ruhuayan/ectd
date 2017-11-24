@@ -196,7 +196,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         };
     }
 
-    
+    /*
     var Portlet = function(){
         return{
             setDataTable: function(){
@@ -216,4 +216,4 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                 });
             }
         };
-    }();
+    }();*/

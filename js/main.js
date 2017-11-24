@@ -105,6 +105,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         WARNING_NOFILE: "There is no file to save",
         WARNING_SPACE: "File name can't contain space",
         WARNING_EXISTS: " already exists, it will be replaced?",
+        WARNING_CASE: "File name can not contain upper case letter",
         INFO_WAIT: "It may take a minute or two to save the ECTD structure files.",
         WARNING_TAG: "One tag can't contain two files!",
         SUCCESS_REPLACED: " File replaced", 
@@ -159,6 +160,9 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         SAVEFILE: "Save file",
         ORDERS: 'My Orders',
         TRANSACTIONS: 'Payouts',
+
+        //publish
+        VALIDATE: "Validate",
         
         //profile
         FIRSTNAME: "First Name",
@@ -322,6 +326,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         WARNING_DELETE: "不能删除 eCTD 架构文件夹!!!",
         WARNING_NOFILE: "没有文件",
         WARNING_EXISTS: " 已经存在，将会被取代",
+        WARNING_CASE: "文件名不能含有大写字母",
         SUCCESS_REPLACED: " 文件被取代",
         WARNING_TAG: "一个tag 不能有2个文件",
         WARNING_SPACE: "文件名不能有空格",
@@ -370,6 +375,9 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         //sideba
         ORDERS: '我的订单',
         TRANSACTIONS: '收款',
+
+        //publish
+        VALIDATE: "验证",
         
         //profile
         FIRSTNAME: "姓",
@@ -771,7 +779,10 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         "dist/jstree.min.js",
                         'dist/Filetree.js',
                         'js/services/cookiesApiService.js',
-                        'js/services/applicationApiService.js'
+                        'js/services/applicationApiService.js',
+                         'js/services/fileApiService.js',
+                        'js/services/genInfoApiService.js',
+                        'js/services/tagApiService.js'
                     ]
                 });
             }]
@@ -1086,8 +1097,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
+    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     setInterval(function() {
