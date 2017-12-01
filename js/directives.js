@@ -247,6 +247,29 @@ MetronicApp.directive('charCheck', function() {
         }
     };
 });
+
+MetronicApp.directive("appNumberCheck", function(){
+    return{
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {  
+            var me = attrs.ngModel;
+            
+            scope.$watch(me, function(value){                                   //console.log(value);
+                var submissions = scope.submissions; unique = true; 
+                if(value!=undefined && submissions && submissions.length){
+                    for (var i in submissions){                               //console.log(submissions[i], scope.formData.appUid)
+                        if(submissions[i].appUid !== scope.formData.appUid &&value == submissions[i].folder) unique = false;
+                    }
+                               
+                }
+
+                ngModel.$setValidity('unique', unique);
+            });
+            
+        }
+    };
+});
 // to check if input is numberic and certain length
 MetronicApp.directive('numbericCheck', function() {
     return {
@@ -269,54 +292,17 @@ MetronicApp.directive('numbericCheck', function() {
     };
 });
 
-/*Metronic.directive("modal", function(){
+Metronic.directive("expandable", function(){
     return{
-        link: function (scope, element, attrs) {
-            // ensure id attribute exists
-            if (!attrs.id) {
-                console.error('modal must have an id');
-                return;
-            }
-
-            // move element to bottom of page (just before </body>) so it can be displayed above everything else
-            element.appendTo('body');
-
-            // close modal on background click
-            element.on('click', function (e) {
-                var target = $(e.target);
-                if (!target.closest('.modal-body').length) {
-                    scope.$evalAsync(Close);
-                }
-            });
-
-            // add self (this modal instance) to the modal service so it's accessible from controllers
-            var modal = {
-                id: attrs.id,
-                open: Open,
-                close: Close
-            };
-            ModalService.Add(modal);
-
-            // remove self from modal service when directive is destroyed
-            scope.$on('$destroy', function() {
-                ModalService.Remove(attrs.id);
-                element.remove();
-            });
-
-            // open modal
-            function Open() {
-                element.show();
-                $('body').addClass('modal-open');
-            }
-
-            // close modal
-            function Close() {
-                element.hide();
-                $('body').removeClass('modal-open');
-            }
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            var newClass = attrs.expandable;
+            //if(scope.) 
+            
         }
     }
-});*/
+});
 
 MetronicApp.filter('trustUrl', function($sce) {
     return function(url) {

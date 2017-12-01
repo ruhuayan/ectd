@@ -11,7 +11,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
             if(CookiesApiService.GetCookies()){
                 appUid = $rootScope.appData.appUid;
                 userData = $rootScope.userData;
-                JsTree.userData = userData;
+                JsTree.userData = JsTree.userData || userData;
             }
             //userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
             if(!$rootScope.subFiles || $rootScope.subFiles.length==0){

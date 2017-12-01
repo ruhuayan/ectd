@@ -53,13 +53,13 @@
         getNodeContent: function(selectedNode){
             if(selectedNode){
                 var node = selectedNode;
-                angular.element("#TagCtrl").scope().setTagTitle(node, true);
+                angular.element("#TagCtrl").scope().setTagTitle(node);
             }else{
                 var node = this.getSelectedNode();                        //console.log(node);
-                if(node) angular.element("#TagCtrl").scope().setTagTitle(node, false);
+                if(node) angular.element("#TagCtrl").scope().setTagTitle(node);
             }
         },
-        setExpandTreeListener: function(){
+        setExpandTreeListener: function(){    
             $("#expandTree").click(function (e){
                 e.preventDefault();
                 var leftPanel = $(".leftPanel");

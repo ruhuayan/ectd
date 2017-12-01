@@ -102,8 +102,10 @@
                         <div class="form-group" ng-class="{ 'has-error' : subForm.folder.$invalid && subForm.folder.$touched }">
                             <label for="folder" class="col-sm-3"><span class="form-label bold" translate>APPFOLDER</span> <span class="required">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="folder" id="folder" ng-model="formData.folder" placeholder="Enter Application Folder" ng-disabled="uneditable" required />
-                                <p ng-show=" subForm.folder.$touched && subForm.folder.$invalid" class="help-block">Application Folder is required.</p>
+                                <input type="text" class="form-control" name="folder" id="folder" ng-model="formData.folder" placeholder="Enter Application Folder" 
+                                ng-disabled="uneditable" required app-number-check/>
+                                <p ng-show=" subForm.folder.$touched && subForm.folder.$error.required" class="help-block">Application Number is required.</p>
+                                <p ng-show=" subForm.folder.$error.unique" class="help-block">Application Number {{formData.folder}} already exits.</p>
                             </div>
                         </div>
                             

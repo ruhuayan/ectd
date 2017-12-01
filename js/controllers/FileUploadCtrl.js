@@ -6,7 +6,7 @@ angular.module('MetronicApp')
         var appUid, toasts = {};                                                console.log("upload ctrl");
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
-            JsTree.userData = $rootScope.userData;
+            JsTree.userData = JsTree.userData || $rootScope.userData;
         }                                                                       
 
         var uploader = $scope.uploader = new FileUploader({

@@ -32,11 +32,10 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                 $scope.submissions =  $rootScope.applications = data.list;//.slice(0,8);        //console.log($rootScope.applications)
                 $scope.dtOptions = dtOptions;
                 //Portlet.setDataTable();
-                //if(data.list.length>1) $scope.submissions = data;
+            
             });
         }
-        
-                                                                         
+                                                                            
 //        $scope.dtOptions = DTOptionsBuilder.newOptions()
 //                .withOption('order', [1, 'asc'])
 //                .withOption('lengthMenu', [5,10])
@@ -176,7 +175,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                 });
             });
         };
-       
+        
         function getTemplateList(){
             TemplateApiService.GetTemplateList($rootScope.userData).then(function(result){             //console.log(result)
                 $scope.templates = result; 
@@ -196,24 +195,4 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         };
     }
 
-    /*
-    var Portlet = function(){
-        return{
-            setDataTable: function(){
-                $("#appTable").dataTable({
-                     aaSorting: [[2, 'asc']],
-                     //bPaginate: false,
-                     bFilter: false,
-                     bInfo: false,
-                     bSortable: true,
-                     bRetrieve: true,
-                     aoColumnDefs: [
-                         { "aTargets": [0], "bSortable": true },
-                         { "aTargets": [1], "bSortable": true },
-                         { "aTargets": [2], "bSortable": true },
-                         { "aTargets": [3], "bSortable": false }
-                     ]
-                });
-            }
-        };
-    }();*/
+   

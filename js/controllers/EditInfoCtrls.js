@@ -24,12 +24,12 @@ angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$
             JsTree.toggle($rootScope.open);
             $rootScope.open = ! $rootScope.open; // ? false : true;
         };
-        if(!$rootScope.tagEdit)  $rootScope.tagEdit = false;
+       /* if(!$rootScope.tagEdit)  $rootScope.tagEdit = false;
         $rootScope.togglePortlet = function(){
             //JsTree.getNodeContent();
             $rootScope.tagEdit = ! $rootScope.tagEdit;
             if($rootScope.tagEdit) JsTree.getNodeContent();
-        };
+        };*/
     }]);
 
 angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'GenInfoApiService',
@@ -44,7 +44,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.getUserData = function(){
             return $rootScope.userData;
         };
-        var adminData ={};           // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        var adminData ={"appNumber": $rootScope.appData.folder, "subId": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
         GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
             function(result){
                 if(result && result.id){
@@ -93,6 +93,8 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 GenInfoApiService.CreateGenInfo(appUid, $rootScope.userData, jsonData).then(function(result){
                     if(result.id){
                         toastr.success('Admin info Saved');
+                        //$rootScope.appData.folder = $scope.adminData.appNumber;
+                        //$rootScope.appData.version = $scope.adminData.subId;
                         $scope.uneditable = true;
                     }
                 });
@@ -268,7 +270,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             $scope.genForm.$setUntouched();
             $scope.genForm.$setValidity();
         };
-        $scope.setTagTitle = function(node, edit){                                 //console.log(node);
+        $scope.setTagTitle = function(node){                                 //console.log(node);
 
             var sNumber = node.original.sNumber; // node.type=="tag"? node.text.split(" ")[0].replace(/<\/?[^>]+(>|$)/g, "") :
             nodeId = node.id;                                                                  //console.log('id',nodeId)
@@ -296,6 +298,13 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
              $scope.genData = angular.copy(jsonx);;
              } */
 
+        };
+        if(!$rootScope.tagEdit)  $rootScope.tagEdit = false;
+        $rootScope.togglePortlet = function(){
+            $rootScope.tagEdit = ! $rootScope.tagEdit;
+            var node = JsTree.getSelectedNode();
+            if($rootScope.tagEdit && node) //JsTree.getNodeContent();
+                $scope.setTagTitle(node);
         };
         function showTags(node){ //console.log(node);
 

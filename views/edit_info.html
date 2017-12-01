@@ -147,7 +147,7 @@ END PAGE HEADER-->
                                         <label for="appNumber" class="col-sm-3"><span class="form-label bold" translate>APPLICATION</span> &nbsp;<span class="form-label bold" translate>NUMBER</span><span class="required">*</span></label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control input-sm" name="appNumber" id="appNumber" ng-model="adminData.appNumber" placeholder="Application Number" 
-                                                   ng-disabled="uneditable" required numberic-check />
+                                                   ng-disabled="true" required numberic-check />
                                             <p ng-show="adminForm.appNumber.$touched && adminForm.appNumber.$error.required" class="help-block">Application Number is required.</p>
                                             <p ng-show="adminForm.appNumber.$error.numberic" class="help-block">Application Number should consist only digits.</p>
                                         </div>
@@ -169,7 +169,7 @@ END PAGE HEADER-->
                                         <label for="subId" class="col-sm-3"><span class="form-label bold" translate>SUBMISSION</span>&nbsp; <span class="bold">ID </span> <span class="required">*</span></label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control input-sm" name="subId" id="subId" ng-model="adminData.subId" placeholder="0000" 
-                                           maxlength="4" ng-disabled="uneditable" ng-required="true" numberic-check="4" />
+                                           maxlength="4" ng-disabled="true" ng-required="true" numberic-check="4" />
                                     <p ng-show=" adminForm.subId.$touched && adminForm.subId.$error.required" class="help-block">Submission ID is required.</p>
                                     <p ng-show="adminForm.subId.$error.numberic" class="help-block">Submission ID should be 4 digits.</p>
                                 </div>
