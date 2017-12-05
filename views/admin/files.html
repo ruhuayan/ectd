@@ -1,0 +1,55 @@
+<!-- BEGIN PAGE HEADER-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="dashboard"><span class="title" translate>FILES</span></a>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default"> 
+                <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<h3 class="page-title"> <span class="title" translate>MYSUB</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div ng-controller="DashboardController">
+    
+    <div class="row" style="text-align: center; margin-bottom: 20px;">
+        <button type="button" class="btn btn-primary btn-md" ng-click="viewall()" ng-show="submissions.length>=5"><span class="title" translate>VIEWALL</span></button>
+        <button type="button" class="btn btn-primary btn-md" ng-click="create()"><span class="title" translate>CREATENEW</span></button></div>
+    <div class="row" id="panel">
+        <div class="col-md-6 col-sm-12">
+            <h3><span class="title" translate>UPLOAD</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
+            <div style="text-align: center; height: 360px; border: 1px solid #06b6ef; color:#06b6ef; line-height: 360px; font-size: 30px;">
+                <div class="drop-file">
+                    <div class="drop-files-zone-hint" style=" line-height: 1.5; display: inline-block;"><i class="fa fa-plus fa-3x"></i><br />Add New</div>
+                </div>    
+            </div>
+            <!-- END PORTLET-->
+        </div>
+        <div class="col-md-6 col-sm-12">
+             <h3><span class="title" translate>BALANCE</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
+            <div style="text-align: center; height: 360px; border: 1px solid #06b6ef;">
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+    
+    
+</div>
+
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<script>
+    
+    //Dashboard.init();
+</script>
+<!-- BEGIN MAIN JS & CSS -->

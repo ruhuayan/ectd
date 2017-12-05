@@ -1,0 +1,75 @@
+<!-- BEGIN PAGE HEADER-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="dashboard"><span class="title" translate>SUBMISSIONS</span></a>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default"> 
+                <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<!--<h3 class="page-title"> <span class="title" translate>MYSUB</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
+ END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div ng-controller="AdminSubCtrl">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET -->
+            <div class="portlet light ">
+                <div class="portlet-title">
+                    <div class="caption caption-md">
+                        <i class="icon-bar-chart theme-font hide"></i>
+                        <span class="caption-subject font-blue-madison bold uppercase">Submissions</span>
+                        <span class="caption-helper hide">weekly stats...</span>
+                    </div>
+                   
+                </div>
+                <div class="portlet-body">
+                    <table class="row-border hover" id="subTable" datatable="" dt-options="dtOptions" dt-instance="dtInstanceCallback">
+                    <thead>
+                        <tr>
+                            <th><span class="title" translate>DESCRIPTION</span></th>
+                            <th><span class="title" translate>NUMBER</span></th>
+                            <th><span class="title" translate>CREATEDATE</span></th>
+                            <th><span class="title" translate>SUBMITDATE</span></th>
+                            <th><span class="title" translate>USER</span></th>
+                            <th><span class="title" translate>ACTION</span></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="subList.length > 0">
+                      <tr ng-repeat="sub in subList">
+
+                        <td><span>{{ sub.description }}</span></td>
+                        <td>{{sub.folder}}</td>
+                        <td>{{sub.createdAt}}</td>
+                        <td><span ng-if="!sub.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="sub.submitDate">{{sub.submitDate}}</span></td>
+                        <td>not ready</td>
+                        <td> <button type="button" class="btn btn-primary btn-md" ng-click="delete(sub, $index)"><span class="title" translate>DELETE</span></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table> 
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<script>
+</script>
+<!-- BEGIN MAIN JS & CSS -->

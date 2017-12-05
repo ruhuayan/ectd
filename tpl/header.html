@@ -71,7 +71,7 @@
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar" ng-hide="admin">
                     <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
                         <i class="icon-envelope-open"></i>
                         <span class="badge badge-default"> 4 </span>
@@ -146,7 +146,7 @@
                 <!-- END INBOX DROPDOWN -->
                 <!-- BEGIN TODO DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+                <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar" ng-hide="admin">
                     <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
                         <i class="icon-calendar"></i>
                         <span class="badge badge-default"> 3 </span>
@@ -279,9 +279,15 @@
                                 <span class="badge badge-danger"> 3 </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#/todo">
+                        <li ng-hide="admin">
+                            <a ui-sref="submission">
                                 <i class="icon-rocket"></i> <span class="title" translate>MYSUB</span>
+                                <span class="badge badge-success"> 7 </span>
+                            </a>
+                        </li>
+                        <li ng-show="admin && !$state.includes('admin')">
+                            <a ui-sref="admin">
+                                <i class="icon-rocket"></i> <span class="title" translate>ADMIN</span>
                                 <span class="badge badge-success"> 7 </span>
                             </a>
                         </li>
@@ -296,7 +302,7 @@
                 <!-- END USER LOGIN DROPDOWN -->
                 <!-- BEGIN QUICK SIDEBAR TOGGLER -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-quick-sidebar-toggler">
+                <li class="dropdown dropdown-quick-sidebar-toggler" ng-hide="admin">
                     <a href="javascript:;" class="dropdown-toggle">
                         <i class="icon-logout"></i>
                     </a>

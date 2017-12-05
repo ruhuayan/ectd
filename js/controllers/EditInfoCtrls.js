@@ -36,7 +36,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
     function($rootScope, $scope, $state, $cookies, CookiesApiService, GenInfoApiService) {
 
         //function AdinfoCtrl($rootScope, $scope, $state, $translate, CookiesApiService, GenInfoApiService){  //console.log($rootScope.subFiles);
-        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appUid, adminData;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;
         }
@@ -44,7 +44,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.getUserData = function(){
             return $rootScope.userData;
         };
-        var adminData ={"appNumber": $rootScope.appData.folder, "subId": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        if(appUid) adminData ={"appNumber": $rootScope.appData.folder, "subId": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
         GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
             function(result){
                 if(result && result.id){

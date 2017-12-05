@@ -292,7 +292,7 @@ MetronicApp.directive('numbericCheck', function() {
     };
 });
 
-Metronic.directive("expandable", function(){
+MetronicApp.directive("expandable", function(){
     return{
         restrict: 'A',
         require: 'ngModel',
