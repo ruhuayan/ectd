@@ -1,9 +1,9 @@
 angular.module('MetronicApp').controller('AdminSubCtrl', ['$rootScope','$scope','$state','$cookies', 'ApplicationApiService',
- 'ModalService', "DTOptionsBuilder", 
-    function($rootScope, $scope, $state, $cookies, ApplicationApiService, ModalService, DTOptionsBuilder) {
+ 'ModalService', "DTOptionsBuilder", "DTColumnBuilder", 
+    function($rootScope, $scope, $state, $cookies, ApplicationApiService, ModalService, DTOptionsBuilder, DTColumnBuilder,) {
         
         $rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
-        var dtOptions = {
+        /*var dtOptions = {
                     sEmptyTable: "Empty Table",
                     order: [2, 'desc'],                   
                     lengthMenu: [5, 10],
@@ -14,18 +14,22 @@ angular.module('MetronicApp').controller('AdminSubCtrl', ['$rootScope','$scope',
                          sortable: false,
                          orderable: false
                      }]
-                };
-        ApplicationApiService.GetApplicationList($rootScope.userData, 1, 50).then(function(result){
+        };*/
+        $scope.submissions = [{}];
+        ApplicationApiService.GetApplicationList($rootScope.userData, 1, 100).then(function(result){
            if(result && result.list){
-                $scope.subList = result.list;
-                $scope.dtOptions = dtOptions;
+                $scope.submissions = result.list;
+                /* $scope.dtOptions = DTOptionsBuilder.newOptions() //.fromSource(APIROOT + 'admin-menus')
+                    .withOption('order', [2, "desc"])
+                    .withOption('lengthMenu', [5, 10]);
+                   .withOption('createdRow', function (row, data, dataIndex) {
+                        // Recompiling so we can bind Angular directive to the DT
+                        $compile(angular.element(row).contents())($scope);
+                    });;*/
            }
         });
-        $scope.dtInstance = {};
-        /*DTInstances.getLast().then(function(instance) {
-            dtInstance = instance;
-        });*/
-        $scope.delete = function(submission,index){                 //console.log(submission)
+         
+        $scope.delete = function(submission,index){                 console.log(submission, index)
 
             ModalService.showModal({
                 templateUrl: "tpl/modal.html",
@@ -41,16 +45,8 @@ angular.module('MetronicApp').controller('AdminSubCtrl', ['$rootScope','$scope',
                     if(!result) return;
                     if(result.appNumber !== submission.folder) return;
                     
-                    $scope.subList.splice(index, 1);   //$scope.dtInstance.rerender();
-                    $scope.dtOptions = dtOptions;
-                    //console.log($scope.subList);
-                    $scope.dtInstanceCallback = function (_dtInstance) {
-                        //console.log(_dtInstance);
-                        
-                        //$scope.dtInstance = _dtInstance;
-                        //$scope.dtInstance.reloadData();
-                        //$scope.dtOptions = dtOptions;
-                    };
+                    $scope.submissions.splice(index, 1);   //$scope.dtInstance.rerender();
+                    
                     ApplicationApiService.DeleteApplication(submission.appUid, $rootScope.userData).then(function(result){ console.log(result);
                         toastr.success("Application " + submission.folder + " deleted");
                         

@@ -35,7 +35,7 @@
                    
                 </div>
                 <div class="portlet-body">
-                    <table class="row-border hover" id="subTable" datatable="" dt-options="dtOptions" dt-instance="dtInstanceCallback">
+                    <table class="row-border hover" id="subTable" datatable="ng" dt-options="dtOptions">
                     <thead>
                         <tr>
                             <th><span class="title" translate>DESCRIPTION</span></th>
@@ -46,8 +46,8 @@
                             <th><span class="title" translate>ACTION</span></th>
                         </tr>
                     </thead>
-                    <tbody ng-if="subList.length > 0">
-                      <tr ng-repeat="sub in subList">
+                    <tbody>
+                      <tr ng-repeat="sub in submissions">
 
                         <td><span>{{ sub.description }}</span></td>
                         <td>{{sub.folder}}</td>

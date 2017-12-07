@@ -1,7 +1,7 @@
 {
-  "name": "metronic",
+  "name": "eCTD",
   "version": "4.5.7",
-  "description": "Metronic by Keenthemes",
+  "description": "eCTD by Rich Yan",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
