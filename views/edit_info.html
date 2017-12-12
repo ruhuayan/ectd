@@ -255,6 +255,15 @@ END PAGE HEADER-->
                                             <p ng-show="contactForm.contactName.$touched && contactForm.contactName.$invalid" class="help-block">Contact Name is required.</p>
                                         </div>
                                     </div>
+                                    <div class="form-group first"  ng-class="{ 'has-error' : contactForm.telephoneType.$invalid && contactForm.telephoneType.$touched }">
+                                        <label for="telephoneType" class="col-sm-3"><span class="form-label" translate>TELE_TYPE</span><span class="required">*</span> </label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control  input-sm" name="telephoneType" id="telephoneType"  ng-model="contactData.telephoneType" required ng-disabled="uneditable">
+                                                <option  ng-repeat="x in telephoneTypes">{{x}}</option>
+                                            </select>
+                                            <p ng-show=" contactForm.telephoneType.$touched && contactForm.telephoneType.$invalid" class="help-block">Telephone Type is required.</p>
+                                        </div>
+                                    </div>
                                     <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid}">
                                         <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span><span class="required">*</span></label>
                                         <div class="col-sm-9">
@@ -378,7 +387,7 @@ END PAGE HEADER-->
 
 
                                 <form class="form-horizontal" role="form" ng-submit="submitTag();" name="genForm">
-                                    <div class="form-body" style=""> 
+                                    <div class="form-body" > 
 
                                         <div class="form-group" ng-class="{'has-error': genForm.sNumber.$touched && genForm.sNumber.$invalid }">
                                             <label for="sNumber" class="col-sm-4" ><span class="form-label bold">Structure Number</span><span class="required">*</span></label>
@@ -475,7 +484,7 @@ END PAGE HEADER-->
                                         <div class="form-group" ng-show="stfTag">
                                             <label for="species" class="col-sm-4"><span class="form-label">Species</span> </label>
                                             <div class="col-sm-8">
-                                                <select multiple class="form-control  input-sm" name="species" id="species" ng-model="genData.species" ng-disabled="uneditable">
+                                                <select multiple class="form-control  input-sm" name="species" id="species" ng-model="species" ng-disabled="uneditable">
                                                     <option  ng-repeat="x in specieTypes">{{x}}</option>
                                                 </select>
 

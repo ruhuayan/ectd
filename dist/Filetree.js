@@ -6,7 +6,7 @@
 
 function Filetree(id, height){
     this.tree = $(id); 
-    this.height = height >650 ? height: 650;                   //console.log(this.height);
+    this.height = height >650 ? height: 650;                   //this.ctrlId, this.userData
     //this.isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
 };
 Filetree.prototype ={

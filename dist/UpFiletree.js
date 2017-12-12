@@ -3,7 +3,7 @@
         Filetree.call(this, id, height);
         this.ctrlId = "#FileUploadCtrl";
         this.uptree = $('#uploadFileTree');                                     //console.log("this.height: ", this.height);
-        this.treeChanged = false;
+        this.treeChanged = false;              // this.treeChanged to alert unsaved tree before leaving the page
     }
     Jstree.prototype = {
         constructor: Jstree,
@@ -267,7 +267,7 @@
             var fileArray=[];
             for(var i=0; i<json.length; i++){
                 if(json[i].type==="file" || json[i].type ==="folder"){ 
-                    var node = {"id": json[i].id, "text": json[i].text, "type": json[i].type, "parent": json[i].parent};
+                    var node = {"id": json[i].id, "text": json[i].text.replace(/<\/?[^>]+(>|$)/g, ""), "type": json[i].type, "parent": json[i].parent};
                     fileArray.push(node);
                 }
             }

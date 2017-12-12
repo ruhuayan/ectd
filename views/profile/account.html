@@ -38,7 +38,7 @@
                                     <label for="userName" class="col-sm-3"><span class="form-label bold"><span class="title" translate>USERNAME</span></span></label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control input-sm" name="userName" id="userName" ng-model="userData.userName" placeholder="user name"
-                                        maxlength="50"  required ng-disabled="uneditable" >
+                                        maxlength="50"  required ng-disabled="true" >
                                         <p ng-show="userForm.userName.$touched && userForm.userName.$error.required" class="help-block">User name is required.</p>
                                         <p ng-show="userForm.userName.$error.maxlength" class="help-block">User name less than 50 characters.</p>
                                     </div>
@@ -163,13 +163,13 @@
                             <div class="form-group">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                                        <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" /> </div>
+                                        <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="No image" /> </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
                                     <div>
                                         <span class="btn default btn-file">
                                             <span class="fileinput-new"> Select image </span>
                                             <span class="fileinput-exists"> Change </span>
-                                            <input id="fileinput-id" type="file" name="userThumb" class="file" ng-model="thumb" required> 
+                                            <input id="fileinput-id" type="file" name="userThumb" class="file"  file-model="files"> 
                                         </span>
                                         <a href="#" class="btn default fileinput-exists" data-dismiss="fileinput"> Remove </a>
                                         <!--<p ng-show="thumbForm.userThumb.$touched && thumbForm.userThumb.$error.required" class="help-block">No image file is selected</p>-->
@@ -199,7 +199,7 @@
                                     <label for="pass"><span class="form-label bold" translate>PW</span></label>
                                     <div>
                                         <input type="password" name="pass" id="pass" class="form-control" ng-model="passData.password" required char-check />
-                                        <p ng-show="passForm.pass.$touched && passForm.pass.$error.required" class="help-block">Password is required</p>
+                                        <p ng-show="passForm.pass.$touched && passForm.pass.$error.required" class="help-block">New Password is required</p>
                                         <p ng-show="passForm.pass.$error.character" class="help-block">Password must contain at least one number,one capital letter, one special character, length 6-16.</p>
                                     </div>
                                 </div>

@@ -66,13 +66,13 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
          };*/
         var referenceData={};
         $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
-        $scope.appTypes = ["New Drug application (NDA)", "abbreviated new drug application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)",
+        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)",
             "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
         $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", "Product Correspondence",
             "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
         $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
         $scope.subSubTypes = ["Original", "Presubmisssion", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
-
+        $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];
 
         //$scope.adminData = angular.copy(adminData);
         //$scope.contactData = angular.copy(contact);                         //console.log("initial contact", contacts[0]);
@@ -190,7 +190,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
          tagData = JSON.parse($cookies.get("tagData"));                      console.log(tagData);
          };*/
 
-        $scope.stfTypes = ["Pre-clinical study report", "Complete clinical study report", "2 Study Report Synopsis", "1,3-15 Study Report Body", "16.1.1 Protocol and/or Amendment",
+        /*$scope.stfTypes = ["Pre-clinical study report", "Complete clinical study report", "2 Study Report Synopsis", "1,3-15 Study Report Body", "16.1.1 Protocol and/or Amendment",
             "16.1.2 Sample CRF", "16.1.3 IEC and IRB and Consent Form Listings", "16.1.4 Description of Investigators and Sites",
             "16.1.5 Signatures of principal or coordinating investigator(s)or sponsor's reponsible medical officer", "16.1.6 Listing of patients receiving test drug(s) from specified batch",
             "16.1.7 Randomisation Scheme","16.1.8 Audit Certificates or similar documentation", "16.1.9 Documentation of statistical methods and interim analysisis plans",
@@ -198,7 +198,19 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.specieTypes = ["none", "mouse", "rat", "hamster", "other-rodent", "rabbit", "dog", "non-human-primate", "other-non-rodent-mammal", "non-mammals"];
         $scope.routeTypes = ["none", "oral", "intravenous", "intramuscular", "intraperitioneal", "subcutaneous", "inhalation", "topical", "other"];
         $scope.durationTypes = ["none", "short", "medium", "long"];
-        $scope.controlTypes = ["none", "placebo", "no-treatment", "dose-reponse-without-placebo", "active-control-without-placebo", "external"];
+        $scope.controlTypes = ["none", "placebo", "no-treatment", "dose-reponse-without-placebo", "active-control-without-placebo", "external"];*/
+
+        $scope.stfTypes = ["Pre-Clinical Study Report", "Legacy Clinical Study Report", "Synopsis", "Study Report Body", "Protocol or Amendment", 
+        "Sample Case Report Form", "IEC IRB Consent Form List", "List Description Investigator Site", "Signatures Investigators", 
+        "List Patients with Batches", "Randomisation Scheme", "Audit Certificates Report", "Statistical Methods Interim Analysis Plan", 
+        "Inter Laboratory Standardisation Methods Quality Assurance", "Publications Based on Study", "Publications Referenced in Report", 
+        "Discontinued Patients", "Protocol Deviations", "Patients Excluded from Efficacy Analysis", "Demographic Data", "Compliance and Drug Concentration Data", 
+        "Individual Efficacy Response Data", "Adverse Event Listings", "Listing Individual Laboratory Measurements by Patient", "Case Report Forms", "Available on Request"];
+        $scope.specieTypes = ["none", "mouse", "rat", "hamster", "other-rodent", "rabbit", "dog", "non-human-primate", "other-non-rodent-mammal", "non-mammals"];
+        $scope.routeTypes = ["none", "oral", "intravenous", "intramuscular", "intraperitoneal", "subcutaneous", "inhalation", "topical", "other"];
+        $scope.durationTypes = ["none", "short", "medium", "long"];
+        $scope.controlTypes = ["none", "placebo", "no-treatment", "dose-response-without-placebo", "active-control-without-placebo", "external"];    
+        
 
         $scope.init = function(){
             $scope.uneditable = true;
@@ -211,10 +223,10 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             $scope.uneditable = !$scope.uneditable;
         };
 
-        $scope.submitTag = function(){
+        $scope.submitTag = function(){          
             if($scope.genForm.$valid){
                 $scope.genData.nodeId = nodeId;
-                $scope.genData.species = "";
+                $scope.genData.species =  $scope.species.toString();
                 if($scope.genData.createdAt){
                     delete $scope.genData.createdAt;
                     delete $scope.genData.updatedAt;
@@ -280,6 +292,8 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 if(result && result.id){
                     jsonx = result;                                             console.log("result: ", jsonx);
                     $scope.genData = angular.copy(jsonx);
+                    //if($scope.genData.species) 
+                        $scope.species = $scope.genData.species.split(",");     //console.log($scope.genData.species);
                 }else{
                     var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length).replace(/<\/?[^>]+(>|$)/g, "");
                     jsonx = studyTag? {"title": "Study Title", "eCode":"Study Report (STF 2.2)"} : {'sNumber': sNumber, 'title': title, 'eCode':node.text.replace(/<\/?[^>]+(>|$)/g, "")};

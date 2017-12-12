@@ -13,6 +13,7 @@ angular.module('MetronicApp').controller('UserAccountController', function($root
             $scope.userData.country = result.addressList[0].country;
         }
     });
+
     $scope.provinceCode = {};
     
     var provinces ={"CN": ["北京市", "上海市","天津市", "重庆市", "河北省", "山西省", "內蒙古自治区", "辽宁省", "吉林省", "黑龙江省",  "江苏省", "浙江省", "安徽省", "福建省", "江西省","山东省", "河南省", "湖北省", "湖南省", 
@@ -95,9 +96,21 @@ angular.module('MetronicApp').controller('UserAccountController', function($root
         $scope.passForm.$setUntouched();
         $scope.passForm.$setValidity();
     };
-    $scope.submitThumb = function(){console.log("a thumb file ", $scope.thumb);
-        if($scope.thumbForm.$valid){
-            
-        }else console.log("No image file selected");
+    $scope.submitThumb = function(){        
+        var fd=new FormData();                                  //console.log($scope.files);
+        
+        angular.forEach($scope.files,function(file){
+            fd.append('file',file);               
+        });                                                         //console.log(fd);
+
+        $http({
+            method: 'POST', 
+            url: 'upload.php',
+            headers: {'Content-Type': undefined },
+            data: fd,
+        }).success(function(response) {
+            console.log(response);
+        });
     };
+    
 });

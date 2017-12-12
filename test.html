@@ -1,183 +1,22 @@
+
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-  .bar {
-    fill: steelblue;
-  }
-
-  .axis text {
-    font: 10px sans-serif;
-  }
-
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  .x.axis path {
-    display: none;
-  }
+<html>
+<head>
+<title>games.richyan.com</title>
+<style type="text/css">
+body {
+margin:0;
+padding:0;
+}
+iframe {
+display: block;
+border: none;
+height: 100vh;
+width: 100vw;
+}
 </style>
-<svg class="chart"></svg>
-<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script>
-  var slide9tree;
-  var slide9diagonal;
-  var slide9vis;
-  var slide9root;
-
-  function slide9Start() {
-    //Define width, height, margins
-    var m = [20, 120, 20, 60],
-      w = 520 - m[1] - m[3],
-      h = 520 - m[0] - m[2],
-      i = 0,
-      root;
-
-    //Define tree layour
-    var tree = d3.layout.tree()
-      .size([h, w]);
-    slide9tree = tree;
-
-    //Define bezier curve drawer
-    var diagonal = d3.svg.diagonal()
-      .projection(function (d) { return [d.y, d.x]; });
-    slide9diagonal = diagonal;
-
-    //Init the svg element and main group
-    var vis = d3.select("#slide9 .emptyDiv").append("svg:svg")
-      .attr("width", w + m[1] + m[3])
-      .attr("height", h + m[0] + m[2])
-      .append("svg:g")
-      .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-    slide9vis = vis;
-
-    //Load and init process the data
-    root = flare;
-    root.x0 = h / 2;
-    root.y0 = 0;
-    slide9root = root
-
-    function toggleAll(d) {
-      if (d.children) {
-        d.children.forEach(toggleAll);
-        toggle(d);
-      }
-    }
-
-    // Initialize the display to show a few nodes.
-    root.children.forEach(toggleAll);
-    toggle(root.children[1]);
-    toggle(root.children[1].children[2]);
-    toggle(root.children[9]);
-    toggle(root.children[9].children[0]);
-
-    //Update & start the tree
-    updateSlide9(root);
-  }
-
-  function updateSlide9(source) {
-    var duration = 500;
-
-    // Compute the new tree layout.
-    var nodes = slide9tree.nodes(slide9root).reverse();
-
-    // Normalize for fixed-depth.
-    nodes.forEach(function (d) { d.y = d.depth * 120; });
-
-    // Add the data to the nodes
-    var i = 0;
-    var node = slide9vis.selectAll("g.node")
-      .data(nodes, function (d) { return d.id || (d.id = ++i); });
-
-    // Enter any new nodes at the parent's previous position.
-    var nodeEnter = node.enter().append("svg:g")
-      .attr("class", "node")
-      .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", function (d) { toggle(d); updateSlide9(d); });
-
-    nodeEnter.append("svg:circle")
-      .attr("r", 1e-6)
-      .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
-
-    nodeEnter.append("svg:text")
-      .attr("x", function (d) { return d.children || d._children ? -10 : 10; })
-      .attr("dy", ".35em")
-      .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-      .text(function (d) { return d.name; })
-      .style("fill-opacity", 1e-6);
-
-    // Transition nodes to their new position.
-    var nodeUpdate = node.transition()
-      .duration(duration)
-      .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
-
-    nodeUpdate.select("circle")
-      .attr("r", 4.5)
-      .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
-
-    nodeUpdate.select("text")
-      .style("fill-opacity", 1);
-
-    // Transition exiting nodes to the parent's new position.
-    var nodeExit = node.exit().transition()
-      .duration(duration)
-      .attr("transform", function (d) { return "translate(" + source.y + "," + source.x + ")"; })
-      .remove();
-
-    nodeExit.select("circle")
-      .attr("r", 1e-6);
-
-    nodeExit.select("text")
-      .style("fill-opacity", 1e-6);
-
-    // Update the links
-    var link = slide9vis.selectAll("path.link")
-      .data(slide9tree.links(nodes), function (d) { return d.target.id; });
-
-    // Enter any new links at the parent's previous position.
-    link.enter().insert("svg:path", "g")
-      .attr("class", "link")
-      .attr("d", function (d) {
-        var o = { x: source.x0, y: source.y0 };
-        return slide9diagonal({ source: o, target: o });
-      })
-      .transition()
-      .duration(duration)
-      .attr("d", slide9diagonal);
-
-    // Transition links to their new position.
-    link.transition()
-      .duration(duration)
-      .attr("d", slide9diagonal);
-
-    // Transition exiting nodes to the parent's new position.
-    link.exit().transition()
-      .duration(duration)
-      .attr("d", function (d) {
-        var o = { x: source.x, y: source.y };
-        return slide9diagonal({ source: o, target: o });
-      })
-      .remove();
-
-    // Keep the old positions for transition.
-    nodes.forEach(function (d) {
-      d.x0 = d.x;
-      d.y0 = d.y;
-    });
-  }
-
-  // Toggle children.
-  function toggle(d) {
-    if (d.children) {
-      d._children = d.children;
-      d.children = null;
-    } else {
-      d.children = d._children;
-      d._children = null;
-    }
-  }
-
-</script>
+</head>
+<body>
+<iframe src="http://www.photo.richyan.com/"><p>Your user agent does not support iframes. However you may visit <a href="http://www.photo.richyan.com/#">the page that was supposed to be here</a></p></iframe>
+</body>
+</html>

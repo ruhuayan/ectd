@@ -30,7 +30,7 @@
                                                                                                     //console.log(Filetree.prototype);
     function Jstree(id, height){
         Filetree.call(this, id, height);
-        this.ctrlId = "#AdinfoCtrl";
+        //this.ctrlId = "#AdinfoCtrl";
     }
     Jstree.prototype = {
         constructor: Jstree,

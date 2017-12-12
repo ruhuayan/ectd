@@ -36,6 +36,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         LOGOUT: "Logout",
         
         INBOX: "Inbox",
+        ADMIN: "Admin",
         
         /* DASHBOARD*/
         SUBMISSION: "Submission",
@@ -123,6 +124,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         NUMBER: "Number",
         TYPE: "Type",
         SUBTYPE: "sub-type",
+        TELE_TYPE: "Telephone Type",
         APP_CONTACT:"Application Contact",
         CONT_TYPE: "Contact Type",
         CONT_NAME:"Contact Name",
@@ -258,6 +260,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         MYPROFILE: '用户设置',
         
         INBOX: "邮箱",
+        ADMIN: "管理员",
         
         SUBMISSION: "申请档",
         HOME: '主页',
@@ -346,6 +349,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         TYPE: "类型",
         SUBTYPE: "次类型",
         APP_CONTACT:"联系方式",
+        TELE_TYPE: "电话类型",
         CONT_TYPE: "联系类型",
         CONT_NAME:"联系人名字",
         TELEPHONE: "电话号码",
@@ -1128,15 +1132,15 @@ MetronicApp.run(function($rootScope) {
     //$rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
-    setInterval(function() {
+    /*setInterval(function() {
         var now = Date.now();
         if (now - lastDigestRun > 10 * 30 * 1000) {
                                                                                 //console.log("url: ", $rootScope.Base_URL);
-                                                                                console.log("if" + now);
+                                                                  //console.log("if" + now);
         }
     }, 60 * 1000);
 
     $rootScope.$watch(function() {
         lastDigestRun = new Date();
-    });
+    });*/
 });
