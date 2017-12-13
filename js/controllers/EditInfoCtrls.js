@@ -76,8 +76,10 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
 
 
         $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
-        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)", "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
-        $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", "Product Correspondence", "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
+        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)", 
+            "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
+        $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", 
+            "Product Correspondence", "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
         $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
         $scope.subSubTypes = ["Original", "Presubmission", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
         $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];
@@ -234,12 +236,13 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.submitTag = function(){          
             if($scope.genForm.$valid){
                 $scope.genData.nodeId = nodeId;
-                $scope.genData.species =  $scope.species.toString();
+                //$scope.genData.species =  $scope.species.toString();
                 if($scope.genData.createdAt){
                     delete $scope.genData.createdAt;
                     delete $scope.genData.updatedAt;
                 }
                 $scope.genData.tag = $scope.substanceTag? "substance" : $scope.productTag? "product" : $scope.stfTag ? "stf" : null;
+                if($scope.genData.tag == "stf") $scope.genData.species =  $scope.species.toString();
                 var genData = JSON.stringify($scope.genData);                                  console.log("tag: " , $scope.genData);
 
                 TagApiService.CreateTag($rootScope.userData, appUid, genData).then(function(result){           console.log(result)
@@ -300,7 +303,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 if(result && result.id){
                     jsonx = result;                                             console.log("result: ", jsonx);
                     $scope.genData = angular.copy(jsonx);
-                    //if($scope.genData.species) 
+                    if($scope.genData.species) 
                         $scope.species = $scope.genData.species.split(",");     //console.log($scope.genData.species);
                 }else{
                     var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length).replace(/<\/?[^>]+(>|$)/g, "");

@@ -35,8 +35,7 @@ Filetree.prototype ={
                 "plugins" : _this.plugins || ["types", "state", "dnd", "search"]
             }).bind("hover_node.jstree", function(event, data){
                  //$("li#"+data.node.id).prop("title", data.node.text);               // selector for id with dot does not work
-                var title = data.node.text.replace(/<\/?[^>]+(>|$)/g, "");
-                $('li[id="'+ data.node.id + '"]').prop("title", title);
+                _this.hoverHandler(data);
             }).bind("loaded.jstree", function (event, data) {                               //console.log(_this.height);
                 //$(this).css("height", _this.height);       
                 _this.loadedHandler();
@@ -76,6 +75,10 @@ Filetree.prototype ={
                 var searchString = $(this).val();
                 _this.tree.jstree('search', searchString);                //console.log($(this).val());
         });
+    },
+    hoverHandler: function(data){
+        var title = data.node.text.replace(/<\/?[^>]+(>|$)/g, "");
+        $('li[id="'+ data.node.id + '"]').prop("title", title);
     },
     setSelectNodeHandler: function(selectNodeHandler){
         this.selectNodeHandler = selectNodeHandler;

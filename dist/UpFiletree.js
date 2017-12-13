@@ -44,8 +44,7 @@
             }).bind("dblclick.jstree", function(event){
                 _this.dblclickEventHandler(event);
             }).bind("hover_node.jstree", function(event, data){
-                $("#"+data.node.id).prop("title", data.node.text );
-
+                _this.hoverHandler(data);
             }).on('copy_node.jstree', function (e, data) { 
                 var jsECTDtree = _this.tree.jstree(true);
                 var parentNode = jsECTDtree.get_node(data.parent);           
@@ -160,7 +159,7 @@
                     'label': "Rename",
                     'action': function (data) {                                                  
                             var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference);                                        //console.log('rename obj', obj);
+                            obj = inst.get_node(data.reference);                                        console.log('rename obj', inst);
                             if(obj.type!="file" && obj.type!="folder"){ 
                                 angular.element("#FileUploadCtrl").scope().translateMsg("WARNING_RENAME");
                                 //toastr.warning(msg); //{{'Name' | translate}}                            //"CAN NOT RENAME ECTD STRUCTUR FOLDER!" 
@@ -177,6 +176,12 @@
                                     }else 
                                         $('#jsECTDtree').jstree(true).set_text(obj, obj.text+'.pdf');
                                 }); 
+                            }else if(obj.type=="folder" && obj.text.indexOf("<b>">=0)){
+                                var default_text = obj.text.replace(/<\/?[^>]+(>|$)/g, "");
+                                inst.edit(obj, default_text, function(){
+                                     $('#jsECTDtree').jstree(true).set_text(obj, "<b>"+obj.text+'</b>');
+                                     JsTree.treeChanged = true;
+                                });
                             }else{
                                 inst.edit(obj, obj.text, function(){                                   // console.log('text: ', obj.text);
                                     $('#jsECTDtree').jstree(true).set_text(obj, obj.text);
