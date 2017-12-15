@@ -44,7 +44,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.getUserData = function(){
             return $rootScope.userData;
         };
-        if(appUid) adminData ={"appNumber": $rootScope.appData.folder, "subId": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        if(appUid) adminData ={"appNumber": $rootScope.appData.folder, "subnum": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
         GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
             function(result){
                 if(result && result.id){
