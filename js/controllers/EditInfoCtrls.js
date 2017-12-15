@@ -242,7 +242,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                     delete $scope.genData.updatedAt;
                 }
                 $scope.genData.tag = $scope.substanceTag? "substance" : $scope.productTag? "product" : $scope.stfTag ? "stf" : null;
-                if($scope.genData.tag == "stf") $scope.genData.species =  $scope.species.toString();
+                if($scope.species && $scope.species.length) $scope.genData.species =  $scope.species.toString();
                 var genData = JSON.stringify($scope.genData);                                  console.log("tag: " , $scope.genData);
 
                 TagApiService.CreateTag($rootScope.userData, appUid, genData).then(function(result){           console.log(result)
