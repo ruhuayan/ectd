@@ -40,7 +40,7 @@ angular.module('MetronicApp')
             name: 'sizeLimit',
             message: "WARNING_SIZE", //"Maximum file size 6mb",
             fn: function(item, options){
-                return item.size < 6000000;
+                return item.size < 10000000;
             }
         });
         uploader.filters.push({

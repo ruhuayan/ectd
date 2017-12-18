@@ -1,5 +1,5 @@
- //var Base_URL = "http://192.168.88.187:8080/ectd";
- var Base_URL = "http://52.4.14.123/ectd";
+ var Base_URL = "http://192.168.88.187:8080/ectd";
+ //var Base_URL = "http://52.4.14.123/ectd";
 
  // to prevent client from leaving the page
  $(window).bind("beforeunload", function(e){

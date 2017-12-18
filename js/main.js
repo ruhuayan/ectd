@@ -83,7 +83,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         UPFILES: "Uploaded Files", 
         CHOOSEFILE: "Choose File",
         MAXFILE: "(Max: 10 files)",
-        MAXSIZE: "(Max Size: 6mb)",
+        MAXSIZE: "(Max Size: 10mb)",
         NAME: "Name", 
         SIZE: "Size",
         PROGRESS: "Progress",
@@ -96,7 +96,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
          
         WARNING_NOAPP: "You need to create an application to...",
         WARNING_FILES: "Maximum 10 files", 
-        WARNING_SIZE: "Maximum file size 6mb",
+        WARNING_SIZE: "Maximum file size 10mb",
         WARNING_FILE: "Not a pdf file",
         WARNING_DUPLICATE: "Duplicate file",
         WARNING_LOADED:"Already uploaded",
@@ -307,7 +307,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         UPFILES: "已上传文件", 
         CHOOSEFILE: "选择文件",
         MAXFILE: "(每次可上传 10个文件)",
-        MAXSIZE: "(文件不大于 6mb)",
+        MAXSIZE: "(文件不大于 10mb)",
         NAME: "文件名", 
         SIZE: "大小",
         PROGRESS: "进度",
@@ -320,7 +320,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         
         WARNING_NOAPP: "请先建立申请表",
         WARNING_FILES: "不超过10个文件", 
-        WARNING_SIZE: "文件不大于 6mb",
+        WARNING_SIZE: "文件不大于 10mb",
         WARNING_FILE: "不是 PDF 文件",
         WARNING_DUPLICATE: "文件重复",
         WARNING_LOADED:"文件已上传",
@@ -1128,8 +1128,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     /*setInterval(function() {
