@@ -24,7 +24,7 @@
 
         return service;
 
-        function GetApplicationList(userData, pageno, pagesize) {
+        function GetApplicationList(userData, pageno, pagesize) { 
             return $http.get(Base_URL + '/a/application/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all Application list'));
         }

@@ -661,7 +661,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: "/dashboard.html",
         templateUrl: "views/dashboard.html",
         data: { pageTitle: 'eCTD Home' },
-        controller: "DashboardController",
+        controller: "",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -1128,8 +1128,8 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    //$rootScope.Base_URL = "http://52.4.14.123/ectd";
+    //$rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
     
     /*setInterval(function() {
