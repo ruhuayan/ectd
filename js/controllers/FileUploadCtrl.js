@@ -67,6 +67,7 @@ angular.module('MetronicApp')
                 for(var i=1; i<upFiles.length; i++){
                     if(upFiles[i].text===item.name ) {
                         valid =0;
+                        
                     }
                 }
                 return valid;
