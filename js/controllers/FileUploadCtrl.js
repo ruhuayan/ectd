@@ -29,13 +29,13 @@ angular.module('MetronicApp')
                 return item.type == "application/pdf";
             }
         });
-        uploader.filters.push({
+        /*uploader.filters.push({
             name: "lowerCase",
             message: "WARNING_CASE",                //"WARNING_CASE",
             fn: function(item, options){
                 return !(/[A-Z]/.test(item.name));
             }
-        });
+        });*/
         uploader.filters.push({
             name: 'sizeLimit',
             message: "WARNING_SIZE", //"Maximum file size 6mb",

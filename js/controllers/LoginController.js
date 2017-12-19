@@ -38,8 +38,6 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
                 }
             });
         };
-    
-
     }]);
 /*(function() {
     'use strict';
