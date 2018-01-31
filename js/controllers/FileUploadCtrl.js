@@ -14,13 +14,13 @@ angular.module('MetronicApp')
             removeAfterUpload: true
         }); 
         // FILTERS
-        uploader.filters.push({
-            name: 'quequeLimit',
-            message: "WARNING_FILES", //"Maximum 10 files",
-            fn: function(item , options){
-                return this.queue.length < 10;
-            }
-        });                     //uploader.queueLimit = 10;
+        // uploader.filters.push({
+        //     name: 'quequeLimit',
+        //     message: "WARNING_FILES", //"Maximum 10 files",
+        //     fn: function(item , options){
+        //         return this.queue.length < 10;
+        //     }
+        // });                     //uploader.queueLimit = 10;
         uploader.filters.push({
             
             name: 'pdfFilter',
@@ -36,13 +36,13 @@ angular.module('MetronicApp')
                 return !(/[A-Z]/.test(item.name));
             }
         });*/
-        uploader.filters.push({
-            name: 'sizeLimit',
-            message: "WARNING_SIZE", //"Maximum file size 6mb",
-            fn: function(item, options){
-                return item.size < 10000000;
-            }
-        });
+        // uploader.filters.push({
+        //     name: 'sizeLimit',
+        //     message: "WARNING_SIZE", //"Maximum file size 6mb",
+        //     fn: function(item, options){
+        //         return item.size < 10000000;
+        //     }
+        // });
         uploader.filters.push({
             name: 'duplicateValidate',
             message: "WARNING_DUPLICATE",  //"Duplicate file",

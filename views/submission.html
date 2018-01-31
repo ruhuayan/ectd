@@ -103,9 +103,9 @@
                             <label for="folder" class="col-sm-3"><span class="form-label bold" translate>APPFOLDER</span> <span class="required">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="folder" id="folder" ng-model="formData.folder" placeholder="Enter Application Folder" 
-                                ng-disabled="uneditable" required app-number-check numberic-check="6"/>
+                                ng-disabled="uneditable" required a numberic-check="6"/>
                                 <p ng-show="subForm.folder.$touched && subForm.folder.$error.required" class="help-block">Application Number is required.</p>
-                                <p ng-show="subForm.folder.$error.unique" class="help-block">Application Number {{formData.folder}} already exits.</p>
+                                
                                 <p ng-show="subForm.folder.$error.numberic" class="help-block">Application Number should be 6 digits.</p>
                             </div>
                         </div>
@@ -117,9 +117,10 @@
                             <label for="version" class="col-sm-3"><span class="form-label bold" translate>SEQUENCE</span><span class="required">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control input-sm" name="version" id="version" ng-model="formData.version" 
-                                       maxlength="4" ng-disabled="uneditable" required numberic-check="4" />
+                                       maxlength="4" ng-disabled="uneditable" required numberic-check="4" sequence-number-check />
                                 <p ng-show="subForm.version.$touched && subForm.version.$error.required" class="help-block">Version is required.</p>
                                 <p ng-show="subForm.version.$error.numberic" class="help-block">Version should be 4 digits.</p>
+                                <p ng-show="subForm.version.$error.unique" class="help-block">Application Number {{formData.version}} already exits.</p>
                             </div>
                         </div>
                                 <div class="form-group">

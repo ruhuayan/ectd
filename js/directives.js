@@ -248,18 +248,20 @@ MetronicApp.directive('charCheck', function() {
     };
 });
 
-MetronicApp.directive("appNumberCheck", function(){
+MetronicApp.directive("sequenceNumberCheck", function(){
     return{
-        restrict: 'A',
+        restrict: 'AE',
         require: 'ngModel',
         link: function (scope, elem, attrs, ngModel) {  
             var me = attrs.ngModel;
             
-            scope.$watch(me, function(value){                                   //console.log(value);
+            scope.$watch(me, function(value){                                 console.log(value);
                 var submissions = scope.submissions; unique = true; 
                 if(value!=undefined && submissions && submissions.length){
                     for (var i in submissions){                               //console.log(submissions[i], scope.formData.appUid)
-                        if(submissions[i].appUid !== scope.formData.appUid &&value == submissions[i].folder) unique = false;
+                        if(submissions[i].appUid !== scope.formData.appUid 
+                            && submissions[i].folder == scope.formData.folder
+                            &&value == submissions[i].version) unique = false;
                     }
                                
                 }
