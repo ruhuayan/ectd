@@ -255,7 +255,7 @@ MetronicApp.directive("sequenceNumberCheck", function(){
         link: function (scope, elem, attrs, ngModel) {  
             var me = attrs.ngModel;
             
-            scope.$watch(me, function(value){                                 console.log(value);
+            scope.$watch(me, function(value){                                 //console.log(value);
                 var submissions = scope.submissions; unique = true; 
                 if(value!=undefined && submissions && submissions.length){
                     for (var i in submissions){                               //console.log(submissions[i], scope.formData.appUid)

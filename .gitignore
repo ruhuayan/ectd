@@ -1,3 +1,6 @@
-./ectd.sql
-./pdf.iml
-./.idea/
+ectd.sql
+
+dist/jsECTDtree.js
+dist/pdfjs/FieSave.js
+images
+css/editor.css
