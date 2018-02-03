@@ -36,13 +36,13 @@ angular.module('MetronicApp')
                 return !(/[A-Z]/.test(item.name));
             }
         });*/
-        // uploader.filters.push({
-        //     name: 'sizeLimit',
-        //     message: "WARNING_SIZE", //"Maximum file size 6mb",
-        //     fn: function(item, options){
-        //         return item.size < 10000000;
-        //     }
-        // });
+        uploader.filters.push({
+            name: 'sizeLimit',
+            message: "WARNING_SIZE", //"Maximum file size 100mb",
+            fn: function(item, options){
+                return item.size < 100000000;
+            }
+        });
         uploader.filters.push({
             name: 'duplicateValidate',
             message: "WARNING_DUPLICATE",  //"Duplicate file",
@@ -139,7 +139,8 @@ angular.module('MetronicApp')
             if(result.errors) return; 
             $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
             
-            JsTree.initTree($rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
+           
             var upFiles = result.ectdFileList;                                  //console.log("upfiles: ", upFiles);
             if(upFiles.length>0){
                 setFileNodes(upFiles);                                          

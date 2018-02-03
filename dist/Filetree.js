@@ -7,12 +7,16 @@
 function Filetree(id, height){
     this.tree = $(id); 
     this.height = height >650 ? height: 650;                   //this.ctrlId, this.userData
+    this.substanceTags = {};
     //this.isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
 };
 Filetree.prototype ={
     constructor: Filetree,
-    initTree: function(json){
-        var _this = this;                                                       //console.log("this.plugins", this.plugins);
+    initTree: function(json, substanceTags){
+        var _this = this;  
+        if(substanceTags){                     console.log(substanceTags);
+            _this.substanceTags = substanceTags;
+        }                                                                 //console.log("this.plugins", this.plugins);
         this.tree.jstree({
                 "core" : {
                     //"animation" : 0,
@@ -50,6 +54,26 @@ Filetree.prototype ={
             }).on('move_node.jstree', function (e, data) {
                 if(_this.moveNodeHandler) _this.moveNodeHandler(data);
             });
+        
+    },
+    addSubstanceTag(id, tag){           // add substance and product tag
+        if(id=="m32S"||id=="m23S"){
+            var addText = "["+tag.manufacturer+"]["+tag.substance+"]";
+            this.addNodeText(id, addText);
+        }else if(id=="m32P"||id=="m23P"){
+            var addText = "["+tag.manufacturer+"]["+tag.prodName+"]["+tag.dosage+"]";
+            this.addNodeText(id, addText);
+        }
+    },
+    addNodeText:function(id, text){
+
+        var node = this.tree.jstree(true).get_node(id);                     //console.log(node);
+        if(node.text.indexOf("<b>")>=0){
+            var title = node.text.replace(/<\/?[^>]+(>|$)/g, "");
+            title = "<b>" + title.slice(0, title.indexOf("["))+' '+text + "</b>"
+            this.tree.jstree(true).set_text(node, title.slice(0, title.indexOf("["))+' '+text);
+        }else
+            this.tree.jstree(true).set_text(node, node.text.slice(0, node.text.indexOf("["))+' '+text);
     },
     loadedHandler: function(){
         var _this = this; 
@@ -60,11 +84,13 @@ Filetree.prototype ={
                   if(node.type === "tag" && node.children.length) 
                       _this.tree.jstree().set_icon(node.id, "fa fa-file");
                   else if(node.type ==="file") _this.paintParents(node.parents);
-                 /*else if(node.id=="m32s"|| node.id=="m23S"){                     //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
-
-                  }else if(node.id=="m32p"||node.id=="m23P"){                      //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
-
-                  }*/
+                  else if(_this.substanceTags && ( node.id=="m23S" || node.id=="m32S")){  //console.log(_this.substanceTags[node.id])//$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
+                    if(_this.substanceTags[node.id])
+                        _this.addSubstanceTag(node.id, _this.substanceTags[node.id]);
+                  }else if(_this.substanceTags && (node.id=="m32P"||node.id=="m23P")){                      //$.inArray(node.id, ["m32s", "m32S", "m23S", "m23s"])
+                    if(_this.substanceTags[node.id])
+                        _this.addSubstanceTag(node.id, _this.substanceTags[node.id]);
+                  }
 
             });
         

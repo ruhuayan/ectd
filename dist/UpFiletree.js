@@ -7,8 +7,11 @@
     }
     Jstree.prototype = {
         constructor: Jstree,
-        initTree: function(json){
+        initTree: function(json, substanceTags){
             var _this = this;                                                   //console.log("this.height: ", _this.height);
+            if(substanceTags){
+                _this.substanceTags = substanceTags;
+            }
             _this.tree.jstree({
                 "core" : {
                     //"animation" : 0,
@@ -102,6 +105,7 @@
                 jsECTDtree.open_node(data.parent);
 
             }).on('open_node.jstree', function (event, data) {});    
+            
         },
         initUploadTree: function(fileJson){                              //console.log(this);
             var _this = this;

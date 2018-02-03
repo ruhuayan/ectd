@@ -2,8 +2,8 @@
  * Created by richardy on 11/9/2017.
  */
 
-angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$state', 'CookiesApiService', 'ApplicationApiService',
-    function($rootScope, $scope, $state,  CookiesApiService, ApplicationApiService) {
+angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$state', 'CookiesApiService', 'ApplicationApiService', "TagApiService",
+    function($rootScope, $scope, $state,  CookiesApiService, ApplicationApiService, TagApiService) {
         //function JstreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
         var appUid;                                                console.log("edit info");
         if(CookiesApiService.GetCookies()){
@@ -15,21 +15,38 @@ angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$
             ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData ", JsTree);
                 $rootScope.subFiles = result.nodeList;
                 //$rootScope.appData.NumOfFiles = result.nodeList.length;
+                
                 JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+                $rootScope.substanceTags = {};
+                getSubTags(appUid, $rootScope.userData);
+                
             });
         }else{
-            JsTree.initTree($rootScope.subFiles);                                   //console.log('subFiles: ', $rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);                                   console.log('subFiles: ',  $rootScope.substanceTags);
+            // getSubTags(appUid, $rootScope.userData);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
-            $rootScope.open = ! $rootScope.open; // ? false : true;
+            $rootScope.open = ! $rootScope.open; 
         };
-       /* if(!$rootScope.tagEdit)  $rootScope.tagEdit = false;
-        $rootScope.togglePortlet = function(){
-            //JsTree.getNodeContent();
-            $rootScope.tagEdit = ! $rootScope.tagEdit;
-            if($rootScope.tagEdit) JsTree.getNodeContent();
-        };*/
+
+        function getSubTags(appUid, userData){
+            var promises = [];
+            
+            angular.forEach(["m23S", "m23P", "m32S", "m32P"], function(value, key){
+                promises.push(
+                    TagApiService.GetTagByNid(appUid, value, userData)
+                );
+            });
+            Promise.all(promises).then(x => {  
+                angular.forEach( x, (y, i)=>{        //console.log(y);
+                    if(y.id){
+                        $rootScope.substanceTags[y.nodeId] = y;
+                        JsTree.addSubstanceTag(y.nodeId, y);
+                    }
+                });
+            });
+        }
     }]);
 
 angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'GenInfoApiService',
@@ -65,16 +82,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
          contact = contacts[0];
          };*/
         var referenceData={};
-        /*$scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
-        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)",
-            "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
-        $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", "Product Correspondence",
-            "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
-        $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
-        $scope.subSubTypes = ["Original", "Presubmisssion", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
-        $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];*/
-
-
+        
         $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
         $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)", 
             "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
@@ -172,13 +180,6 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.submitReference = function(){
             if($scope.referenceForm.$valid){
                 var jsonData =JSON.stringify( $scope.referenceData);                                 //console.log(jsonData);
-//                $.post('php/adinfo.php', {'appData': jsonData}, function(result){
-//                    if(result) {
-//                        toastr.success('Reference information Saved');
-//                        //$scope.uneditable = true;
-//                        //Portlet.write(result);
-//                    }
-//                });
             }
         };
         $scope.cancelReference = function(){
@@ -200,22 +201,13 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
          tagData = JSON.parse($cookies.get("tagData"));                      console.log(tagData);
          };*/
 
-        /*$scope.stfTypes = ["Pre-clinical study report", "Complete clinical study report", "2 Study Report Synopsis", "1,3-15 Study Report Body", "16.1.1 Protocol and/or Amendment",
-            "16.1.2 Sample CRF", "16.1.3 IEC and IRB and Consent Form Listings", "16.1.4 Description of Investigators and Sites",
-            "16.1.5 Signatures of principal or coordinating investigator(s)or sponsor's reponsible medical officer", "16.1.6 Listing of patients receiving test drug(s) from specified batch",
-            "16.1.7 Randomisation Scheme","16.1.8 Audit Certificates or similar documentation", "16.1.9 Documentation of statistical methods and interim analysisis plans",
-            "16.1.10 Documentation of Inter-laboratory Standardization and Quality Assurance" ] ;
-        $scope.specieTypes = ["none", "mouse", "rat", "hamster", "other-rodent", "rabbit", "dog", "non-human-primate", "other-non-rodent-mammal", "non-mammals"];
-        $scope.routeTypes = ["none", "oral", "intravenous", "intramuscular", "intraperitioneal", "subcutaneous", "inhalation", "topical", "other"];
-        $scope.durationTypes = ["none", "short", "medium", "long"];
-        $scope.controlTypes = ["none", "placebo", "no-treatment", "dose-reponse-without-placebo", "active-control-without-placebo", "external"];*/
 
         $scope.stfTypes = ["Pre-Clinical Study Report", "Legacy Clinical Study Report", "Synopsis", "Study Report Body", "Protocol or Amendment", 
-        "Sample Case Report Form", "IEC IRB Consent Form List", "List Description Investigator Site", "Signatures Investigators", 
-        "List Patients with Batches", "Randomisation Scheme", "Audit Certificates Report", "Statistical Methods Interim Analysis Plan", 
-        "Inter Laboratory Standardisation Methods Quality Assurance", "Publications Based on Study", "Publications Referenced in Report", 
-        "Discontinued Patients", "Protocol Deviations", "Patients Excluded from Efficacy Analysis", "Demographic Data", "Compliance and Drug Concentration Data", 
-        "Individual Efficacy Response Data", "Adverse Event Listings", "Listing Individual Laboratory Measurements by Patient", "Case Report Forms", "Available on Request"];
+            "Sample Case Report Form", "IEC IRB Consent Form List", "List Description Investigator Site", "Signatures Investigators", 
+            "List Patients with Batches", "Randomisation Scheme", "Audit Certificates Report", "Statistical Methods Interim Analysis Plan", 
+            "Inter Laboratory Standardisation Methods Quality Assurance", "Publications Based on Study", "Publications Referenced in Report", 
+            "Discontinued Patients", "Protocol Deviations", "Patients Excluded from Efficacy Analysis", "Demographic Data", "Compliance and Drug Concentration Data", 
+            "Individual Efficacy Response Data", "Adverse Event Listings", "Listing Individual Laboratory Measurements by Patient", "Case Report Forms", "Available on Request"];
         $scope.specieTypes = ["none", "mouse", "rat", "hamster", "other-rodent", "rabbit", "dog", "non-human-primate", "other-non-rodent-mammal", "non-mammals"];
         $scope.routeTypes = ["none", "oral", "intravenous", "intramuscular", "intraperitoneal", "subcutaneous", "inhalation", "topical", "other"];
         $scope.durationTypes = ["none", "short", "medium", "long"];
@@ -227,6 +219,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             $scope.substanceTag = false;
             $scope.productTag = false;
             $scope.stfTag = false;
+            $scope.isNodefile = false;
         };
         $scope.genData = angular.copy(jsonx);
         $scope.toggleEditable = function(){
@@ -243,46 +236,24 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 }
                 $scope.genData.tag = $scope.substanceTag? "substance" : $scope.productTag? "product" : $scope.stfTag ? "stf" : null;
                 if($scope.species && $scope.species.length) $scope.genData.species =  $scope.species.toString();
-                var genData = JSON.stringify($scope.genData);                                  console.log("tag: " , $scope.genData);
+                var genData = JSON.stringify($scope.genData);                                                 //console.log("tag: " , $scope.genData);
 
                 TagApiService.CreateTag($rootScope.userData, appUid, genData).then(function(result){           console.log(result)
                     if(result.id){
                         toastr.success('Tag info');
-                        if($scope.genData.nodeId=="m32s"||$scope.genData.nodeId=="m23S"){
+                        if($scope.genData.nodeId=="m32S"||$scope.genData.nodeId=="m23S"){
                             var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.substance+"]";
                             JsTree.addNodeText($scope.genData.nodeId, addText);
-                        }else if($scope.genData.nodeId=="m32p"||$scope.genData.nodeId=="m23P"){
+                            $rootScope.substanceTags[$scope.genData.nodeId] = JsTree.substanceTags[$scope.genData.nodeId] = result;
+
+                        }else if($scope.genData.nodeId=="m32P"||$scope.genData.nodeId=="m23P"){
                             var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.prodName+"]["+$scope.genData.dosage+"]";
                             JsTree.addNodeText($scope.genData.nodeId, addText);
+                            $rootScope.substanceTags[$scope.genData.nodeId] = JsTree.substanceTags[$scope.genData.nodeId] = result;
                         }
                     }
                 });
-                /*$.post('php/tag.php', {'appData': genData}, function(result){
-                 if(result) {
-                 toastr.success('Tag info');
-                 //Portlet.write(result, true);
-
-                 if($scope.genData.nodeId=="m32s"||$scope.genData.nodeId=="m23S"){
-                 var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.substance+"]";
-                 JsTree.addNodeText($scope.genData.nodeId, addText);
-                 }else if($scope.genData.nodeId=="m32p"||$scope.genData.nodeId=="m23P"){
-                 var addText = "["+$scope.genData.manufacturer+"]["+$scope.genData.prodName+"]["+$scope.genData.dosage+"]";
-                 JsTree.addNodeText($scope.genData.nodeId, addText);
-                 }
-
-                 var findTag = false;
-                 if(tagData.length>=1){
-                 for(var i=0; i<tagData.length; i++ ){
-                 if(tagData[i].nodeId == nodeId){                    //console.log(tagData[i].nodeId, nodeId);
-                 tagData[i]=angular.copy($scope.genData);
-                 findTag = true;
-                 }
-                 }
-                 }
-                 if(!findTag) tagData.push(angular.copy($scope.genData));
-                 $cookies.putObject("tagData", tagData);
-                 }
-                 });*/
+               
                 $scope.uneditable = true;
                 //toastr.success('Stf done');
             }
@@ -296,11 +267,14 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.setTagTitle = function(node){                                 //console.log(node);
 
             var sNumber = node.original.sNumber; // node.type=="tag"? node.text.split(" ")[0].replace(/<\/?[^>]+(>|$)/g, "") :
-            nodeId = node.id;                                                                  //console.log('id',nodeId)
+            nodeId = node.id;                                                                  
             var studyTag = showTags(node);
+            $scope.isNodeFile = node.type === "file";                                                   //console.log('isNodeFile',$scope.isNodefile);
 
             TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData).then(function(result){    //console.log("tag:", result);
                 if(result && result.id){
+                    if(node.type==="file" && !result.fileStatus) result.fileStatus = "New";
+                       
                     jsonx = result;                                             console.log("result: ", jsonx);
                     $scope.genData = angular.copy(jsonx);
                     if($scope.genData.species) 
@@ -341,7 +315,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 $scope.productTag = true;
                 $scope.stfTag = false;
                 $scope.substanceTag = false;
-            }else if(node.type==="file" && (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){             //array.includes only IE>=12
+            }else if(/*node.type==="file" &&*/ (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){             //array.includes only IE>=12
                 $scope.substanceTag = false;
                 $scope.productTag = false;
                 $scope.stfTag = true;
@@ -352,6 +326,6 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 $scope.productTag = false;
                 $scope.stfTag = false;
             }
-
         }
+        
     }]);

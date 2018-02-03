@@ -412,7 +412,18 @@ END PAGE HEADER-->
                                                 <p ng-show="genForm.eCode.$touched && genForm.eCode.$invalid" class="help-block">eSubmission Code is required.</p>
                                             </div>
                                         </div>
-
+                                <!-- file status  -->
+                                        <div class="form-group" ng-show="isNodeFile">
+                                            <label for="fileStatus" class="col-sm-4"><span class="form-label bold">File Status</span></label>
+                                           <div class="col-sm-8">
+                                                <select class="form-control  input-sm" name="fileStatus" id="fileStatus"  ng-model="genData.fileStatus" selected="selected" ng-disabled="uneditable" >
+                                                    <option value = "New" selected="selected">New</option>
+                                                    <option value = "Replace">Replace</option>
+                                                    <option value = "Append">Append</option>
+                                                <option value = "Delete">Delete</option>
+                                                </select>
+                                           </div>
+                                       </div>
 
                                 <!-- drug substance -->
 

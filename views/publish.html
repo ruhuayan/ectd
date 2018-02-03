@@ -76,19 +76,20 @@ END PAGE HEADER-->
         $scope.inprocess = false;
         var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appUid = $rootScope.appData.appUid;                    //console.log($rootScope.appData);
+            $scope.appNumber = $rootScope.appData.folder;
             JsTree.userData = JsTree.userData || $rootScope.userData;
         }
 
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     console.log("appData infopage", result);
+            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", result);
                 $rootScope.subFiles = result.nodeList;
                 $scope.fileList = result.ectdFileList;
                 //$rootScope.appData.NumOfFiles = result.nodeList.length;
                 JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
             });
         }else{
-            JsTree.initTree($rootScope.subFiles);                                   //console.log('subFiles: ', $rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);                                   //console.log('subFiles: ', $rootScope.subFiles);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -104,7 +105,7 @@ END PAGE HEADER-->
             GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        //console.log("geninfo: ",result);
                 if(!result || !result.id) toastr.error(" The application does not have general information", "Error:");
                 else
-                    JsTree.downloadTree(appUid, $rootScope.userData);
+                    JsTree.downloadTree(appUid, $scope.appNumber, $rootScope.userData);
             });
             
         };
@@ -235,7 +236,7 @@ END PAGE HEADER-->
                 }
             });
         },
-        downloadTree: function(appUid, userData){
+        downloadTree: function(appUid, appNumber, userData){
 
             App.blockUI({
                         target: $("body"),
@@ -269,7 +270,11 @@ END PAGE HEADER-->
 
                     var link = document.createElement('a');
                     link.href = file;
-                    link.download = "ectd";
+                    var date = new Date();                                                                          
+                    var m = date.getMonth() >=9 ? (date.getMonth()+1).toString() : "0" + (date.getMonth()+1);
+                    var d = date.getDate() >=10 ? date.getDate().toString() : "0" + date.getDate(); 
+                    var sDate= date.getFullYear().toString()+m+d;                            console.log(sDate);
+                    link.download = "ectd_" + appNumber + "_" + sDate;
                     link.click();
                     
                     window.URL.revokeObjectURL(link.href);

@@ -23,7 +23,7 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
                 });
             }else{
                 //var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
-                JsTree.initTree($rootScope.subFiles);
+                JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
                 JsTree.setSelectList($rootScope.subFiles);
                 //JsTree.upFiles = $rootScope.subFiles;
             }
