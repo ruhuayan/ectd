@@ -267,8 +267,8 @@ END PAGE HEADER-->
                                     <div class="form-group" ng-class="{'has-error' : contactForm.phone.$touched && contactForm.phone.$invalid}">
                                         <label for="phone" class="col-sm-3"><span class="form-label" translate>TELEPHONE</span><span class="required">*</span></label>
                                         <div class="col-sm-9">
-                                            <input type="tel" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="514-000-0000" maxlength="10"
-                                                   ng-required="true" ng-disabled="uneditable" numberic-check="10" />
+                                            <input type="text" class="form-control input-sm" name="phone" id="phone" ng-model="contactData.phone" placeholder="(136) 0000-0000 / (514) 000-0000" maxlength="15"
+                                                   ng-required="true" ng-disabled="uneditable" phone-input="11" />
                                             <!--<p>{{formData.phone | phonenumber}}</p>-->
                                             <p ng-show="contactForm.phone.$touched && contactForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
                                             <p ng-show="contactForm.phone.$error.numberic" class="help-block">Telephone should be 10 digits.</p>
@@ -416,11 +416,11 @@ END PAGE HEADER-->
                                         <div class="form-group" ng-show="isNodeFile">
                                             <label for="fileStatus" class="col-sm-4"><span class="form-label bold">File Status</span></label>
                                            <div class="col-sm-8">
-                                                <select class="form-control  input-sm" name="fileStatus" id="fileStatus"  ng-model="genData.fileStatus" selected="selected" ng-disabled="uneditable" >
+                                                <select class="form-control  input-sm" name="fileStatus" id="fileStatus"  ng-model="genData.fileStatus" ng-disabled="uneditable" >
                                                     <option value = "New" selected="selected">New</option>
                                                     <option value = "Replace">Replace</option>
                                                     <option value = "Append">Append</option>
-                                                <option value = "Delete">Delete</option>
+                                                    <option value = "Delete">Delete</option>
                                                 </select>
                                            </div>
                                        </div>

@@ -282,6 +282,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 }else{
                     var title = node.text.slice(node.text.indexOf(" ")+1, node.text.length).replace(/<\/?[^>]+(>|$)/g, "");
                     jsonx = studyTag? {"title": "Study Title", "eCode":"Study Report (STF 2.2)"} : {'sNumber': sNumber, 'title': title, 'eCode':node.text.replace(/<\/?[^>]+(>|$)/g, "")};
+                    if(node.type==="file") jsonx.fileStatus = "New";
                     $scope.genData = angular.copy(jsonx);
                 }
 

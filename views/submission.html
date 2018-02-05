@@ -72,8 +72,21 @@
             <div class="portlet-body" >
                 <form class="form-horizontal" role="form" ng-submit="createApp();" name="subForm">
                     <div class="form-body">
-                        <div class="form-group first" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
-                            <label class="col-sm-3 bold">eCTD Template <span class="required">*</span></label>
+                        <div class="form-group first" ng-class="{ 'has-error' : subForm.destination.$invalid && subForm.destination.$touched }">
+                            <label for="destination" class="col-sm-3 bold">Destination <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="selectpicker" style="width: 100%;height:30px;" name="destination" id="destination" 
+                                            ng-disabled="uneditable" required>
+                                    <option value="us" selected>USA</option>
+                                    <option value="en">China</option> 
+                                </select>
+                                
+                                <p ng-show="subForm.destination.$touched && subForm.destination.$invalid" class="help-block">Destination is required.</p>
+                                    
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
+                            <label for="template" class="col-sm-3 bold">eCTD Template <span class="required">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="template" id="template" ng-model="template.name" disabled
                                        ng-show="template.id" />
@@ -81,7 +94,7 @@
                                          ng-disabled="uneditable || template.id" required>
                                     <option  value="{{template}}" selected>{{template.name}}</option> 
                                 </select>-->
-                                <select class="selectpicker" style="width: 100%;height:35px;" name="template" id="template" ng-model="template" ng-hide="template.id"
+                                <select class="selectpicker" style="width: 100%;height:30px;" name="template" id="template" ng-model="template" ng-hide="template.id"
                                          ng-disabled="uneditable" required>
                                     <option  ng-repeat="t in templates" value="{{t}}" >{{t.name}}</option> 
                                 </select>
@@ -201,7 +214,7 @@
 
                         <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
                                 <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
-                        <td>{{submission.folder}}</td>
+                        <td title="Sequence: {{submission.version}}">{{submission.folder}}</td>
                         <td>{{submission.createdAt}}</td>
                         <!--<td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>-->
                         <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission)"><span class="title" translate>EDIT</span></button></span>

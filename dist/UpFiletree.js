@@ -156,14 +156,15 @@
                     'action': function(data){
                         var inst = $.jstree.reference(data.reference), obj = inst.get_node(data.reference);            //console.log(inst)
                         inst.create_node(obj, {"text": "new_folder", "type": "folder"}, "last", function (new_node) { //console.log("new node", new_node)
-				        try { inst.edit(new_node); } catch (ex) { setTimeout(function () { inst.edit(new_node); },0); } });
+                        try { inst.edit(new_node); JsTree.treeChanged = true; 
+                         } catch (ex) { setTimeout(function () { inst.edit(new_node); JsTree.treeChanged = true; },0); } });
                     }
                 },
                 'rename': { // The "rename" menu item
                     'label': "Rename",
                     'action': function (data) {                                                  
                             var inst = $.jstree.reference(data.reference),
-                            obj = inst.get_node(data.reference);                                        console.log('rename obj', inst);
+                            obj = inst.get_node(data.reference);                                        //console.log('rename obj', inst);
                             if(obj.type!="file" && obj.type!="folder"){ 
                                 angular.element("#FileUploadCtrl").scope().translateMsg("WARNING_RENAME");
                                 //toastr.warning(msg); //{{'Name' | translate}}                            //"CAN NOT RENAME ECTD STRUCTUR FOLDER!" 
@@ -177,19 +178,25 @@
                                         angular.element("#FileUploadCtrl").scope().translateMsg("WARNING_SPACE");
                                         //toastr.warning("File name can't contain space!!!");
                                         $('#jsECTDtree').jstree(true).set_text(obj, default_text+".pdf");
-                                    }else 
+                                    }else {
                                         $('#jsECTDtree').jstree(true).set_text(obj, obj.text+'.pdf');
+                                        JsTree.treeChanged = true;
+                                    }
                                 }); 
-                            }else if(obj.type=="folder" && obj.text.indexOf("<b>">=0)){
-                                var default_text = obj.text.replace(/<\/?[^>]+(>|$)/g, "");
-                                inst.edit(obj, default_text, function(){
-                                     $('#jsECTDtree').jstree(true).set_text(obj, "<b>"+obj.text+'</b>');
-                                     JsTree.treeChanged = true;
-                                });
-                            }else{
-                                inst.edit(obj, obj.text, function(){                                   // console.log('text: ', obj.text);
-                                    $('#jsECTDtree').jstree(true).set_text(obj, obj.text);
-                                });
+                            }else if(obj.type=="folder"){    
+
+                                if(obj.text.indexOf("<b>")<0){
+                                    inst.edit(obj, obj.text, function(){                                   // console.log('text: ', obj.text);
+                                        $('#jsECTDtree').jstree(true).set_text(obj, obj.text);
+                                        JsTree.treeChanged = true;
+                                    });
+                                }else{
+                                    var default_text = obj.text.replace(/<\/?[^>]+(>|$)/g, "");
+                                    inst.edit(obj, default_text, function(){
+                                        $('#jsECTDtree').jstree(true).set_text(obj, "<b>"+obj.text+'</b>');  //console.log(obj.text);
+                                        JsTree.treeChanged = true;
+                                    });
+                                }
                             }
                     }
                 },

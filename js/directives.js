@@ -374,43 +374,49 @@ MetronicApp.directive('phoneInput', function($filter, $browser) {
     return {
         require: 'ngModel',
         link: function($scope, $element, $attrs, ngModelCtrl) {
-            var len = parseInt($attrs.phoneInput) || 11; 
-            /*$scope.$watch($attrs.ngModel, function(value){                                   //console.log(value);
-                if(value!=undefined) {
-                    if(len) ngModelCtrl.$setValidity('numberic', value.length == len );
-                }else ngModelCtrl.$setValidity('numberic', true);
-            });*/
+            var len; // = parseInt($attrs.phoneInput) || 11;                
             
-            var listener = function() {
-                var value = $element.val().replace(/[^0-9]/g, '');
-                $element.val($filter('tel')(value, false));                     
-                //if(len) ngModelCtrl.$setValidity('numberic',   value.length >= len-1 );console.log(value.length, len);
-            };
+            // var listener = function() {
+            var me = $attrs.ngModel;
+            $scope.$watch(me, function(value){                                  /// console.log(value);
+                if(value!=undefined) {
+                    var v = value.replace(/[^0-9]/g, '');
+                    len = v.indexOf("1") ==0 ? 11: 10;                      //console.log(v.length, len )
+    
+                    ngModelCtrl.$setValidity('numberic', v.length == len);
+                    $element.val($filter('tel')(v, false));
+                }else ngModelCtrl.$setValidity('numberic', true);
+            });
+                // var value = $element.val().replace(/[^0-9]/g, '');                   
+                // ngModelCtrl.$setValidity('digits',   value.length == len );console.log(value.length, len);
+                // $element.val($filter('tel')(value, false));
+            // };
 
             // This runs when we update the text field
-            ngModelCtrl.$parsers.push(function(viewValue) {
-                return viewValue.replace(/[^0-9]/g, '').slice(0,len);
-            });
+            // ngModelCtrl.$parsers.push(function(viewValue) {
+            //     return viewValue.replace(/[^0-9]/g, '').slice(0,len);
+            // });
             
-            // This runs when the model gets updated on the scope directly and keeps our view in sync
-            ngModelCtrl.$render = function() {
-                $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
-            };
+            // // This runs when the model gets updated on the scope directly and keeps our view in sync
+            // ngModelCtrl.$render = function() {
+            //     $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
+            // };
 
-            $element.bind('change', listener);
-            $element.bind('keydown', function(event) {
-                var key = event.keyCode;
-                // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
-                // This lets us support copy and paste too
-                if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)){
-                    return;
-                }
-                $browser.defer(listener); // Have to do this or changes don't get picked up properly
-            });
+            // $element.bind('change', listener);
+            // $element.bind('keydown', function(event) {       //console.log(event.keyCode);
+            //     var key = event.keyCode;
+            //     // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
+            //     // This lets us support copy and paste too
+            //     if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)){
+            //         return;
+            //     }
+            //     $browser.defer(listener); // Have to do this or changes don't get picked up properly
+            
+            // });
 
-            $element.bind('paste cut', function() {
-                $browser.defer(listener);
-            });
+            // $element.bind('paste cut', function() {
+            //     $browser.defer(listener);
+            // });
         }
 
     };
@@ -442,7 +448,10 @@ MetronicApp.filter('tel', function () {
 
         if(number){
             if(number.length>3){
-                number = number.slice(0, 4) + '-' + number.slice(4,8);
+                if(city.indexOf('1')==0)
+                    number = number.slice(0,4) + "-" + number.slice(4, 9);
+                else
+                    number = number.slice(0, 3) + '-' + number.slice(3,8);
             }
             else{
                 number = number;
