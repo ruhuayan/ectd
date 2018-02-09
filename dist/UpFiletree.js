@@ -52,13 +52,13 @@
                 var jsECTDtree = _this.tree.jstree(true);
                 var parentNode = jsECTDtree.get_node(data.parent);           
                 if(parentNode.type=="tag"){                              //One file only to one tag
-                    if(parentNode.children.length>1){
-                        jsECTDtree.delete_node(data.node.id);
-                        _this.uptree.jstree(true).show_node(data.node.id);
-                        angular.element(_this.ctrlId).scope().showUpfileNode(data.node.id);
-                        toastr.warning("One tag can't contain two files!"); 
-                        return;
-                    }
+                    // if(parentNode.children.length>1){
+                    //     jsECTDtree.delete_node(data.node.id);
+                    //     _this.uptree.jstree(true).show_node(data.node.id);
+                    //     angular.element(_this.ctrlId).scope().showUpfileNode(data.node.id);
+                    //     toastr.warning("One tag can't contain two files!"); 
+                    //     return;
+                    // }
                     _this.setTagNode(parentNode, data.node.text, data.original.id, jsECTDtree);                                   //console.log(parentNode);
                 }
                 jsECTDtree.open_node(parentNode.id);                                             
@@ -88,13 +88,13 @@
                 var jsECTDtree = _this.tree.jstree(true);
                 var parentNode = jsECTDtree.get_node(data.parent), old_parentNode = jsECTDtree.get_node(data.old_parent);
                 if(parentNode.type=="tag"){ 
-                    if(parentNode.children.length>1){
-                        toastr.warning("One tag can't contain two files!");
-                        jsECTDtree.move_node(data.node, data.old_parent);
-                        if(old_parentNode.type=="tag") jsECTDtree.set_icon(old_parentNode.id, "glyphicon glyphicon-file");
-                        jsECTDtree.set_icon(parentNode.id, "glyphicon glyphicon-file");
-                        return;
-                    }                                                               //console.log(data);
+                    // if(parentNode.children.length>1){
+                    //     toastr.warning("One tag can't contain two files!");
+                    //     jsECTDtree.move_node(data.node, data.old_parent);
+                    //     if(old_parentNode.type=="tag") jsECTDtree.set_icon(old_parentNode.id, "glyphicon glyphicon-file");
+                    //     jsECTDtree.set_icon(parentNode.id, "glyphicon glyphicon-file");
+                    //     return;
+                    // }                                                               //console.log(data);
                     _this.setTagNode(parentNode, data.node.text, data.node.id, jsECTDtree); 
                 }
 
