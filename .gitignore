@@ -4,3 +4,5 @@ dist/jsECTDtree.js
 dist/pdfjs/FieSave.js
 images
 css/editor.css
+node_modules/
+assets/apps/

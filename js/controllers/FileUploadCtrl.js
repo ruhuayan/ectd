@@ -184,7 +184,7 @@ angular.module('MetronicApp')
                 return;
             }
         };
-        function batchUpdata(json, callback) {                                       //console.log(json);
+        function batchUpdata(json, callback) {                                       console.log(json);
 
             $translate("INFO_WAIT").then(function(translation){
                 toastr.info(translation, "Please be patient", {"timeOut": 50000, "closeButton": true});                            //"You need to create an application to upload files!"
@@ -197,7 +197,7 @@ angular.module('MetronicApp')
                 overlayColor: "#999"//'#d9534f'
             });
 
-            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            console.log(result);
+            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
 
                 if(result){
                     toastr.remove();
@@ -305,6 +305,10 @@ angular.module('MetronicApp')
             }
             JsTree.refreshUploadTree(upFileNodes.concat($rootScope.uploadFiles));                                      //console.log($scope.uploadFiles);
         };
+        // var deletedNodes = [];
+        // $scope.deleteFileFromTree = function(fileNode){
+
+        // }
         $scope.$on("$destroy", function(){
             if( !$scope.fileJson) return;
             var title = "Save File Tree ?",

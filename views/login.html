@@ -1,78 +1,55 @@
-<style>
-    body{
-        background: #fff;
-    }
-    #input-name::-webkit-input-placeholder {
-    text-align: center;
-    background-image: url("assets/input-name1.png");
-    background-position: 0 50%;
-    background-repeat: no-repeat;  
-    padding: 2px 2px 3px 2px;
-}
-#input-pass::-webkit-input-placeholder {
-    text-align: center;
-    background-image: url("assets/input-pass1.png");
-    background-position: 0 50%;
-    background-repeat: no-repeat;
-    padding: 2px 2px 6px 2px;
-}
-:-moz-placeholder { /* Firefox 18- */
-   text-align: center;  
-}
-::-moz-placeholder {  /* Firefox 19+ */
-   text-align: center;  
-}
-:-ms-input-placeholder {  
-   text-align: center; 
-}.login-content{
-    float: left; margin-left: 50px; margin-top: 200px;
-}
-.login-content > .login-form .form-control {
-          width: 100%;
-          padding: 10px 0;
-          border: none;
-          border-bottom: 1px solid;
-          border-color: #a0a9b4;
-          color: #868e97;
-          font-size: 14px;
-          margin-top: 30px;
-          border-radius: 0 !important; }
-</style>
-        <div class="container">
-                <div class="company_logo" style="float: left;">
-                        <img class="login-logo" src="assets/company-logo.png" />
-                </div>
-                
-                <div class="login-content">
-                    <h2> <span translate>LOGINTO</span>&nbsp;<span class="title bold" translate>SYSTEM<span></h2>
-                        <form action="javascript:;" class="login-form" ng-submit="signin();">
-                            <div class="alert alert-danger display-hide">
-                                <button class="close" data-close="alert"></button>
-                                <span>Enter any username and password. </span>
-                            </div>
-                            <div class="row">
-                                <input class="form-control form-group" id="input-name" ng-keyup="$event.keyCode == 13 && signin();" type="text" autocomplete="off" ng-model="user.name" placeholder="Username" name="name" required/>
-                            </div>
-                            <div class="row" style='margin-bottom: -10px;'>
-                                <input class="form-control form-group" id="input-pass" ng-keyup="$event.keyCode == 13 && signin();" type="password" autocomplete="off" ng-model="user.password" placeholder="Password" name="password" required/>
-                            </div>
-                            <div class="row">
-                                <div class="register" style="float: left">
-                                    <a ui-sref="register" id="register" class="register"><span translate>REGISTER</span></a>
-                                </div>
-                                <div class="forgot-password" style="float: right;">
-                                    <a href="javascript:;" id="forget-password" class="forget-password" ng-click=""><span translate>FORGOTPW</span></a>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px;">
-                                <div style="float: left;"><button type="submit" class="btn blue"><span translate>LOGIN</span></button></div>
-                                <div style="float: right;"><button type="button" class="btn blue" ng-click="cancel()"><span translate>CANCEL</span></button></div>
-                            </div>
-                   
-                        </form>
+<div class="login-page">
+    <div class="company_logo">
+        <img class="login-logo" src="assets/ectd.png" />
+    </div>
 
+    <div class="login-content">
+        <h2>
+            <span translate>LOGINTO</span>&nbsp;
+            <span class="title bold" translate>SYSTEM
+                <span>
+        </h2>
+        <form action="javascript:;" class="login-form" ng-submit="signin();">
+            <div class="alert alert-danger display-hide">
+                <button class="close" data-close="alert"></button>
+                <span>Enter any username and password. </span>
+            </div>
+            <div class="row">
+                <input class="form-control form-group" id="input-name" ng-keyup="$event.keyCode == 13 && signin();" type="text" autocomplete="off"
+                    ng-model="user.name" placeholder="Username" name="name" required/>
+            </div>
+            <div class="row" style='margin-bottom: -10px;'>
+                <input class="form-control form-group" id="input-pass" ng-keyup="$event.keyCode == 13 && signin();" type="password" autocomplete="off"
+                    ng-model="user.password" placeholder="Password" name="password" required/>
+            </div>
+            <div class="row">
+                <div class="register" style="float: left">
+                    <a ui-sref="register" id="register" class="register">
+                        <span translate>REGISTER</span>
+                    </a>
                 </div>
-               
-           
-        </div>
-      
+                <div class="forgot-password" style="float: right;">
+                    <a href="javascript:;" id="forget-password" class="forget-password" ng-click="">
+                        <span translate>FORGOTPW</span>
+                    </a>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div style="float: left;">
+                    <button type="submit" class="btn blue">
+                        <span translate>LOGIN</span>
+                    </button>
+                </div>
+                <div style="float: right;">
+                    <button type="button" class="btn blue" ng-click="cancel()">
+                        <span translate>CANCEL</span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+</div>

@@ -1074,30 +1074,30 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         }
     })
     // Todo
-    .state('todo', {
-        url: "/todo",
-        templateUrl: "views/todo.html",
-        data: { pageTitle: 'Todo' },
-        controller: "TodoController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                    files: [
-                        'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
-                        'assets/apps/css/todo-2.css',
-                        'assets/global/plugins/select2/css/select2.min.css',
-                        'assets/global/plugins/select2/css/select2-bootstrap.min.css',
-                        'assets/global/plugins/select2/js/select2.full.min.js',
-                        'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
-                        'assets/apps/scripts/todo-2.min.js',
-                        'js/controllers/TodoController.js'
-                    ]
-                });
-            }]
-        }
-    });
+    // .state('todo', {
+    //     url: "/todo",
+    //     templateUrl: "views/todo.html",
+    //     data: { pageTitle: 'Todo' },
+    //     controller: "TodoController",
+    //     resolve: {
+    //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+    //             return $ocLazyLoad.load({
+    //                 name: 'MetronicApp',
+    //                 insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+    //                 files: [
+    //                     'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
+    //                     'assets/apps/css/todo-2.css',
+    //                     'assets/global/plugins/select2/css/select2.min.css',
+    //                     'assets/global/plugins/select2/css/select2-bootstrap.min.css',
+    //                     'assets/global/plugins/select2/js/select2.full.min.js',
+    //                     'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
+    //                     'assets/apps/scripts/todo-2.min.js',
+    //                     'js/controllers/TodoController.js'
+    //                 ]
+    //             });
+    //         }]
+    //     }
+    // });
 
 }]);
 

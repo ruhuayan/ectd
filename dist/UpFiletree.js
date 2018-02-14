@@ -4,6 +4,7 @@
         this.ctrlId = "#FileUploadCtrl";
         this.uptree = $('#uploadFileTree');                                     //console.log("this.height: ", this.height);
         this.treeChanged = false;              // this.treeChanged to alert unsaved tree before leaving the page
+        this.deletedNodes = [];
     }
     Jstree.prototype = {
         constructor: Jstree,
@@ -71,19 +72,29 @@
             }).on('delete_node.jstree', function(e, data){   
                 var jsECTDtree = _this.tree.jstree(true);
                 var node = data.node; 
-                if(node.children_d.length>0){                                                   // if deleted node has child nodes - file node does not contain child node
-                        var childNodes = node.children_d;
-                        for(var i=0; i<childNodes.length; i++) 
-                            _this.uptree.jstree(true).show_node(childNodes[i]);
+                var parentNode = jsECTDtree.get_node(data.parent);   
+                if(node.children_d.length>0){
+                    // _this.deletedNodes.push(node);                                                   // if deleted node has child nodes - file node does not contain child node
+                    var childNodes = node.children_d;
+                    for(var i=0; i<childNodes.length; i++) {
+                        var deletedNode =_this.tree.jstree().get_node(childNodes[i]); //to set flag
+                        var dNode = {"id": deletedNode.id, "text": deletedNode.text.replace(/<\/?[^>]+(>|$)/g, ""),"parent": node.id, "deleted":1, "type": deletedNode.type};  
+                        _this.deletedNodes.push(dNode); 
+
+                        _this.uptree.jstree(true).show_node(childNodes[i]);       //console.log(childNodes[i])
+                    }
                 }else{
-                    var parentNode = jsECTDtree.get_node(data.parent);           
+                            
                     if(parentNode.type=="tag" && parentNode.children.length==0){                 //check if its parent is tag
                         _this.resetTagNode(parentNode, jsECTDtree);
                     }                                                                            //console.log(parentNode);
-                    _this.treeChanged = true;
+                   
                     _this.uptree.jstree(true).show_node(data.node.id);
-                    angular.element(_this.ctrlId).scope().showUpfileNode(data.node.id);
+                    angular.element(_this.ctrlId).scope().showUpfileNode(data.node.id);  
                 }  
+                var deletedNode = {"id": node.id, "text": node.text.replace(/<\/?[^>]+(>|$)/g, ""),"parent": parentNode.id, "deleted":1, "type": node.type};
+                _this.deletedNodes.push(deletedNode);
+                _this.treeChanged = true;
             }).on('move_node.jstree', function (e, data) {  
                 var jsECTDtree = _this.tree.jstree(true);
                 var parentNode = jsECTDtree.get_node(data.parent), old_parentNode = jsECTDtree.get_node(data.old_parent);
@@ -287,6 +298,15 @@
                     fileArray.push(node);
                 }
             }
+            var deletedNodes = this.deletedNodes;
+            if(deletedNodes.length) fileArray = fileArray.concat(deletedNodes);
+            // for(var i=0; i<deletedNodes.length; i++){
+            //     if(deletedNodes[i].type==="file" || deletedNodes[i].type ==="folder"){ 
+            //         var deletedNode = {"id": deletedNodes[i].id, "text": deletedNodes[i].text.replace(/<\/?[^>]+(>|$)/g, ""),"deleted":1, "type": deletedNodes[i].type};
+            //         fileArray.push(deletedNode);
+            //     }
+            // }
+
             if(fileArray.length>0){
                 //angular.element(this.ctrlId).scope().saveFileJson(fileArray);
                 return fileArray;
