@@ -39,6 +39,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         ADMIN: "Admin",
         
         /* DASHBOARD*/
+        
         SUBMISSION: "Submission",
         HOME: 'Home',
         DESCRIPTION: "Description", 
@@ -53,6 +54,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CREATENEW: "Create a New Application", 
         NEWSUB: "New Submission",
         /* SUBMISSION */
+        DESTINATION: "Destination",
         PLANNEDSUB: "planned submission",
         DOCUMENT: "Document",
         APPFOLDER: "Application Number",    //application folder
@@ -66,6 +68,23 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         CREATEAPP: "Create Application",
         EDITAPP: "Edit Application", 
         OBJECT: "Object",
+        STRUCT_NUM: "Structure Number",               //
+        ESUB_CODE: "eSubmission Code",                //
+        TAG: "Tag",                                     //
+        CONFIGURATION: "Configuration",                 //
+        HEADER_FOOTER: "Header and Footer",             //
+        PROD_NAME: "Product Name",
+        F_VERSION: "File version",
+        DOSAGE: "Dosage",
+        MANUF: "Manufacturer",
+        SUBSTANCE:"Substance",
+        MANUAL: "Manual Directory Name",
+        STUDY_NUM: "Study Number",
+        STUDY_TYPE: "Study Type",
+        SPECIES: "Species",
+        ROUTE:"Route of Admin",
+        DURATION: "Duration",
+        T_CONTROL: "Type of Control",
         
         /* LOGIN */
         LOGINTO: "LOG INTO",
@@ -189,7 +208,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         MINETIME: 'Mining Time',
         MONTH: 'Month',
         DATE: 'Paid on',
-        DURATION: 'Duration',
+        // DURATION: 'Duration',
         ESTIMATE: 'Estimated Earnings',
         CURRENT: '(BASED ON YOUR CURRENT HASH RATE)',
         CAD:'Canadian dollar',
@@ -278,6 +297,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         UPGRADE: '购买算力',
        
        /* SUBMISSION */
+        DESTINATION: "目标国家",
         PLANNEDSUB: "计划的申请档",
         DOCUMENT: "文件",
         APPFOLDER: "申请档号码", 
@@ -292,7 +312,24 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         EDITAPP: "修改申请表", 
         OBJECT:"目标",
         NEWSUB: "新的 申请档",
-        
+        STRUCT_NUM: "结构号码",               //
+        ESUB_CODE: "e 代码",                //
+        TAG: "标签",                                     //
+        CONFIGURATION: "设置",                 //
+        HEADER_FOOTER: "开头和尾部",             //
+        PROD_NAME: "产品名字",
+        F_VERSION: "文件版本",
+        DOSAGE: "用量",
+        SUBSTANCE:"原料",
+        MANUF: "生产商",
+        MANUAL: "Manual Directory Name",
+        STUDY_NUM: "研究报告号码",
+        STUDY_TYPE: "研究报告类型",
+        SPECIES: "类目",
+        ROUTE:"Route of Admin",
+        DURATION: "周期",
+        T_CONTROL: "控制类型",
+
         LOGINTO: "进入",
         SYSTEM: "系统",
         LOGIN: '登录',
@@ -405,7 +442,7 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         MINETIME: '挖矿时间',
         MONTH: '月',
         DATE: ' 转账日期',
-        DURATION: '挖矿时间',
+        // DURATION: '挖矿时间',
         ESTIMATE: '预计收入',
         CURRENT: '（根据目前算力）',
         CAD:'加币',
@@ -951,6 +988,48 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         }
     })
 */
+    //edit
+    .state("edit", {
+        url: '/edit',
+        templateUrl: "views/edit/edit.html",
+        data: {pageTitle: 'Upload file, Edit Admin info and STF'},
+        controller: '',
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'MetronicApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
+                        'dist/location.js',
+                        'js/services/cookiesApiService.js',
+                        'js/services/applicationApiService.js',
+                        'js/services/genInfoApiService.js',
+                        'js/services/tagApiService.js',
+                        'js/controllers/EditInfoCtrls.js',
+                        'dist/themes/default/style.min.css',
+                        "dist/jstree.min.js",
+                        'dist/Filetree.js'
+                        //'dist/InfoFiletree.js'
+                    ]
+                });
+            }]
+        }
+    }).state("edit.info",{
+        url: '/info',
+        templateUrl: "views/edit/info.html",
+        data: {pageTitle: 'Edit Admin info '},
+        controller: ''
+    }).state("edit.tag",{
+        url: '/tag',
+        templateUrl: "views/edit/tag.html",
+        data: {pageTitle: 'Edit tag '},
+        controller: ''
+    }).state("edit.upload",{
+        url: '/upload',
+        templateUrl: "views/edit/upload.html",
+        data: {pageTitle: 'Upload file'},
+        controller: ''
+    })
     // User Profile
     .state("profile", {
         url: "/profile",

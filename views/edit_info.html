@@ -380,7 +380,7 @@ END PAGE HEADER-->
                     <div class="panel panel-primary">
                         <div class="panel-heading" role="tab" id="heading1">
                             <a class="panel-title" onclick="Portlet.togglePanel(this, 0);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="true" aria-controls="collapse1">
-                            General</a>
+                                <span class="title" translate>TAG</span></a>
                         </div>
                         <div id="collapse1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading1">
                             <div class="panel-body">
@@ -390,14 +390,14 @@ END PAGE HEADER-->
                                     <div class="form-body" > 
 
                                         <div class="form-group" ng-class="{'has-error': genForm.sNumber.$touched && genForm.sNumber.$invalid }">
-                                            <label for="sNumber" class="col-sm-4" ><span class="form-label bold">Structure Number</span><span class="required">*</span></label>
+                                            <label for="sNumber" class="col-sm-4" ><span class="form-label bold" translate>STRUCT_NUM</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="sNumber" id="sNumber" ng-model="genData.sNumber" placeholder="Structure Number" ng-disabled="uneditable">
                                                 <p ng-show="genForm.sNumber.$touched && genForm.sNumber.$invalid" class="help-block">Structure Number is required.</p>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-class="{ 'has-error': genForm.title.$invalid && genForm.title.$touched }">
-                                            <label for="title" class="col-sm-4"><span class="form-label bold">Title</span> <span class="required">*</span></label>
+                                            <label for="title" class="col-sm-4"><span class="form-label bold" translate>TITLE</span> <span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <!--<input type="text" class="form-control input-ssm" name="title" id="title" ng-model="genData.title" placeholder="Title" required ng-disabled="uneditable">-->
                                                 <textarea class="form-control" rows="3" id="title" name="title" ng-model="genData.title" placeholder="Title" required ng-disabled="uneditable"></textarea>
@@ -406,7 +406,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.eCode.$invalid && genForm.eCode.$touched }">
-                                             <label for="eCode" class="col-sm-4"><span class="form-label bold">eSubmission Code</span><span class="required">*</span></label>
+                                             <label for="eCode" class="col-sm-4"><span class="form-label bold" translate>ESUB_CODE</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="eCode" id="eCode" ng-model="genData.eCode" placeholder="eSubmission Code" required ng-disabled="uneditable">
                                                 <p ng-show="genForm.eCode.$touched && genForm.eCode.$invalid" class="help-block">eSubmission Code is required.</p>
@@ -414,7 +414,7 @@ END PAGE HEADER-->
                                         </div>
                                 <!-- file status  -->
                                         <div class="form-group" ng-show="isNodeFile">
-                                            <label for="operation" class="col-sm-4"><span class="form-label bold">File Status</span></label>
+                                            <label for="operation" class="col-sm-4"><span class="form-label bold" translate>F_VERSION</span></label>
                                            <div class="col-sm-8">
                                                 <select class="form-control  input-sm" name="operation" id="operation"  ng-model="genData.operation" ng-disabled="uneditable" >
                                                     <option value = "New" selected="selected">New</option>
@@ -428,7 +428,7 @@ END PAGE HEADER-->
                                 <!-- drug substance -->
 
                                         <div class="form-group" ng-class="{ 'has-error': genForm.substance.$invalid && genForm.substance.$touched }" ng-show="substanceTag">
-                                            <label for="substance" class="col-sm-4"><span class="form-label bold">Substance</span><span class="required">*</span></label>
+                                            <label for="substance" class="col-sm-4"><span class="form-label bold" translate>SUBSTANCE</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="substance" id="substance" ng-model="genData.substance" ng-required="substanceTag" ng-disabled="uneditable">
                                                 <p ng-show="genForm.substance.$touched && genForm.substance.$invalid" class="help-block">Substance is required.</p>
@@ -436,7 +436,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.manufacturer.$invalid && genForm.manufacturer.$touched }" ng-show="substanceTag">
-                                             <label for="manufacturer" class="col-sm-4"><span class="form-label bold">Manufacturer</span><span class="required">*</span></label>
+                                             <label for="manufacturer" class="col-sm-4"><span class="form-label bold" translate>MANUF</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="manufacturer" id="manufacturer" ng-model="genData.manufacturer" ng-required="substanceTag" ng-disabled="uneditable">
                                                 <p ng-show="genForm.manufacturer.$touched && genForm.manufacturer.$invalid" class="help-block">Manufacturer is required.</p>
@@ -444,14 +444,14 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.prodName.$invalid && genForm.prodName.$touched }" ng-show="productTag">
-                                             <label for="prodName" class="col-sm-4"><span class="form-label bold">Product Name</span><span class="required">*</span></label>
+                                             <label for="prodName" class="col-sm-4"><span class="form-label bold" translate>PROD_NAME</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="prodName" id="prodName" ng-model="genData.prodName" ng-required="productTag" ng-disabled="uneditable">
                                                 <p ng-show="genForm.prodName.$touched && genForm.prodName.$invalid" class="help-block">Product Name is required.</p>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.dosage.$invalid && genForm.dosage.$touched }" ng-show="productTag">
-                                             <label for="dosage" class="col-sm-4"><span class="form-label bold">Dosage</span><span class="required">*</span></label>
+                                             <label for="dosage" class="col-sm-4"><span class="form-label bold" translate>DOSAGE</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="dosage" id="dosage" ng-model="genData.dosage" ng-required="productTag" ng-disabled="uneditable">
                                                 <p ng-show="genForm.dosage.$touched && genForm.dosage.$invalid" class="help-block">Dosage is required.</p>
@@ -459,7 +459,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.manufacturer.$invalid && genForm.manufacturer.$touched }" ng-show="productTag">
-                                             <label for="manufacturer" class="col-sm-4"><span class="form-label bold">Manufacturer</span><span class="required">*</span></label>
+                                             <label for="manufacturer" class="col-sm-4"><span class="form-label bold" translate>MANUF</span><span class="required">*</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="manufacturer" id="manufacturer" ng-model="genData.manufacturer" ng-required="productTag" ng-disabled="uneditable">
                                                 <p ng-show="genForm.manufacturer.$touched && genForm.manufacturer.$invalid" class="help-block">Manufacturer is required.</p>
@@ -467,7 +467,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-show="substanceTag || productTag">
-                                             <label for="manual" class="col-sm-4"><span class="form-label">Manual Directory Name</span></label>
+                                             <label for="manual" class="col-sm-4"><span class="form-label" translate>MANUAL</span></label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="manual" id="manual" ng-model="genData.manual" ng-disabled="uneditable">
                                             </div>
@@ -476,7 +476,7 @@ END PAGE HEADER-->
                                 <!--   end  substance -->
 
                                         <div class="form-group" ng-class="{ 'has-error' : genForm.studyNumber.$invalid && genForm.studyNumber.$touched }" ng-show="stfTag">
-                                            <label for="studyNumber" class="col-sm-4"><span class="form-label bold">Study Number</span><span class="required">*</span> </label>
+                                            <label for="studyNumber" class="col-sm-4"><span class="form-label bold" translate>STUDY_NUM</span><span class="required">*</span> </label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control input-ssm" name="studyNumber" id="studyNumber" ng-model="genData.studyNumber" placeholder="<insert ID>" ng-disabled="uneditable" ng-required="stfTag">
                                                 <p ng-show=" genForm.studyNumber.$touched && genForm.studyNumber.$invalid" class="help-block">Study Number is required.</p>
@@ -484,7 +484,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group"  ng-class="{ 'has-error' : genForm.stfType.$invalid && genForm.stfType.$touched }" ng-show="stfTag">
-                                            <label for="stfType" class="col-sm-4"><span class="form-label bold">Study Type</span><span class="required">*</span> </label>
+                                            <label for="stfType" class="col-sm-4"><span class="form-label bold" translate>STUDY_TYPE</span><span class="required">*</span> </label>
                                             <div class="col-sm-8">
                                                 <select class="form-control  input-sm" name="stfType" id="stfType" ng-model="genData.stfType" ng-disabled="uneditable" ng-required="stfTag">
                                                     <option  ng-repeat="x in stfTypes">{{x}}</option>
@@ -493,7 +493,7 @@ END PAGE HEADER-->
                                             </div>
                                         </div>
                                         <div class="form-group" ng-show="stfTag">
-                                            <label for="species" class="col-sm-4"><span class="form-label">Species</span> </label>
+                                            <label for="species" class="col-sm-4"><span class="form-label" translate>SPECIES</span> </label>
                                             <div class="col-sm-8">
                                                 <select multiple class="form-control  input-sm" name="species" id="species" ng-model="species" ng-disabled="uneditable">
                                                     <option  ng-repeat="x in specieTypes">{{x}}</option>
@@ -502,7 +502,7 @@ END PAGE HEADER-->
                                             </div>
                                         </div>
                                         <div class="form-group row" ng-show="stfTag">
-                                            <label for="route" class="col-sm-4"><span class="form-label">Route of Admin</span></label>
+                                            <label for="route" class="col-sm-4"><span class="form-label" translate>ROUTE</span></label>
                                             <div class="col-sm-8">
                                                 <select class="form-control  input-sm" name="route" id="route" ng-model="genData.route" ng-disabled="uneditable">
                                                     <option  ng-repeat="x in routeTypes">{{x}}</option>
@@ -512,7 +512,7 @@ END PAGE HEADER-->
                                         </div>
 
                                         <div class="form-group" ng-show="stfTag">
-                                            <label for="duration" class="col-sm-4"><span class="form-label">Duration</span> </label>
+                                            <label for="duration" class="col-sm-4"><span class="form-label" translate>DURATION</span> </label>
                                             <div class="col-sm-8">
                                                 <select class="form-control  input-sm" name="duration" id="duration" ng-model="genData.duration" ng-disabled="uneditable">
                                                     <option  ng-repeat="x in durationTypes">{{x}}</option>
@@ -520,7 +520,7 @@ END PAGE HEADER-->
                                             </div>
                                         </div>  
                                          <div class="form-group" ng-show="stfTag">
-                                            <label for="control" class="col-sm-4"><span class="form-label">Type of Control</span> </label>
+                                            <label for="control" class="col-sm-4"><span class="form-label" translate>T_CONTROL</span> </label>
                                             <div class="col-sm-8">
                                                 <select class="form-control  input-sm" name="control" id="control" ng-model="genData.control" ng-disabled="uneditable">
                                                     <option  ng-repeat="x in controlTypes">{{x}}</option>
@@ -530,8 +530,8 @@ END PAGE HEADER-->
 
                                         <div class="form-actions">
                                             <div class="col-md-offset-2 col-md-10">
-                                                    <button type="submit" class="btn green" ng-disabled="genForm.$invalid || uneditable">Save</button>
-                                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelTag()">Cancel</button>
+                                                    <button type="submit" class="btn green" ng-disabled="genForm.$invalid || uneditable" translate>SAVE</button>
+                                                    <button type="button" class="btn default" ng-disabled="uneditable" ng-click="cancelTag()" translate>CANCEL</button>
                                             </div>
                                         </div>
                                     </div>
@@ -543,8 +543,8 @@ END PAGE HEADER-->
                     </div>
                     <div class="panel panel-primary">
                         <div class="panel-heading" role="tab" id="heading2">
-                            <a class="panel-title" onclick="Portlet.togglePanel(this, 1);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="false" aria-controls="collapse2">
-                            Configuration</a>
+                            <a class="panel-title" onclick="Portlet.togglePanel(this, 1);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="false" aria-controls="collapse2" translate>
+                            CONFIGURATION</a>
                         </div>
                          <div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading2">
                              <div class="panel-body">
@@ -579,8 +579,8 @@ END PAGE HEADER-->
 
                     <div class="panel panel-primary">
                         <div class="panel-heading" role="tab" id="heading3">
-                            <a class="panel-title" onclick="Portlet.togglePanel(this, 2);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="false" aria-controls="collapse3">
-                            Header and Footer</a>
+                            <a class="panel-title" onclick="Portlet.togglePanel(this, 2);" data-toggle="collapse" data-parent="#accordion1" aria-expanded="false" aria-controls="collapse3" translate>
+                            HEADER_FOOTER</a>
                         </div> 
                          <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
                             <div class="panel-body">

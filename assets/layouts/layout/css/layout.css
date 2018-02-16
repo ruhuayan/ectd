@@ -139,6 +139,7 @@ div.login-page .company_logo img.login-logo{
 
 body{
     font-size: 12px;
+    overflow: hidden;
 }
 /***
 Page Header

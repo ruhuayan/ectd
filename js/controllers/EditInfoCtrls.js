@@ -38,13 +38,19 @@ angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$
                     TagApiService.GetTagByNid(appUid, value, userData)
                 );
             });
-            Promise.all(promises).then(x => {  
-                angular.forEach( x, (y, i)=>{        //console.log(y);
-                    if(y.id){
-                        $rootScope.substanceTags[y.nodeId] = y;
-                        JsTree.addSubstanceTag(y.nodeId, y);
-                    }
-                });
+            Promise.all(promises).then(x=>{
+                return x.filter(entry => entry.id);
+            }).then(x => {                      //console.log(x);
+                x.map(entry => {
+                    $rootScope.substanceTags[entry.nodeId] = entry;
+                    JsTree.addSubstanceTag(entry.nodeId, entry);
+                })
+                // angular.forEach( x, (y, i)=>{        //console.log(y);
+                //     if(y.id){
+                //         $rootScope.substanceTags[y.nodeId] = y;
+                //         JsTree.addSubstanceTag(y.nodeId, y);
+                //     }
+                // });
             });
         }
     }]);

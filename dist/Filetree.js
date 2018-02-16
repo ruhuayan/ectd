@@ -66,14 +66,20 @@ Filetree.prototype ={
         }
     },
     addNodeText:function(id, text){
+        var node = this.tree.jstree(true).get_node(id);                                         
+        if(!node) return; 
 
-        var node = this.tree.jstree(true).get_node(id);                     //console.log(node);
-        if(node.text.indexOf("<b>")>=0){
-            var title = node.text.replace(/<\/?[^>]+(>|$)/g, "");
-            title = "<b>" + title.slice(0, title.indexOf("["))+' '+text + "</b>"
-            this.tree.jstree(true).set_text(node, title.slice(0, title.indexOf("["))+' '+text);
-        }else
-            this.tree.jstree(true).set_text(node, node.text.slice(0, node.text.indexOf("["))+' '+text);
+        if(node.text.indexOf("<b>")>=0){               // replace element <b></b> and [manu][sub]
+            // var title = node.text.replace(/<\/?[^>]+(>|$)/g, "").replace(/\[(.*?)\]/g, "");            
+            var title = node.text.replace(/(?:\[(.*?)\])|(?:<\/?[^>]+(>|$))/g, "");            //console.log(title)
+            title = "<b>" + title + ' ' + text + "</b>";               //console.log(title);
+            this.tree.jstree(true).set_text(node, title);      
+                                                                                    //console.log(this.tree.jstree(true).get_text(node));
+        }else{
+            var title = node.text.replace(/\[(.*?)\]/g, "");  
+            this.tree.jstree(true).set_text(node, title+' '+text);
+        }
+            
     },
     loadedHandler: function(){
         var _this = this; 

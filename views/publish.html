@@ -21,7 +21,7 @@ END PAGE HEADER-->
         <span class="label label-danger">Edit Admin info and STF</span>
     </h3>
 </div>-->
-<div class="row" ng-controller="PublishTreeCtrl" id="PublishTreeCtrl">
+<div class="row" ng-controller="PublishTreeCtrl" id="PublishTreeCtrl" ng-init="inprocess = false">
     <div class="leftPanel col-md-4"> 
         <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
@@ -56,8 +56,8 @@ END PAGE HEADER-->
                 </div>
             </div>
             <div class="portlet-body">
-                 <div><a class="btn btn-sm green" href="#" id="validate-btn" ng-click="validateApp()" ng-disabled="inprocess"><span class="title" translate>VALIDATE</span></a>
-                    <a class="btn btn-sm green" href="#" id="download-btn" ng-click="downloadApp()" ng-disabled="inprocess"><span class="title" translate>PUBLISH</span></a>
+                 <div><button class="btn btn-sm green" href="#" id="validate-btn" ng-click="validateApp()" ng-disabled="inprocess"><span class="title" translate>VALIDATE</span></button>
+                    <button class="btn btn-sm green" href="#" id="download-btn" ng-click="downloadApp()" ng-disabled="inprocess"><span class="title" translate>PUBLISH</span></button>
                 </div>
             </div>
             <div class="portlet-footer">
@@ -73,7 +73,7 @@ END PAGE HEADER-->
 <script>
 
     function PublishTreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService, GenInfoApiService, TagApiService, ModalService){
-        $scope.inprocess = false;
+        $scope.inprocess = true;
         var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
             appUid = $rootScope.appData.appUid;                    //console.log($rootScope.appData);
@@ -89,7 +89,7 @@ END PAGE HEADER-->
                 JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
             });
         }else{
-            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);                                   //console.log('subFiles: ', $rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);         //console.log('subFiles: ', $rootScope.subFiles);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -101,19 +101,26 @@ END PAGE HEADER-->
         $scope.getAppUid = function(){
             return appUid;
         };
-        $scope.downloadApp = function(){
-            GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        //console.log("geninfo: ",result);
+        $scope.downloadApp = async function(){
+            var result = await checkGenInfo();
                 if(!result || !result.id) toastr.error(" The application does not have general information", "Error:");
                 else
                     JsTree.downloadTree(appUid, $scope.appNumber, $rootScope.userData);
-            });
-            
+            // GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        //console.log("geninfo: ",result);
+            //     if(!result || !result.id) toastr.error(" The application does not have general information", "Error:");
+            //     else
+            //         JsTree.downloadTree(appUid, $scope.appNumber, $rootScope.userData);
+            // });
         };
         $scope.validateApp = async function(){
+            // if($scope.inprocess) return;
             $scope.inprocess = true;
             JsTree.validateTree($rootScope.subFiles);
-            await checkGenInfo();
-            await checkContacts();
+            var result = await checkGenInfo();
+            if(!result || !result.id) JsTree._writeMsg("Application", " does not have general information");
+            result = await checkContacts();
+            if(!result || !result.length) JsTree._writeMsg("Application", " does not have contact information");
+
             angular.forEach($scope.fileList, function(value, index){                                //console.log(value);
                 var fileLastState = value.ectdFileStateList[value.ectdFileStateList.length-1];
                 if(fileLastState.type !="pdf") JsTree._writeMsg(value.name, " file type error");
@@ -135,18 +142,22 @@ END PAGE HEADER-->
                     }
                 }
             });
+            // $scope.inprocess = false;              console.log("inporcess", $scope.inprocess)
+            $scope.$apply(()=>{
+                $scope.inprocess = false;
+            });
             //JsTree._hideProgressbar();
         };
         function checkGenInfo(){
-            GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        console.log("geninfo: ",result);
+            return GenInfoApiService.GetGenInfo(appUid, $rootScope.userData);/*.then(function(result){        console.log("geninfo: ",result);
                 if(!result || !result.id) JsTree._writeMsg("Application", " does not have general information");
-            });
+            });*/
         }
         function checkContacts(){
-            GenInfoApiService.GetContacts(appUid, $rootScope.userData).then(function(result){        console.log("contact info: ", result);
+            return GenInfoApiService.GetContacts(appUid, $rootScope.userData)/*.then(function(result){        console.log("contact info: ", result);
                 if(!result || !result.length) JsTree._writeMsg("Application", " does not have contact information");
                 $scope.inprocess = false;
-            });
+            });*/
         }
         function fileExits(filename){
             var found = false;
@@ -200,22 +211,23 @@ END PAGE HEADER-->
                 var node = _this.tree.jstree().get_node(value.id), parentNode;
                 var nodeArray = ["m1", "m12", "m2", "m3", "m4", "m5"];
                 
-                if(value.id!=="sub1"){
+                if(value.id!=="sub1"){                                                         // to make sure every node has parentNode
                     parentNode = _this.tree.jstree().get_node(value.parent);
                     if(!parentNode) _this._writeMsg(value.id, " is lost");
                 } 
-                if($.inArray(value.id, nodeArray)>=0) {
+                
+                if($.inArray(value.id, nodeArray)>=0) {                                               // to check if m1-5 folders contains files 
                     if(node.text.indexOf("<b>")<0) _this._writeMsg(value.text, " does not contain files");                      //console.log(value.id +"does contain files");
-                }else if($.inArray(value.id, ["m32P", "m32S", "m23S", "m23P"])>=0){
+                }else if($.inArray(value.id, ["m32P", "m32S", "m23S", "m23P"])>=0){                         // to check product and substance tag 
                     angular.element(JsTree.ctrlId).scope().validateTag(node.id).then(function(result){
                          if(!result || !result.id) _this._writeMsg(node.id, " does not have tag file");
                      });
-                }else if(node.type==="file" && (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){
+                }else if(node.type==="file" && (node.parents.indexOf("m4")>=0||node.parents.indexOf("m5")>=0)){   // to check study file has tag
                      angular.element(JsTree.ctrlId).scope().validateTag(node.id).then(function(result){
                          if(!result || !result.id) _this._writeMsg(node.text, " does not have tag file");
                      });
                 }
-                if(node.type != "tag" && (/[A-Z]/.test(value.name))){
+                if(node.type != "tag" && (/[A-Z]/.test(value.name))){                                 // to check if folder or files contain upperletter
                     _this._writeMsg(value.name, " contains upper letter");
                 }
                     
@@ -237,7 +249,7 @@ END PAGE HEADER-->
             });
         },
         downloadTree: function(appUid, appNumber, userData){
-
+            var _this = this;
             App.blockUI({
                         target: $("body"),
                         message: " Downloading ...",
@@ -246,21 +258,31 @@ END PAGE HEADER-->
                         zIndex: 10000
                     });
 
-            /*var _downloadBtn = $("#download-btn"), _validateBtn = $("#validate-btn"), progressbar;
-            _validateBtn.fadeOut(300);
-            _downloadBtn.fadeOut(300, function () {
-                progressbar = $('<div class="load-process">Loading...</div>')
-                    .css({ "width": "5%", "height": 2, "background": "#ff0000", "margin-bottom": "25px" }).appendTo(_downloadBtn.parents(".portlet-body"));
-            });*/
-
+            var _downloadBtn = $("#download-btn"), _validateBtn = $("#validate-btn"), progressbar, intevervalID;
+            _validateBtn.hide();
+            _downloadBtn.hide();
+            (function () {
+                progressbar = $('<div><div class="load-process"></div><div class="load-text">Composing zip folder: 1%</div></div>')
+                    .appendTo(_downloadBtn.parents(".portlet-body"));
+                $(".load-process").css({"width":'5%', "height": 2, "background": "#ff0000" }) ;
+                var w = 3;
+                intevervalID = setInterval(function(){
+                $(".load-process").css({"width":(++w)+'%'});
+                $(".load-text").html("Composing zip folder: {0}%".format(w));
+                    if(w>=100) {clearInterval(intevervalID); }
+                }, 3000);
+               
+            })();
+            
             var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid + "/?uid=" + userData.uid + "&apptoken=" + userData.access_token;
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
             xhr.responseType = 'blob';
             xhr.onprogress = function (e) {        //console.log (e);
                 if (e.lengthComputable) {
-                    //var progress = e.loaded / e.total;
-                    //progressbar.show().css("width", progress + "%");                                                              //console.log(progress);
+                    var progress = e.loaded / e.total;
+                    progressbar.show().find('.load-process').css("width", progress + "%");  
+                    $("load-text").html("Downloading: {0}%".format(progress));                                                            //console.log(progress);
                 }
             };
             xhr.onload = function (e) {
@@ -273,19 +295,34 @@ END PAGE HEADER-->
                     var date = new Date();                                                                          
                     var m = date.getMonth() >=9 ? (date.getMonth()+1).toString() : "0" + (date.getMonth()+1);
                     var d = date.getDate() >=10 ? date.getDate().toString() : "0" + date.getDate(); 
-                    var sDate= date.getFullYear().toString()+m+d;                            console.log(sDate);
+                    var h = date.getHours() >=10? "h"+date.getHours() : "h0"+date.getHours();
+                    var min = date.getMinutes>10? "m"+date.getMinutes(): "m0"+date.getMinutes();
+                    var sDate= date.getFullYear().toString()+m+d+h+min;                            console.log(sDate);
                     link.download = "ectd_" + appNumber + "_" + sDate;
                     link.click();
                     
                     window.URL.revokeObjectURL(link.href);
-                    //progressbar.hide();
-                    //_downloadBtn.show();
-                    //_validateBtn.show();
-                    App.unblockUI($("body"));
+                    _this.endProgressbar(_validateBtn, _downloadBtn, progressbar, intevervalID);
+                    // clearInterval(intevervalID);
+                    // progressbar.hide();
+                    // _downloadBtn.show();
+                    // _validateBtn.show();
+                    // App.unblockUI($("body"));
+                }else {                             
+                    // App.unblockUI("body");
+                    _this.endProgressbar(_validateBtn, _downloadBtn, progressbar, intevervalID);
+                    _this._writeMsg("Error: ", this.status);
                 }
             };
-            xhr.send();
+            xhr.send(null);
             return this; 
+        },
+        endProgressbar: function(validateBtn, downloadBtn, progressbar, intevervalID){
+            clearInterval(intevervalID);
+            progressbar.hide();
+            downloadBtn.fadeIn();
+            validateBtn.fadeIn();
+            App.unblockUI($("body"));
         },
         /*_hideProgressbar: function(){
             var _downloadBtn = $("#download-btn"), _validateBtn = $("#validate-btn"), progressbar = $(".portlet-body div.load-process");
@@ -294,7 +331,7 @@ END PAGE HEADER-->
             _validateBtn.fadeIn();
         },*/
         _writeMsg: function(nodeText, msg){
-            var msgDiv = $('<div class="errorMsg"><span>'+nodeText+'</span><span style="color:red">'+msg+'</span></div>')
+            var msgDiv = $('<div class="errorMsg"><span>'+nodeText+'</span><span style="color:red">&nbsp;'+msg+'</span></div>')
                     .css({"font-weight":"bold",  "width":"100%" }).appendTo($(".rightPanel .portlet-footer"));
         },
         _setFooterHeight: function(){
