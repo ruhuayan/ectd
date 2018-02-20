@@ -653,8 +653,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         var $state = $injector.get('$state');
         $state.go('login');
     });
-
-    //  $urlRouterProvider.otherwise('login');
+    // $urlRouterProvider.when('/edit','/edit/'+info);
 
     $stateProvider
         .state("login", {
@@ -668,7 +667,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
-                        //'css/login.css',
+                        'assets/layouts/layout/css/login.css',
                         'js/controllers/LoginController.js',
                         'js/angular-base64.js'
                     ]
@@ -698,7 +697,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: "/dashboard.html",
         templateUrl: "views/dashboard.html",
         data: { pageTitle: 'eCTD Home' },
-        controller: "",
+        // controller: "",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -993,7 +992,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/edit',
         templateUrl: "views/edit/edit.html",
         data: {pageTitle: 'Upload file, Edit Admin info and STF'},
-        controller: '',
+        // controller: '',
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -1005,7 +1004,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'js/services/applicationApiService.js',
                         'js/services/genInfoApiService.js',
                         'js/services/tagApiService.js',
-                        'js/controllers/EditInfoCtrls.js',
+                        // 'js/controllers/EditInfoCtrls.js',
                         'dist/themes/default/style.min.css',
                         "dist/jstree.min.js",
                         'dist/Filetree.js'
@@ -1177,7 +1176,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     //         }]
     //     }
     // });
-
+    
 }]);
 
 /* Init global settings and run the app */

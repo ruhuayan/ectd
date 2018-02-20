@@ -46,7 +46,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a><span class="title" translate>EDITINFO</span></a>
+            <a><span class="title" translate>{{PAGE}}</span></a>
         </li>
     </ul>
     <div class="page-toolbar">
@@ -116,7 +116,7 @@ END PAGE HEADER-->
 <script>
                                                                                                      
      //console.log(JsTree);
-     function Jstree(id, height){
+    function Jstree(id, height){
         Filetree.call(this, id, height);
         this.ctrlId = "#FileUploadCtrl";
         this.uptree = $('#uploadFileTree');                                     //console.log("this.height: ", this.height);
@@ -451,6 +451,19 @@ END PAGE HEADER-->
                 });
             });
         },*/
+        // resizePanel: function(callback){
+        //     // e.preventDefault();
+        //     var leftPanel = $(".leftPanel");
+        //     var rightPanel = $(".rightPanel");
+        //     var half = leftPanel.hasClass("col-md-6"); 
+        //     if(half){
+        //         leftPanel.removeClass("col-md-6").addClass("col-md-4");
+        //         rightPanel.removeClass("col-md-6").addClass("col-md-8").attr("data-col", "col-md-8");
+        //     }else{
+        //         leftPanel.removeClass("col-md-4").addClass("col-md-6");
+        //         rightPanel.removeClass("col-md-8").addClass("col-md-6").attr("data-col", "col-md-6");
+        //     }
+        // },
         setExpandTreeListener: function(){
             $("#expandTree").click(function (e){
                 e.preventDefault();

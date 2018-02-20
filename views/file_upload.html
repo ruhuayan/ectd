@@ -2,13 +2,17 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a ui-sref="dashboard"><span class="title" translate>HOME</span></a>
+            <a ui-sref="dashboard">
+                <span class="title" translate>HOME</span>
+            </a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a ui-sref="fileupload"><span class="title" translate>UPLOAD</span></a>
+            <a ui-sref="fileupload">
+                <span class="title" translate>UPLOAD</span>
+            </a>
         </li>
-    </ul> 
+    </ul>
 </div>
 <!-- <h3 class="page-title"> File Upload </h3>
 END PAGE HEADER-->
@@ -20,7 +24,7 @@ END PAGE HEADER-->
 </div>-->
 <div class="row" id="FileUploadCtrl" ng-controller="FileUploadCtrl" nv-file-drop="" uploader="uploader">
     <div class="leftPanel col-md-4">
-        
+
         <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -33,22 +37,25 @@ END PAGE HEADER-->
                 </div>
                 <div class="actions">
                     <form class="form-horizontal" role="form" ng-submit="savetree();" title="Save File Tree">
-                    <div class="form-actions">
+                        <div class="form-actions">
                             <div class="btn-group">
-                                <button type="submit" class="btn btn-sm green"><span class="title" translate>SAVE</span></button>
-                                 <a class="btn btn-square btn-default btn-sm" href="#" title="Expand/Shrink File Tree Panel" id="expandTree">
+                                <button type="submit" class="btn btn-sm green">
+                                    <span class="title" translate>SAVE</span>
+                                </button>
+                                <a class="btn btn-square btn-default btn-sm" href="#" title="Expand/Shrink File Tree Panel" id="expandTree">
                                     <i class="fa fa-exchange" aria-hidden="true"></i>
-                                 </a>  
-                                    <!--<button type="button" class="btn btn-sm default" ng-click="canceltree()"><span class="title" translate>CANCEL</span></button>-->
+                                </a>
+                                <!--<button type="button" class="btn btn-sm default" ng-click="canceltree()"><span class="title" translate>CANCEL</span></button>-->
                             </div>
-                    </div>
+                        </div>
                     </form>
                 </div>
             </div>
-            <div class="portlet-body"><div id="jsECTDtree" class="scroller"> </div>
+            <div class="portlet-body">
+                <div id="jsECTDtree" class="scroller"> </div>
             </div>
         </div>
-       
+
     </div>
     <!--<div class="col-md-3">
         <div class="portlet light bordered">
@@ -103,26 +110,31 @@ END PAGE HEADER-->
 
                 </div>
             </div>
-            
+
             <div class="portlet-body row">
-                
-                <div class="uploadTree col-sm-4"> 
+
+                <div class="uploadTree col-sm-4">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
-                           
+
                             <span class="caption-subject bold uppercase" translate>UPFILES</span>
-                            <a class="btn btn-circle btn-icon-only" href="#" title="Sort file" ng-click="sortUptree()"><i class="fa fa-sort"></i> </a>
+                            <a class="btn btn-circle btn-icon-only" href="#" title="Sort file" ng-click="sortUptree()">
+                                <i class="fa fa-sort"></i>
+                            </a>
                         </div>
-                        
+
                     </div>
-                    <div class="portlet-body upload-result-files" ><span ng-show="showHint">Uploaded file is empty.<br /> To upload files, click button Choose Files</span>
+                    <div class="portlet-body upload-result-files">
+                        <span ng-show="showHint">Uploaded file is empty.
+                            <br /> To upload files, click button Choose Files</span>
                         <div id="uploadFileTree"></div>
                     </div>
                 </div>
                 <div class="col-sm-8 upload-queue">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
-                            <input class="btn btn-success btn-s" type="file" nv-file-select="" uploader="uploader" accept="application/pdf" multiple />
+                            <input class="btn btn-success btn-s" type="file" nv-file-select="" uploader="uploader" accept="application/pdf" multiple
+                            />
                         </div>
                     </div>
                     <div class="table-scrollable table-scrollable-borderless">
@@ -162,32 +174,42 @@ END PAGE HEADER-->
                                         <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
                                             <span class="glyphicon glyphicon-upload"></span> Upload </button>-->
                                         <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                            <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCEL</span></button>
-                                            <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(item)">
-                                            <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVE</span> </button>
+                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                            <span class="title" translate>CANCEL</span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="removeItem(item)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                            <span class="title" translate>REMOVE</span>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                <div>
-                    <p>Queue progress:  {{ uploader.queue.length }} </p>
-                    <div class="progress progress-sm" style="">
-                        <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                    <div>
+                        <p>Queue progress: {{ uploader.queue.length }} </p>
+                        <div class="progress progress-sm" style="">
+                            <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
                     </div>
-                </div>
-                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-                    <span class="glyphicon glyphicon-upload"></span><span class="title" translate>UPLOADALL</span> </button>
-                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> <span class="title" translate>CANCELALL</span></button>
+                    <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                        <span class="glyphicon glyphicon-upload"></span>
+                        <span class="title" translate>UPLOADALL</span>
+                    </button>
+                    <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                        <span class="glyphicon glyphicon-ban-circle"></span>
+                        <span class="title" translate>CANCELALL</span>
+                    </button>
                     <button type="button" class="btn btn-danger btn-s" ng-click="removeAll() " ng-disabled="!uploader.queue.length">
-                    <span class="glyphicon glyphicon-trash"></span> <span class="title" translate>REMOVEALL</span> </button>
+                        <span class="glyphicon glyphicon-trash"></span>
+                        <span class="title" translate>REMOVEALL</span>
+                    </button>
                 </div>
-        </div>
+            </div>
         </div>
         <!-- END: ACCORDION DEMO -->
     </div>
-    
+
 </div>
 <!-- <div class="modal fade " id="myModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -210,4 +232,3 @@ END PAGE HEADER-->
 <script>
     //console.log(FileUploadCtrl);
 </script>
-

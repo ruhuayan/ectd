@@ -6,3 +6,4 @@ images
 css/editor.css
 node_modules/
 assets/apps/
+assets/layouts/layout/scss
