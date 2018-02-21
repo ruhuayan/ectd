@@ -71,7 +71,7 @@
                                                 ng-required="true" phone-input>
                                         <!--<p>{{formData.phone | phonenumber}}</p>-->
                                         <p ng-show="userForm.phone.$touched && userForm.phone.$error.required" class="help-block">Telephone Number is required.</p>
-                                        <p ng-show="userForm.phone.$error.numberic" class="help-block">Telephone number should be all digits.</p>
+                                        <p ng-show="userForm.phone.$error.numberic" class="help-block">Telephone number is not valid.</p>
                                     </div>
                                 </div>
                                 <div class="form-group bg-info text-white"><label class="col-sm-3"><span class="panel-title bold" translate>COMPANY</span> </label></div>
@@ -80,7 +80,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control input-sm" name="companyName" id="companyName" ng-model="userData.companyName" 
                                                placeholder="Company Name" required >
-                                        <p ng-show=" userForm.companyName.$touched && userForm.companyName.$invalid" class="help-block">Company Name is required.</p>
+                                        <p ng-show=" userForm.companyName.$touched && userForm.companyName.$invalid" class="help-block">Company Name is not valid.</p>
                                     </div>
                                 </div>
                                 

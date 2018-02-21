@@ -686,7 +686,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [   
                         'js/angular-base64.js',
-                        'js/contrllers/RegisterCtrl'
+                        'js/controllers/RegisterCtrl.js'
                     ]
                 });
             }]
