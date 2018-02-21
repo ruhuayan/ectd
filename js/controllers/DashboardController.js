@@ -8,7 +8,8 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     $rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
     if($rootScope.applications)                                             
             $scope.submissions = $rootScope.applications.slice(0,5);     
-    else {getUserAppList(1, 50, null); console.log($state)}                                    
+    else if(!$rootScope.loaded){  getUserAppList(1, 50, null);             console.log("load Num: ",$rootScope.loaded);
+    }                                 
     
     $scope.edit = function(submission){                                         //console.log("submission: ", submission.id);
         toastr.success('Application ID: '+ submission.id);

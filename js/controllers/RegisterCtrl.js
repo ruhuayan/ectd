@@ -6,7 +6,7 @@ angular.module('MetronicApp').controller('RegisterCtrl', ['$rootScope','$scope',
         "USA": ["California", "Florida", "New Jersey", "New York", "Texas", "Washington"],
         "CA": ["Quebc", "Ontario", "British Columbia"]
         };
-    var cities = {};
+    var cities = {};                 
     $scope.countires = [{
             "id": 1,
             "code": "CN",

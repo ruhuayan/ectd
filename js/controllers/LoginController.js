@@ -1,12 +1,12 @@
 angular.module('MetronicApp').controller('LoginController', ['$scope', '$location', '$rootScope', '$state', '$cookies', 'AuthenticationService',
     function($scope, $location, $rootScope, $state, $cookies, AuthenticationService){
 
-        $scope.user = {};
+        $scope.user = {};                            
        
         $scope.signin = signin;
         $scope.cancel = cancel;
 
-        (function initController() {
+        (function initController() {              
             // reset login status
             AuthenticationService.ClearCredentials();
         })();
@@ -22,11 +22,10 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
                     $rootScope.currentuser = 'root';
                     AuthenticationService.SetCredentials(response);
                     toastr.success('Succesfully Logged In');
-
+                    $rootScope.loaded = 0; 
                     $state.go("dashboard").then(function() {
+                        $rootScope.loaded = 1;
                        //$window.location.reload();
-                        // console.log($state);
-                        //$state.reload(); toastr.success('Succesfully Logged In');
                         $state.reload();
                     });
                     

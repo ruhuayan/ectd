@@ -678,7 +678,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: "/register",
         templateUrl: "views/register.html",
         data: { pageTitle: 'Register' },
-        controller: "RegisterCtrl",
+        // controller: "RegisterCtrl",         //already in ng-controller
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -714,7 +714,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/submission.html',
         templateUrl: "views/submission.html",
         data: {pageTitle: 'Create new application'},
-        controller: '',
+        // controller: '',
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -737,7 +737,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/edit_link.html',
         templateUrl: "views/edit_link.html",
         data: {pageTitle: 'Edit PDF links'},
-        controller: '',
+        // controller: '',
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -762,7 +762,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/edit_info.html',
         templateUrl: "views/edit_info.html",
         data: {pageTitle: 'Edit Admin info and STF'},
-        controller: '',
+        // controller: '',
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -788,7 +788,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: "/file_upload.html",
         templateUrl: "views/file_upload.html",
         data: { pageTitle: 'Upload PDF files' },
-        controller: "",
+        // controller: "",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -813,7 +813,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/publish.html',
         templateUrl: "views/publish.html",
         data: {pageTitle: 'Publish the application'},
-        controller: '',
+        // controller: '',
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
