@@ -14,9 +14,10 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
         function cancel(){
             alert('are you sure to want to give up!');
         }
-        function signin() {                                                                 //console.log("sign...")
+        function signin() { 
+            var loginData={};                                                                //console.log("sign...")
             //  vm.dataLoading = true;
-            AuthenticationService.signin($scope.user.name, $scope.user.password, function(response) {
+            AuthenticationService.signin($scope.user.name, $scope.user.password, $scope.user.code, function(response) {
                 if (response) {
                    
                     $rootScope.currentuser = 'root';

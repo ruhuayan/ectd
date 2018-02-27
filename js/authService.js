@@ -16,7 +16,7 @@
 
         return service;
 
-        function signin(username, password, callback) {
+        function signin(username, password, code, callback) {
             //console.log(username);
             /*$.post('php/login.php', {userName: username, pass: password}, function(response){
                 if(response)  return callback(response);
@@ -63,7 +63,8 @@
                 data: {
                     grant_type: "password", 
                     username: username, 
-                    password: "Basic " +Base64.encode( username + ':' + password )
+                    password: "Basic " +Base64.encode( username + ':' + password ),
+                    code: code
                 }
                 
             }).done(function (response){                                        console.log(response);
