@@ -1,5 +1,5 @@
-angular.module('MetronicApp').controller('RegisterCtrl', ['$rootScope','$scope','$state',
-    function($rootScope, $scope, $state){
+angular.module('MetronicApp').controller('RegisterCtrl', ['$rootScope','$scope','$state', '$http',
+    function($rootScope, $scope, $state, $http){
     
     var provinces ={"CN": ["北京市", "上海市","天津市", "重庆市", "河北省", "山西省", "內蒙古自治区", "辽宁省", "吉林省", "黑龙江省",  "江苏省", "浙江省", "安徽省", "福建省", "江西省","山东省", "河南省", "湖北省", "湖南省", 
         "广东省", "广西壮族自治区", "海南省", "四川省", "贵州省", "云南省", "西藏自治区", "陕西省", "甘肃省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区", "台湾省", "香港特别行政区", "澳门特别行政区"],
@@ -26,7 +26,9 @@ angular.module('MetronicApp').controller('RegisterCtrl', ['$rootScope','$scope',
             "tax": 0.05,
             "taxName": "GST"
         }];
-    //$scope.userData = {};
+    // $http.get("http://192.168.88.187:8081/f/getCountryList").then((result)=>{ console.log(result);
+    //         $scope.countires = result;
+    // });
     $scope.selectedCountry = function(){                                        //console.log($scope.userData.country)
         var countryCode =  $scope.country.code;
         if(countryCode == null){

@@ -201,9 +201,9 @@
                 
                 <table class="row-border hover" id="appTable" datatable="ng" dt-options="dtOptions">
                     <thead>
-                        <tr>
+                        <tr><th><span class="title" translate>NUMBER</span></th>
                             <th><span class="title" translate>DESCRIPTION</span></th>
-                            <th><span class="title" translate>NUMBER</span></th>
+                            <th><span class="title" translate>SEQUENCE</span></th>
                             <th><span class="title" translate>CREATEDATE</span></th>
                             <!--<th><span class="title" translate>SUBMITDATE</span></th>-->
                             <th><span class="title" translate>ACTION</span></th>
@@ -211,10 +211,10 @@
                     </thead>
                     <tbody ng-if="submissions.length > 0">
                       <tr ng-repeat="submission in submissions">
-
+                        <td title="Sequence: {{submission.version}}">{{submission.folder}}</td>
                         <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
                                 <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
-                        <td title="Sequence: {{submission.version}}">{{submission.folder}}</td>
+                        <td>{{submission.version}}</td>
                         <td>{{submission.createdAt}}</td>
                         <!--<td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>-->
                         <td><span ng-if="!submission.submitDate"><a ng-click="edit(submission)" title="Edit" style="font-size: 16px;"><i class="fa fa-edit"></i></a></span> &nbsp;&nbsp;

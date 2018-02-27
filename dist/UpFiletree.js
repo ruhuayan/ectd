@@ -344,13 +344,13 @@
                     leftPanel.removeClass("col-md-4").addClass("col-md-6");
                     rightPanel.removeClass("col-md-8").addClass("col-md-6").attr("data-col", "col-md-6");
                     $(".upload-queue").fadeOut(300,function(){
-                        uploadTree.removeClass("col-sm-4").addClass("col-sm-8");
+                        uploadTree.removeClass("col-sm-6").addClass("col-sm-8");
                     });
 
                 }else {
                     leftPanel.removeClass("col-md-6").addClass("col-md-4");
                     rightPanel.removeClass("col-md-6").addClass("col-md-8").attr("data-col", "col-md-8");
-                    uploadTree.removeClass("col-sm-8").addClass("col-sm-4");
+                    uploadTree.removeClass("col-sm-8").addClass("col-sm-6");
                     $(".upload-queue").fadeIn(300, function(){});
                 }
             });

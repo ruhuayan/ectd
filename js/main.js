@@ -1190,18 +1190,17 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
         // console.log("in cache");
         $templateCache.removeAll();
     });
+    // $rootScope.$on('$locationChangeStart', function(event, next, current) {
+    //     // redirect to login page if not logged in and trying to access a restricted page
+    //     var restrictedPage = $.inArray($location.path(), ['/dashboard']) === -1;
+    //     var loggedIn = $cookies.get('globals') ? true : false;
+    //     //  console.log(loggedIn);
+    //     if (restrictedPage && !loggedIn) {              //console.log($state);
+    //         // $location.path('/login');
+    //         //   console.log("in iffff");
 
-    $rootScope.$on('$locationChangeStart', function(event, next, current) {
-        // redirect to login page if not logged in and trying to access a restricted page
-        var restrictedPage = $.inArray($location.path(), ['/login', '/dashboard']) === -1;
-        var loggedIn = $cookies.get('globals') ? true : false;
-        //  console.log(loggedIn);
-        if (restrictedPage && !loggedIn) {
-            $location.path('/login');
-            //   console.log("in iffff");
-
-        }
-    });
+    //     }
+    // });
 });
 
 // To logout user forcibly after certain time if no action is performed on application

@@ -113,7 +113,7 @@ END PAGE HEADER-->
 
             <div class="portlet-body row">
 
-                <div class="uploadTree col-sm-4">
+                <div class="uploadTree col-sm-6">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
 
@@ -130,7 +130,7 @@ END PAGE HEADER-->
                         <div id="uploadFileTree"></div>
                     </div>
                 </div>
-                <div class="col-sm-8 upload-queue">
+                <div class="col-sm-6 upload-queue">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
                             <input class="btn btn-success btn-s" type="file" nv-file-select="" uploader="uploader" accept="application/pdf" multiple
@@ -188,7 +188,7 @@ END PAGE HEADER-->
                     </div>
                     <div>
                         <p>Queue progress: {{ uploader.queue.length }} </p>
-                        <div class="progress progress-sm" style="">
+                        <div class="progress progress-sm">
                             <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                         </div>
                     </div>

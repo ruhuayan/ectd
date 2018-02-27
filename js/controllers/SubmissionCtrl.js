@@ -11,7 +11,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
         var dtOptions = {
                     sEmptyTable: "Empty Table",
-                    order: [2, 'desc'],                   
+                    order: [3, 'desc'],                   
                     lengthMenu: [5, 10],
                     columnDefs: [{
                          targets: 3,
