@@ -73,7 +73,8 @@
                     else toastr.error('Login Failed');
                     
             }).fail(function(jqXHR){ console.log(jqXHR);
-                toastr.error("Login Failed: " + jqXHR.responseText);
+                callback(JSON.parse(jqXHR.responseText).errors[0].description, true);
+                // toastr.error("Login Failed: " + JSON.parse(jqXHR.responseText).errors[0].description);
             });
         }
 

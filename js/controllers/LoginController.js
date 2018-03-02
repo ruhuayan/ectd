@@ -17,9 +17,12 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
         function signin() { 
             var loginData={};                                                                //console.log("sign...")
             //  vm.dataLoading = true;
-            AuthenticationService.signin($scope.user.name, $scope.user.password, $scope.user.code, function(response) {
+            AuthenticationService.signin($scope.user.name, $scope.user.password, $scope.user.code, function(response, failed) {
+                if(failed){
+                    toastr.error(response, "Login Failed!");
+                    return;
+                }
                 if (response) {
-                   
                     $rootScope.currentuser = 'root';
                     AuthenticationService.SetCredentials(response);
                     toastr.success('Succesfully Logged In');
@@ -31,10 +34,7 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
                     });
                     
                 } else {
-                    //FlashService.Error(response.message);
-                    // vm.dataLoading = false;
-                    toastr.warning('Login Fail');
-                    console.log("error in login controller");
+                    toastr.warning('Login Fail'); //console.log("error in login controller");
                 }
             });
         };
