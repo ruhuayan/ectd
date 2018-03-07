@@ -7,7 +7,7 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
     
     $rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
     if($rootScope.applications)                                             
-            $scope.submissions = $rootScope.applications.slice(0,5);     
+            $scope.submissions = $rootScope.applications.slice(0,10);     
     else if(!$rootScope.loaded){  getUserAppList(1, 50, null);             console.log("load Num: ",$rootScope.loaded);
     }                                 
     
@@ -52,9 +52,18 @@ angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', 
        
         ApplicationApiService.GetClientAppList($rootScope.userData , startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
             if(!data.list) {$rootScope.applications=[]; return;} 
-            $rootScope.applications = data.list;                                //console.log($rootScope.applications)
-            if(data.list.length>5) $scope.submissions = data.list.slice(0,5);
+            // data.list.map(()=>{
+            // });
+            $rootScope.applications = groupBy(data.list, "folder");                                console.log($rootScope.applications)
+            // $rootScope.applications = data.list;
+            if(data.list.length>10) $scope.submissions = data.list.slice(0,10);
             if(callback) callback();
         });  
     }
+    function groupBy(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+    };
 }]);

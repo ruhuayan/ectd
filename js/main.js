@@ -651,7 +651,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
     $urlRouterProvider.otherwise(function($injector) {
         var $state = $injector.get('$state');
-        $state.go('login');
+        $state.go('login'); console.log("aa")
     });
     // $urlRouterProvider.when('/edit','/edit/'+info);
 

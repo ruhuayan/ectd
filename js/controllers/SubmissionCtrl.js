@@ -6,7 +6,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         var appData; 
         if(CookiesApiService.GetCookies())
             appData = $rootScope.appData;
-        else appData = {"version": "0000"};                                     //console.log('app data:', appData);
+        else appData = {"version": "0000"};                                     console.log('app data:', $rootScope.userData.role==="Admin");
         //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
         //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
         var dtOptions = {

@@ -52,6 +52,8 @@ div.login-page {
       background-position: 0 50%;
       background-repeat: no-repeat;
       padding: 2px 2px 6px 2px; }
+    div.login-page .login-content .login-form #input-code::-webkit-input-placeholder {
+      text-align: center; }
     div.login-page .login-content .login-form :-moz-placeholder {
       /* Firefox 18- */
       text-align: center; }

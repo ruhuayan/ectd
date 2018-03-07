@@ -21,12 +21,12 @@
 <!-- END PAGE HEADER-->
 <!-- BEGIN MAIN CONTENT -->
 <div ng-controller="DashboardController">
-    <!--<div class="row-fluid">
+    <div class="row-fluid">
         <table class="table table-striped" id="appTable">
             <thead>
-                <tr>
+                <tr><th><span class="title" translate>NUMBER</span></th>
                     <th><span class="title" translate>DESCRIPTION</span></th>
-                    <th><span class="title" translate>TITLE</span></th>
+                    <th><span class="title" translate>SEQUENCE</span></th>
                     <th><span class="title" translate>CREATEDATE</span></th>
                     <th><span class="title" translate>UPDATEDATE</span></th>
                     <th><span class="title" translate>SUBMITDATE</span></th>
@@ -35,40 +35,41 @@
             </thead>
             <tbody ng-if="submissions.length > 0">
               <tr ng-repeat="submission in submissions">
-                    
+                <td title="Sequence: {{submission.version}}">{{submission.folder}}</td>   
                 <td><span ng-if="!submission.submitDate"><i class="fa fa-file-o"></i></span><span ng-if="submission.submitDate"><i class="fa fa-file"></i></span>
                         <span>&nbsp;&nbsp;{{ submission.description}}</span></td>
-                <td>{{submission.folder}}</td>
+                <td>{{submission.version}}</td>
                 <td>{{submission.createdAt}}</td>
                 <td>{{submission.updatedAt}}</td>
                 <td><span ng-if="!submission.submitDate"><i class="fa fa-times" aria-hidden="true"></i></span><span ng-if="submission.submitDate">{{submission.submitDate}}</span></td>
-                <td><span ng-if="!submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="edit(submission)"><span class="title" translate>EDIT</span></button></span>
-                    <span ng-if="submission.submitDate"><button type="button" class="btn btn-primary btn-md" ng-click="view(submission)"><span class="title" translate>VIEW</span></button></span></td>
-               
+                <td><span ng-if="!submission.submitDate"><a ng-click="edit(submission)" title="Edit" style="font-size: 16px;"><i class="fa fa-edit"></i></a></span> &nbsp;&nbsp;
+                    <span ng-if="submission.submitDate"><a ng-click="view(submission)" title="View"><span class="title" translate>VIEW</span></a></span>
+                    <!-- <span ng-if="!submission.submitDate"><a ng-click="delete(submission, $index)" title="Delete" style="font-size:16px;"><i class="fa fa-trash"></i></a></span> -->
+                </td>
               </tr>
             </tbody>
             <tbody ng-if=" !submissions || submissions.length <=0 ">
                 <tr><td colspan="5">You has not created any application yet. Create a new application now</td>
             </tbody>
         </table> 
-    </div>-->
+    </div>
     <div class="row" style="text-align: center; margin-bottom: 20px;">
         <button type="button" class="btn btn-primary btn-md" ng-click="viewall()" ng-show="submissions.length>=5"><span class="title" translate>VIEWALL</span></button>
         <button type="button" class="btn btn-primary btn-md" ng-click="create()"><span class="title" translate>CREATENEW</span></button></div>
     <div class="row" id="panel">
         <div class="col-md-6 col-sm-12">
             <h3><span class="title" translate>UPLOAD</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
-            <div style="text-align: center; height: 360px; border: 1px solid #06b6ef; color:#06b6ef; line-height: 360px; font-size: 30px;">
+            <!-- <div style="text-align: center; height: 360px; border: 1px solid #06b6ef; color:#06b6ef; line-height: 360px; font-size: 30px;">
                 <div class="drop-file">
                     <div class="drop-files-zone-hint" style=" line-height: 1.5; display: inline-block;"><i class="fa fa-plus fa-3x"></i><br />Add New</div>
                 </div>    
-            </div>
+            </div> -->
             <!-- END PORTLET-->
         </div>
         <div class="col-md-6 col-sm-12">
              <h3><span class="title" translate>BALANCE</span> <i class="fa fa-caret-right" aria-hidden="true"></i></h3>
-            <div style="text-align: center; height: 360px; border: 1px solid #06b6ef;">
-            </div>
+            <!-- <div style="text-align: center; height: 360px; border: 1px solid #06b6ef;">
+            </div> -->
             <!-- END PORTLET-->
         </div>
     </div>
