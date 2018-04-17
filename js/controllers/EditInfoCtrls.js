@@ -97,7 +97,8 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
         $scope.subSubTypes = ["Original", "Presubmission", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
         $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];
-
+        // var subsubTypes =[["original", "Presubmission", "Application"], ["a", "b", "c"], ["c", "d"]]; 
+        // subsubTypes[$scope.subTypes.indexOf(string)]
         //$scope.adminData = angular.copy(adminData);
         //$scope.contactData = angular.copy(contact);                         //console.log("initial contact", contacts[0]);
         $scope.referenceData = angular.copy(referenceData);

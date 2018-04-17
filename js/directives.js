@@ -294,17 +294,7 @@ MetronicApp.directive('numbericCheck', function() {
     };
 });
 
-MetronicApp.directive("expandable", function(){
-    return{
-        restrict: 'A',
-        require: 'ngModel',
-        link: function (scope, element, attrs, ngModel) {
-            var newClass = attrs.expandable;
-            //if(scope.) 
-            
-        }
-    }
-});
+
 
 MetronicApp.filter('trustUrl', function($sce) {
     return function(url) {

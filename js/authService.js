@@ -16,40 +16,35 @@
 
         return service;
 
-        function signin(username, password, code, callback) {
-            //console.log(username);
-            /*$.post('php/login.php', {userName: username, pass: password}, function(response){
-                if(response)  return callback(response);
-            });*/
+        function signin(username, password, code, callback) {   
+            var data = {grant_type: "password", username: username, password: "Basic " +Base64.encode( username + ':' + password ),code: code};   console.log(data);
             
-            //$http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password);
-            //$header = 'Authorization: Basic bGlzYS5rOjEyMzQ1Ng==' + Base64.encode64( username + ':' + password )
-            /*$http({
-                async: true,
-                crossDomain: true,
-                method: 'POST',
-                url: 'http://192.168.88.187:8080/ectd/f/login',
-                headers:{
-                    "content-type": "application/x-www-form-urlencoded",
-                    "Authorization": "Basic " +Base64.encode( username + ':' + password )
-                },
-                data: {
-                    grant_type: "password",
-                    username: "lisa.k", 
-                    password: "Basic " +Base64.encode( username + ':' + password )
-                }
-                
-            }).success(function successCallback(response) {
-                //console.log(response);
-                callback(response);
-
-            }).error(function errorCallback(response) {
-                //   $exceptionHandler('An error has occurred.\nHTTP error: ' + response.status + '(' + response.statusText + ')');
-                // Some error occurred
-                toastr.error('Login Failed');
-                $log.error(response);
-                console.log("! Login fail cause " + response);
-            });*/
+            // $http({
+            //     async: true,
+            //     crossDomain: true,
+            //     method: "POST",
+            //     url: $rootScope.Base_URL + "/f/login",    //'http://192.168.88.187:8080/ectd/f/login',
+            //     headers: {
+            //                 "content-type": "application/x-www-form-urlencoded",
+            //                 "authorization": "Basic " + Base64.encode( username + ':' + password )
+            //             },
+            //     data: {
+            //         grant_type: "password", 
+            //         username: username, 
+            //         password: "Basic " +Base64.encode( username + ':' + password ),
+            //         code: code
+            //     }
+            // }).then(
+            //     function successCallback(response) {   console.log(response);
+            //         callback(response); 
+            //     },
+            //     function errorCallback(response) {
+            //         toastr.error('Login Failed');
+            //         $log.error(response);
+            //         console.log("! Login fail cause " + response);
+            //     }
+            // );
+            //var headers = {"content-type": "application/x-www-form-urlencoded","authorization": "Basic " + Base64.encode( username + ':' + password )};
             $.ajax({
                 async: true,
                 crossDomain: true,
@@ -66,7 +61,6 @@
                     password: "Basic " +Base64.encode( username + ':' + password ),
                     code: code
                 }
-                
             }).done(function (response){                                        console.log(response);
                 var response = JSON.parse(response);
                     if(response.uid) callback(response);
