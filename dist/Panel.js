@@ -25,15 +25,15 @@
                 var panelContainer = $(".panel-container");
 
                 if (EditTreeCtrl.hasClass("col-md-3")) {
-                    EditTreeCtrl.removeClass("col-md-3").addClass("col-md-5");
-                    panelContainer.removeClass("col-md-9").addClass("col-md-7");
+                    EditTreeCtrl.removeClass("col-md-3").addClass("col-md-4");
+                    panelContainer.removeClass("col-md-9").addClass("col-md-8");
                     pdfFrame.panel.hide();
                     //$(".splitter").hide();
                     pdfEditor.panel.css("width", "100%");
 
                 } else {
-                    EditTreeCtrl.removeClass("col-md-5").addClass("col-md-3");
-                    panelContainer.removeClass("col-md-7").addClass("col-md-9");
+                    EditTreeCtrl.removeClass("col-md-4").addClass("col-md-3");
+                    panelContainer.removeClass("col-md-8").addClass("col-md-9");
                     pdfFrame.panel.show();
                     pdfEditor.panel.css("width", "60%");
                 }
