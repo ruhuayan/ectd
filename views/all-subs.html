@@ -16,7 +16,7 @@
 </div>
 
 <div class="row" id="AllSubsCtrl" ng-controller="AllsubsCtrl">
-    <div class="leftPanel col-md-4">
+    <div class="leftPanel col-md-3 col-sm-6">
         <div class="portlet light bordered jstree-portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -43,45 +43,43 @@
                 </div> -->
             </div>
             <div class="portlet-body">
-                <div id="jsECTDtree" class="scroller"> </div>
+                <div id="subtree" class="scroller"> </div>
             </div>
         </div>
 
     </div>
    
-    <div class="rightPanel col-md-8">
+    <div class="rightPanel col-md-9 col-sm-6">
         <div class="portlet light bordered upload-portlet">
-            <div class="portlet-title">
+            <!-- <div class="portlet-title">
                 <div class="caption font-green-sharp">
                     <i class="icon-settings font-green-sharp"></i>
                     <span class="caption-subject bold uppercase">info</span>
-                    <!-- <span class="caption-helper" translate>MAXFILE </span> &nbsp;<span class="caption-helper" translate>MAXSIZE</span> -->
+                    <span class="caption-helper" translate>MAXFILE </span> &nbsp;<span class="caption-helper" translate>MAXSIZE</span>
                 </div>
                 <div class="actions">
                     <div class="btn-group">
                     </div>
-                    <!-- <a class="btn btn-circle btn-icon-only btn-default" id="expandScreen" href="#" data-original-title="" title="Expand Screen">
+                    <a class="btn btn-circle btn-icon-only btn-default" id="expandScreen" href="#" data-original-title="" title="Expand Screen">
                         <i class="fa fa-expand" aria-hidden="true"></i>
-                    </a> -->
+                    </a>
                 </div>
-            </div>
+            </div> -->
 
             <div class="portlet-body row">
 
-                <div class="uploadTree col-sm-6">
+                <div class="appFileTree col-md-6 col-sm-12">
                     <div class="portlet-title">
                         <div class="caption font-green-sharp">
-                            <span class="caption-subject bold uppercase">Sub</span>
+                            <span class="caption-subject bold uppercase">Application</span>
                         </div>
 
                     </div>
-                    <div class="portlet-body upload-result-files">
-                        <span ng-show="showHint">Uploaded file is empty.
-                            <br /> To upload files, click button Choose Files</span>
-                        <div id="uploadFileTree"></div>
+                    <div class="portlet-body">
+                        <div id="apptree"></div>
                     </div>
                 </div>
-                <div class="col-sm-6 upload-queue">
+                <div class="col-md-6 col-sm-12">
                     sub info
                 </div>
             </div>
@@ -90,7 +88,4 @@
 
 </div>
 
-<!-- <script src="dist/UpFiletree.js"></script> -->
-<script>
-    //console.log(FileUploadCtrl);
-</script>
+<script src="dist/SubFiletree.js"></script>

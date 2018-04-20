@@ -75,14 +75,13 @@
                         <div class="form-group first" ng-class="{ 'has-error' : subForm.destination.$invalid && subForm.destination.$touched }">
                             <label for="destination" class="col-sm-3 bold">Destination <span class="required">*</span></label>
                             <div class="col-sm-9">
-                                <select class="selectpicker" style="width: 100%;height:30px;" name="destination" id="destination" 
-                                            ng-disabled="uneditable" required>
+                                <input type="text" class="form-control" name="destination" id="destination" ng-model="formData.destination" disabled />
+                                <!-- <select class="selectpicker" style="width: 100%;height:30px;" name="destination" id="destination" ng-model="formData.destination"
+                                            required disabled>
                                     <option value="us" selected>USA</option>
                                     <option value="en">China</option> 
-                                </select>
-                                
-                                <p ng-show="subForm.destination.$touched && subForm.destination.$invalid" class="help-block">Destination is required.</p>
-                                    
+                                </select> -->
+                                <!-- <p ng-show="subForm.destination.$touched && subForm.destination.$invalid" class="help-block">Destination is required.</p> -->
                             </div>
                         </div>
                         <div class="form-group row" ng-class="{ 'has-error' : subForm.template.$invalid && subForm.template.$touched }">
@@ -199,7 +198,7 @@
             </div>
             <div class="portlet-body portlet-submitted" >
                 
-                <table class="row-border hover" id="appTable" datatable="ng" dt-options="dtOptions">
+                <table class="row-border hover" id="appTable" datatable="ng" dt-options="dtOptions" dt-instance="dtInstance">
                     <thead>
                         <tr><th><span class="title" translate>NUMBER</span></th>
                             <th><span class="title" translate>DESCRIPTION</span></th>

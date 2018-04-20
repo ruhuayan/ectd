@@ -17,7 +17,7 @@
         return service;
 
         function signin(username, password, code, callback) {   
-            var data = {grant_type: "password", username: username, password: "Basic " +Base64.encode( username + ':' + password ),code: code};   console.log(data);
+            //var data = {grant_type: "password", username: username, password: "Basic " +Base64.encode( username + ':' + password ),code: code};   console.log(data);
             
             // $http({
             //     async: true,

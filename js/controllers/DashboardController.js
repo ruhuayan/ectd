@@ -1,69 +1,67 @@
 angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', '$scope', '$cookies', '$state', "ApplicationApiService", 
     function( $rootScope, $scope, $cookies, $state, ApplicationApiService) {
-    $scope.$on('$viewContentLoaded', function() {
-        // initialize core components
-        //App.initAjax();
-    });
+    // $scope.$on('$viewContentLoaded', function() {
+    //     // initialize core components
+    //     //App.initAjax();
+    // });
     
-    $rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
-    if($rootScope.applications)                                             
-            $scope.submissions = $rootScope.applications.slice(0,10);     
-    else if(!$rootScope.loaded){  getUserAppList(1, 50, null);             console.log("load Num: ",$rootScope.loaded);
-    }                                 
+    // $rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
+    // if($rootScope.applications)                                             
+    //         $scope.submissions = $rootScope.applications.slice(0,10);     
+    // else if(!$rootScope.loaded){  getUserAppList(1, 50, null);             console.log("load Num: ",$rootScope.loaded);
+    // }                                 
     
-    $scope.edit = function(submission){                                         //console.log("submission: ", submission.id);
-        toastr.success('Application ID: '+ submission.id);
-        delete $rootScope.subFiles;
-        delete $rootScope.uploadFiles;
-        //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
-        if(submission){
-            $rootScope.appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
+    // $scope.edit = function(submission){                                         //console.log("submission: ", submission.id);
+    //     toastr.success('Application ID: '+ submission.id);
+    //     delete $rootScope.subFiles;
+    //     delete $rootScope.uploadFiles;
+    //     //var submission = ApplicationApiService.GetApplicationById($scope.submissions, id);        //console.log(submision.ectdFileList)
+    //     if(submission){
+    //         $rootScope.appData = ApplicationApiService.ExtractApp(submission);//{"id": submission.id, "appUid": submission.appUid};
             
-            //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
-            var cookieExp = new Date();
-            cookieExp.setDate(cookieExp.getDate() + 1);
-            $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});      //console.log('$rootScope.appData: ', $rootScope.appData); 
-            if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
-            $state.go("editinfo").then(function() {}); 
-        }         
-    };
-    $scope.view = function(submission){
-        toastr.success('View Application ID: '+ submission.id);
-        //$state.go("fileupload").then(function() {});      
-    };
-    $scope.create = function(){
+    //         //$rootScope.uploadFiles = submission.ectdFileList;                   console.log($rootScope.uploadFiles);
+    //         var cookieExp = new Date();
+    //         cookieExp.setDate(cookieExp.getDate() + 1);
+    //         $cookies.putObject('appData', $rootScope.appData, { expires: cookieExp});      //console.log('$rootScope.appData: ', $rootScope.appData); 
+    //         if($rootScope.uploadFiles) delete $rootScope.uploadFiles;
+    //         $state.go("editinfo").then(function() {}); 
+    //     }         
+    // };
+    // $scope.view = function(submission){
+    //     toastr.success('View Application ID: '+ submission.id);
+    //     //$state.go("fileupload").then(function() {});      
+    // };
+    $scope.create = function(lang){  //console.log(lang)
         delete $rootScope.appData;
         delete $rootScope.subFiles;
         delete $rootScope.uploadFiles;
         if($cookies.get("appData")) $cookies.remove("appData");
-        
-        $state.go("submission").then(function() {
+        $state.go("submission", {lang: lang}).then(function() {
             //$rootScope.appData = false;
         });
     };
-    //var table; 
-    $scope.viewall = function(){                                                //console.log($scope.submissions.length)
-        $state.go("submission").then(function() {
-            console.log($state.current.name);
-        }); 
-    };
+    // $scope.viewall = function(){                                                //console.log($scope.submissions.length)
+    //     $state.go("submission").then(function() {
+    //         console.log($state.current.name);
+    //     }); 
+    // };
 
-    function getUserAppList(startNo, endNo, callback) {                        
+    // function getUserAppList(startNo, endNo, callback) {                        
        
-        ApplicationApiService.GetClientAppList($rootScope.userData , startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
-            if(!data.list) {$rootScope.applications=[]; return;} 
-            // data.list.map(()=>{
-            // });
-            $rootScope.applications = groupBy(data.list, "folder");                                console.log($rootScope.applications)
-            // $rootScope.applications = data.list;
-            if(data.list.length>10) $scope.submissions = data.list.slice(0,10);
-            if(callback) callback();
-        });  
-    }
-    function groupBy(xs, key) {
-        return xs.reduce(function(rv, x) {
-          (rv[x[key]] = rv[x[key]] || []).push(x);
-          return rv;
-        }, {});
-    };
+    //     ApplicationApiService.GetClientAppList($rootScope.userData , startNo, endNo).then(function(data){                          //console.log("api service", data.list); 
+    //         if(!data.list) {$rootScope.applications=[]; return;} 
+    //         // data.list.map(()=>{
+    //         // });
+    //         $rootScope.applications = groupBy(data.list, "folder");                                console.log($rootScope.applications)
+    //         // $rootScope.applications = data.list;
+    //         if(data.list.length>10) $scope.submissions = data.list.slice(0,10);
+    //         if(callback) callback();
+    //     });  
+    // }
+    // function groupBy(xs, key) {
+    //     return xs.reduce(function(rv, x) {
+    //       (rv[x[key]] = rv[x[key]] || []).push(x);
+    //       return rv;
+    //     }, {});
+    // };
 }]);

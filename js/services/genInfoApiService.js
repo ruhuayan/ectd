@@ -16,6 +16,7 @@
         service.CreateGenInfo = CreateGenInfo;
         service.CreateContact = CreateContact;
         service.GetContacts = GetContacts; 
+        service.GetAppType = GetAppType;
         return service;
 
         function GetGenInfo(appUid, userData) {                                 // not ready
@@ -37,7 +38,10 @@
             return $http.get(Base_URL + '/a/application/'+ appUid +'/contact/info/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all users'));
         }
-        
+        function GetAppType(userData){
+            return $http.get(Base_URL + '/a/getAppType?uid=' + userData.uid +
+                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all users'));
+        }
         function handleSuccess(res) {
             return res.data;
         }

@@ -1,14 +1,16 @@
-angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'ApplicationApiService',
+angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies','$stateParams','CookiesApiService', 'ApplicationApiService',
 'TemplateApiService', 'ModalService', "DTOptionsBuilder",
-    function($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService, DTOptionsBuilder) {
+    function($rootScope, $scope, $state, $cookies, $stateParams, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService, DTOptionsBuilder) {
+        
+        $scope.changeLanguage($stateParams['lang']);
+        var dest = $stateParams['lang']=="cn"? "中國" : "USA";
 
-//function SubmissionCtrl($rootScope, $scope, $state, $cookies, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService){
         var appData; 
         if(CookiesApiService.GetCookies())
             appData = $rootScope.appData;
-        else appData = {"version": "0000"};                                     console.log('app data:', $rootScope.userData.role==="Admin");
-        //var appData = $cookies.get("appData")? JSON.parse($cookies.get("appData")):{"version": "0000"};          
-        //$rootScope.userData = $rootScope.userData || JSON.parse($cookies.get('globals'));
+        else {
+            appData = {"version": "0000", destination: dest};                            //console.log('app data:', $rootScope.userData.role==="Admin");
+        }
         var dtOptions = {
                     sEmptyTable: "Empty Table",
                     order: [3, 'desc'],                   
@@ -21,46 +23,36 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                          orderable: false
                      }]
                 };
+        $scope.dtInstance = {};
         $scope.submissions = [{}];                    // to make sure data-table has json data
         if($rootScope.applications) {
             $scope.submissions = $rootScope.applications;
             $scope.dtOptions = dtOptions;
-            //Portlet.setDataTable();
-        } else {                                                                                          console.log("Applications loading...");
+        } else {                                                                                          //console.log("Applications loading...");
             ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){     //console.log("api service", data.list);
                 if(!data.list) {$rootScope.applications=[]; return;}
                 $scope.submissions =  $rootScope.applications = data.list;//.slice(0,8);        //console.log($rootScope.applications)
                 $scope.dtOptions = dtOptions;
-                //Portlet.setDataTable();
-            
             });
         }
-                                                                            
-//        $scope.dtOptions = DTOptionsBuilder.newOptions()
-//                .withOption('order', [1, 'asc'])
-//                .withOption('lengthMenu', [5,10])
-//                .withLanguage({"sEmptyTable":"Empty"});
-           
+                                                                  
         if(appData.appUid){                                         
             $scope.submitLabel = "EDITAPP";
-            $scope.template = appData.template;                                 //console.log("template", appData);
-            $scope.formData = angular.copy(appData);
-            //$scope.template = $scope.formData.template;            
+            $scope.template = appData.template;                                 //console.log("template", appData);         
             $scope.uneditable = true;
         }else{
             getTemplateList();                         // to create templates
             $scope.submitLabel = "CREATEAPP"; 
-            $scope.formData={"version": "0000"};
             $scope.uneditable = false;
         }
-        
+        $scope.formData = angular.copy(appData);
+
         $scope.toggleEditable = function(){
             $scope.uneditable =!$scope.uneditable;
         };
         
         $scope.createApp = function(){                                          //console.log($scope.subForm.$valid);                               
             if($scope.subForm.$valid){
-
                 var tid =  $scope.template.id || JSON.parse($scope.template).id;
                 $scope.formData.template = {'id': tid};                         //console.log("template", tid);
                 var jsonData = $scope.formData;                                 //console.log("appdata: ", jsonData);
@@ -104,7 +96,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
             
         };
         $scope.cancelApp = function(){ 
-            $scope.formData= appData? angular.copy(appData): {"version": "0000"};
+            $scope.formData= angular.copy(appData);
             $scope.subForm.$setPristine();
             $scope.subForm.$setValidity();
             $scope.subForm.$setUntouched();
@@ -115,8 +107,8 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
             $rootScope.appData = false;
             delete $rootScope.subFiles;
             delete $rootScope.uploadFiles;
-            appData = {};
-            $scope.formData= {"version": "0000"};
+            appData = {"version": "0000", destination: dest};
+            $scope.formData= angular.copy(appData);;
             $scope.submitLabel = "CREATEAPP"; 
             $scope.template= {};
             if(!$scope.templates) getTemplateList();
@@ -153,7 +145,12 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
 
             ModalService.showModal({
                 templateUrl: "tpl/modal.html",
-                controller: "DelYesNoCtrl",
+                controller: function($scope, title, close){
+                    $scope.title = title;
+                    $scope.close = function(result) {
+                        close({appNumber: $scope.appNumber, sequence: $scope.sequence}, 300); // close, but give 500ms for bootstrap to animate
+                    };
+                },
                 preClose: function(modal){ modal.element.modal('hide'); },
                 inputs:{
                     title: "Delete an Application? "
@@ -163,12 +160,15 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                 modal.element.modal();
                 modal.close.then(function(result) {                                           //console.log(result);
                     if(!result) return;
-                    if(result.appNumber !== submission.folder) return;
+                    if(result.appNumber !== submission.folder || result.sequence !== submission.version) return;
 
                     $scope.submissions.splice(index, 1);
+                    // $scope.dtOptions = DTOptionsBuilder.fromSource($scope.submissions);
+                    $scope.dtInstance._renderer.rerender();
+
                     if($rootScope.appData && $rootScope.appData.appUid === submission.appUid) $scope.exitApp();
                     ApplicationApiService.DeleteApplication(submission.appUid, $rootScope.userData).then(function(result){ console.log(result);
-                        //$rootScope.applications.
+                        
                         toastr.success("Application " + submission.folder + " deleted");
                     });
 
@@ -183,16 +183,12 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         }
     //};
     }]);
-    /*angular.module('MetronicApp').controller('YesNoController', ['$scope', 'close', function($scope, close) {
-        $scope.close = function(result) {
-            close(result, 500); // close, but give 500ms for bootstrap to animate
-        };
-    }]);*/
-    function DelYesNoCtrl($scope, $element, title, close){
-        $scope.title = title;
-        $scope.close = function(result) {
-            close({appNumber: $scope.appNumber}, 300); // close, but give 500ms for bootstrap to animate
-        };
-    }
+    
+    // function DelYesNoCtrl($scope, $element, title, close){
+    //     $scope.title = title;
+    //     $scope.close = function(result) {
+    //         close({appNumber: $scope.appNumber}, 300); // close, but give 500ms for bootstrap to animate
+    //     };
+    // }
 
    

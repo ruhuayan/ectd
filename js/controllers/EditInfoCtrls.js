@@ -68,13 +68,44 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             return $rootScope.userData;
         };
         if(appUid) adminData ={"appNumber": $rootScope.appData.folder, "subnum": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
-        GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
+        
+        var referenceData={};
+        $scope.appTypes=[], $scope.subTypes=[], $scope.subSubTypes=[];
+        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)", 
+            "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
+        $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", 
+            "Product Correspondence", "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
+        $scope.subSubTypes = ["Original", "Presubmission", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
+        
+        $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
+        $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
+        $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];
+        
+        $scope.referenceData = angular.copy(referenceData);
+        var typeArr=[], subTypeArr = [];
+
+        GenInfoApiService.GetAppType($scope.userData).then(
             function(result){
-                if(result && result.id){
-                    adminData = result;
+                if(result && result.length){         console.log(result);
+                    typeArr = result;
+                    GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
+                        function(result){            //console.log(result);
+                            if(result && result.id){
+                                if (result.appType){
+                                    subTypeArr = getTypeList(typeArr, result.appType);   
+                                    $scope.subTypes = getTypes(subTypeArr);         console.log($scope.subTypes)
+                                }
+                                if(result.subType){
+                                    var subSubTypeArr = getTypeList(subTypeArr, result.subType);  //console.log(subTypeArr, result.subType);
+                                    $scope.subSubTypes = getTypes(subSubTypeArr);   console.log($scope.subSubTypes)
+                                }
+                                adminData = result;
+                            }
+                            $scope.adminData = angular.copy(adminData);
+                        });
                 }
-                $scope.adminData = angular.copy(adminData);
             });
+            
         var contacts = [], contact={};
         GenInfoApiService.GetContacts(appUid, $rootScope.userData).then(
             function(result){                                               //console.log("contact data: ", result);
@@ -83,26 +114,17 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 }
                 $scope.contactData = angular.copy(contact);
             });
-        /*if($cookies.get("contactData")) {
-         contacts = JSON.parse($cookies.get("contactData"));
-         contact = contacts[0];
-         };*/
-        var referenceData={};
         
-        $scope.contactTypes = ["Regulatory Contact", "Technical Contact", "United States Agent", "Promotional Labelling and Advertising Regulatory Contact"];
-        $scope.appTypes = ["New Drug Application (NDA)", "Abbreviated New Drug Application (ANDA)","Biologic License Application (BLA)", "Investigational New Drug (IND)", 
-            "Drug Master File (DMF)", "Emergency Use Authorization (EUA)"];
-        $scope.subTypes =["Original Application", "Efficacy Supplement", "Chemistry Manufacturing Controls Supplement","Labeling Supplement", "Annual Report", 
-            "Product Correspondence", "Postmarketing Requirements or Postmarketing Commitments", "Promotional Labeling Advertising", "IND Safety Reports", "Periodic Safety Reports"];
-        $scope.effTypes =["Prior Approval Supplement (PAS)", "Changes Being Effected-0 (CBE-0)", "Changes Being Effected-30 (CBE-30)"];
-        $scope.subSubTypes = ["Original", "Presubmission", "Application", "Amendment", "Resubmission", "Report", "Correspondence"];
-        $scope.telephoneTypes = ["Business Telephone Number", "Fax Telephone Number", "Mobile Telephone Number"];
-        // var subsubTypes =[["original", "Presubmission", "Application"], ["a", "b", "c"], ["c", "d"]]; 
-        // subsubTypes[$scope.subTypes.indexOf(string)]
-        //$scope.adminData = angular.copy(adminData);
-        //$scope.contactData = angular.copy(contact);                         //console.log("initial contact", contacts[0]);
-        $scope.referenceData = angular.copy(referenceData);
-
+        $scope.selectAppType = function(appType){   //console.log(appType);
+            subTypeArr = getTypeList(typeArr, appType);   
+            $scope.subTypes = getTypes(subTypeArr);         console.log($scope.subTypes);
+            $scope.adminData.subType = '';
+            $scope.adminData.subSubType = '';
+        }
+        $scope.selectSubType = function(subType){
+            var subSubTypeArr = getTypeList(subTypeArr, subType);
+            Scope.subSubTypes = getTypes(subSubTypeArr);
+        }
         $scope.toggleEditable = function(){
             $scope.uneditable =!$scope.uneditable;
         };
@@ -194,7 +216,33 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             $scope.referenceForm.$setPristine();
             $scope.referenceForm.$setUntouched();
             $scope.referenceForm.$setValidity();
-        };//}
+        };
+        // function getAppType(userData, callback){
+        //     GenInfoApiService.GetAppType(userData).then(
+        //         function(result){
+        //             if(result && result.length){         console.log(result);
+        //                 typeArr = result;
+        //                 if(callback) callback();
+        //             }
+        //         });
+        // }
+        function getTypeList(list, type){
+            var arr = false;
+            angular.forEach(list, function(v, k){       
+                if(v.type.substr(0,5) == type.substr(0,5)){         //console.log(v.subSubTypeList)
+                    if(v.subTypeList) arr = v.subTypeList;
+                    if(v.subSubTypeList) arr = v.subSubTypeList;
+                } 
+            });
+            return arr;
+        }
+        function getTypes(typelist){   
+            var arr = [];
+            angular.forEach(typelist, function(v, k){
+                arr.push(v.type);
+            });
+            return arr;
+        }
     }]).controller('TagCtrl', ['$rootScope','$scope','$state','CookiesApiService', 'TagApiService',
     function($rootScope, $scope, $state,  CookiesApiService, TagApiService) {
 

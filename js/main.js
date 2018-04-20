@@ -507,11 +507,11 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
     };
    
 
-    $translateProvider.translations('en', en_translations);
+    $translateProvider.translations('us', en_translations);
     //$translateProvider.translations('sp', sp_translations);
     $translateProvider.translations('cn', cn_translations);
 
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.preferredLanguage('us');
     $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
 }]);
@@ -622,13 +622,13 @@ MetronicApp.controller('SidebarController', ['$state', '$scope', function($state
 }]);
 
 /* Setup Layout Part - Quick Sidebar */
-MetronicApp.controller('QuickSidebarController', ['$scope', function($scope) {
-    $scope.$on('$includeContentLoaded', function() {
-        setTimeout(function() {
-            QuickSidebar.init(); // init quick sidebar        
-        }, 2000);
-    });
-}]);
+// MetronicApp.controller('QuickSidebarController', ['$scope', function($scope) {
+//     $scope.$on('$includeContentLoaded', function() {
+//         setTimeout(function() {
+//             QuickSidebar.init(); // init quick sidebar        
+//         }, 2000);
+//     });
+// }]);
 
 /* Setup Layout Part - Theme Panel
 MetronicApp.controller('ThemePanelController', ['$scope', function($scope) {
@@ -696,8 +696,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     .state('dashboard', {
         url: "/dashboard",
         templateUrl: "views/dashboard.html",
-        data: { pageTitle: 'eCTD Home' },
-        // controller: "",
+        data: { pageTitle: 'eCTD Dashboard' },
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -713,8 +712,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     }) .state('allsubs', {
         url: "/allsubs",
         templateUrl: "views/all-subs.html",
-        data: { pageTitle: 'eCTD Home' },
-        // controller: "",
+        data: { pageTitle: 'All Submissions' },
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -724,6 +722,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'js/controllers/AllsubsCtrl.js',
                         'js/services/applicationApiService.js',
                         'js/services/cookiesApiService.js',
+                        'dist/themes/default/style.min.css',
+                        "dist/jstree.min.js",
                         'dist/Filetree.js'
                     ]
                 });
@@ -733,7 +733,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         url: '/submission',
         templateUrl: "views/submission.html",
         data: {pageTitle: 'Create new application'},
-        // controller: '',
+        params: {
+            lang: "us"
+        },
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -979,12 +981,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     files: [
                         'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
                         'assets/pages/css/profile.css',
-
                         'assets/global/plugins/jquery.sparkline.min.js',
                         'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
-
                         'assets/pages/scripts/profile.min.js',
-
                         'js/controllers/UserProfileController.js'
                     ]
                 });
@@ -1117,7 +1116,7 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    // $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    // $rootScope.Base_URL = "http://52.4.14.123/ectd";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
 });
