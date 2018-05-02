@@ -86,7 +86,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
 
         GenInfoApiService.GetAppType($scope.userData).then(
             function(result){
-                if(result && result.length){         console.log(result);
+                if(result && result.length){         //console.log(result);
                     typeArr = result;
                     GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
                         function(result){            //console.log(result);
