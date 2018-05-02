@@ -849,7 +849,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'js/services/applicationApiService.js',
                          'js/services/fileApiService.js',
                         'js/services/genInfoApiService.js',
-                        'js/services/tagApiService.js'
+                        'js/services/tagApiService.js',
+                        'js/controllers/PublishCtrl.js',
                     ]
                 });
             }]

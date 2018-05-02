@@ -72,7 +72,9 @@ END PAGE HEADER-->
 
 <script>
 
-    function PublishTreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService, GenInfoApiService, TagApiService, ModalService){
+angular.module('MetronicApp')
+    .controller('PublishTreeCtrl', [ '$rootScope', '$scope', 'CookiesApiService', 'ApplicationApiService', 'GenInfoApiService', 'TagApiService', 'ModalService',
+    function($rootScope, $scope, CookiesApiService, ApplicationApiService, GenInfoApiService, TagApiService, ModalService){
         $scope.inprocess = true;
         var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
@@ -173,7 +175,7 @@ END PAGE HEADER-->
             return TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData);
         }
     
-    }
+    }]);
 
     function Jstree(id, height){
         Filetree.call(this, id, height);
