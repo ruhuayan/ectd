@@ -347,7 +347,14 @@ angular.module('MetronicApp')
         $scope.setModal = function(title, body, callback){
             ModalService.showModal({
                 templateUrl: "tpl/modal.html",
-                controller: "SaveTreeYesNoCtrl",
+                controller: function($scope, $element, title, body, close){
+                    $scope.title = title;
+                    $scope.body = body;
+                    $scope.hideForm = true;
+                    $scope.close = function(result) {
+                        close(result, 300); // close, but give 500ms for bootstrap to animate
+                    };
+                },
                 preClose: function(modal){ modal.element.modal('hide'); },
                 inputs:{
                     title: title,
