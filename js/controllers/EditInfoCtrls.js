@@ -12,7 +12,7 @@ angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$
         }
 
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData ", JsTree);
+            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     console.log("appData ", result);
                 $rootScope.subFiles = result.nodeList;
                 //$rootScope.appData.NumOfFiles = result.nodeList.length;
                 

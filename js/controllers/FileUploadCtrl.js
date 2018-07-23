@@ -372,12 +372,12 @@ angular.module('MetronicApp')
         }
     //};
     }]);
-function SaveTreeYesNoCtrl($scope, $element, title, body, close){
-    $scope.title = title;
-    $scope.body = body;
-    $scope.hideForm = true;
-    $scope.close = function(result) {
-        close(result, 300); // close, but give 500ms for bootstrap to animate
-    };
-}
+// function SaveTreeYesNoCtrl($scope, $element, title, body, close){
+//     $scope.title = title;
+//     $scope.body = body;
+//     $scope.hideForm = true;
+//     $scope.close = function(result) {
+//         close(result, 300); // close, but give 500ms for bootstrap to animate
+//     };
+// }
 

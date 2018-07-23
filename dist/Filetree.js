@@ -199,9 +199,9 @@ Filetree.prototype ={
                 }
             };
             xhr.onload = function(e) {
-                if (this.status === 200) {
+                if (this.status === 200) {        console.log(this.response)
                     var blob = new Blob([this.response], {type: 'application/pdf'}),
-                        file = URL.createObjectURL(blob);                               //console.log(file);
+                        file = URL.createObjectURL(blob);                               console.log(blob);
                     progressbar.hide();
                     //layer.append(iframe);
                     $("#frame").attr("src", file);
