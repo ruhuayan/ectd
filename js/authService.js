@@ -17,59 +17,48 @@
         return service;
 
         function signin(username, password, code, callback) {   
-            //var data = {grant_type: "password", username: username, password: "Basic " +Base64.encode( username + ':' + password ),code: code};   console.log(data);
+            $http({
+                method: 'POST',
+                url:$rootScope.Base_URL + '/api-token-auth/',
+                data: {username, password},
+                headers: {'Content-Type': 'application/json'}
+            }).then(res=>{          console.log(res)
+                if(res.status==200){
+                    const userData = {username: username, token: res.data.token}
+                    callback(userData);
+                }
+            });
+            // $http.post($rootScope.Base_URL + '/api-token-auth/', {username, password}).then(
+            //     function(res){
+            //         console.log(res);
+            //     }
+            // );
             
-            // $http({
+            // $.ajax({
             //     async: true,
             //     crossDomain: true,
             //     method: "POST",
-            //     url: $rootScope.Base_URL + "/f/login",    //'http://192.168.88.187:8080/ectd/f/login',
+            //     url: $rootScope.Base_URL + "/f/login",
+                
             //     headers: {
-            //                 "content-type": "application/x-www-form-urlencoded",
-            //                 "authorization": "Basic " + Base64.encode( username + ':' + password )
-            //             },
+            //         "content-type": "application/x-www-form-urlencoded",
+            //         "authorization": "Basic " + Base64.encode( username + ':' + password )
+            //     },
             //     data: {
             //         grant_type: "password", 
             //         username: username, 
             //         password: "Basic " +Base64.encode( username + ':' + password ),
             //         code: code
             //     }
-            // }).then(
-            //     function successCallback(response) {   console.log(response);
-            //         callback(response); 
-            //     },
-            //     function errorCallback(response) {
-            //         toastr.error('Login Failed');
-            //         $log.error(response);
-            //         console.log("! Login fail cause " + response);
-            //     }
-            // );
-            //var headers = {"content-type": "application/x-www-form-urlencoded","authorization": "Basic " + Base64.encode( username + ':' + password )};
-            $.ajax({
-                async: true,
-                crossDomain: true,
-                method: "POST",
-                url: $rootScope.Base_URL + "/f/login",
-                
-                headers: {
-                    "content-type": "application/x-www-form-urlencoded",
-                    "authorization": "Basic " + Base64.encode( username + ':' + password )
-                },
-                data: {
-                    grant_type: "password", 
-                    username: username, 
-                    password: "Basic " +Base64.encode( username + ':' + password ),
-                    code: code
-                }
-            }).done(function (response){                                        console.log(response);
-                var response = JSON.parse(response);
-                    if(response.uid) callback(response);
-                    else toastr.error('Login Failed');
+            // }).done(function (response){                                        console.log(response);
+            //     var response = JSON.parse(response);
+            //         if(response.uid) callback(response);
+            //         else toastr.error('Login Failed');
                     
-            }).fail(function(jqXHR){ console.log(jqXHR);
-                callback(JSON.parse(jqXHR.responseText).errors[0].description, true);
-                // toastr.error("Login Failed: " + JSON.parse(jqXHR.responseText).errors[0].description);
-            });
+            // }).fail(function(jqXHR){ console.log(jqXHR);
+            //     callback(JSON.parse(jqXHR.responseText).errors[0].description, true);
+            //     // toastr.error("Login Failed: " + JSON.parse(jqXHR.responseText).errors[0].description);
+            // });
         }
 
         function SetCredentials(data) {

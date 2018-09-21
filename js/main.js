@@ -669,7 +669,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     files: [
                         'assets/layouts/layout/css/login.css',
                         'js/controllers/LoginController.js',
-                        'js/angular-base64.js'
+                        // 'js/angular-base64.js'
                     ]
                 });
             }]
@@ -685,7 +685,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [   
-                        'js/angular-base64.js',
+                        // 'js/angular-base64.js',
                         'js/controllers/RegisterCtrl.js'
                     ]
                 });
@@ -1048,7 +1048,7 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    // $rootScope.Base_URL = "http://52.4.14.123/ectd";
+    // $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
+    $rootScope.Base_URL = "http://localhost:8000";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
 });
