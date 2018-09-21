@@ -8,7 +8,7 @@
     TemplateApiService.$inject = ['$http', '$rootScope'];
 
     function TemplateApiService($http, $rootScope) {
-         var Base_URL = $rootScope.Base_URL;                            //"http://52.4.14.123/ectd"; //"http://192.168.88.187:8080/ectd";
+        const Base_URL = $rootScope.Base_URL;                            //"http://52.4.14.123/ectd"; //"http://192.168.88.187:8080/ectd";
 
         var service = {};
 
@@ -20,28 +20,42 @@
         return service;
 
         function GetTemplateList(userData) {
-            return $http.get(Base_URL +'/a/eCTDTemplate/list?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting Templates'));
+            return $http({
+                method: 'GET',
+                url:Base_URL + '/templates',
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error getting Templates'));
         }
 
        
         function GetOneTemplate(templateId, userData) {
-            return $http.get(Base_URL + '/a/eCTDTemplate/getById/'+ templateId + '/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting one Template'));
+            return $http({
+                method: 'GET',
+                url: Base_URL + '/templates/'+templateId,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error getting one Template'));
         }
 
-          function TemplateCreate(userData, templateData) {
-            return $http.post(Base_URL + '/a/eCTDTemplate/create.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, templateData).then(handleSuccess, handleError('Error in creating Template'));
+        function TemplateCreate(userData, templateData) {
+
+            return $http({
+                method: 'POST',
+                url: Base_URL + '/templates/',
+                data: templateData, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating Template'));
         }
 
-        function TemplateUpdate(userData, templateData) {
-            return $http.post(Base_URL+'/a/eCTDTemplate/update.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, templateData).then(handleSuccess, handleError('Error in updating Template'));
+        function TemplateUpdate(userData, templateId, templateData) {
+            return $http({
+                method: 'PUT',
+                url: Base_URL + '/templates/'+templateId,
+                data: templateData, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in updating Template'));
         }
 
         // private functions
-
         function handleSuccess(res) {
             return res.data;
         }
