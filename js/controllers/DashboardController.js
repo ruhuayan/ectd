@@ -1,5 +1,6 @@
 angular.module('MetronicApp').controller('DashboardController', [ '$rootScope', '$scope', '$cookies', '$state', "ApplicationApiService", 
     function( $rootScope, $scope, $cookies, $state, ApplicationApiService) {
+
     // $scope.$on('$viewContentLoaded', function() {
     //     // initialize core components
     //     //App.initAjax();

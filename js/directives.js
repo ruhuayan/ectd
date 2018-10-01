@@ -256,12 +256,12 @@ MetronicApp.directive("sequenceNumberCheck", function(){
             var me = attrs.ngModel;
             
             scope.$watch(me, function(value){                                 //console.log(value);
-                var submissions = scope.submissions; unique = true; 
+                var submissions = scope.submissions, unique = true; 
                 if(value!=undefined && submissions && submissions.length){
                     for (var i in submissions){                               //console.log(submissions[i], scope.formData.appUid)
-                        if(submissions[i].appUid !== scope.formData.appUid 
-                            && submissions[i].folder == scope.formData.folder
-                            &&value == submissions[i].version) unique = false;
+                        if(submissions[i].id !== scope.formData.id 
+                            && submissions[i].number == scope.formData.number
+                            &&value == submissions[i].sequence) unique = false;
                     }
                                
                 }

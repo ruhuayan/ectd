@@ -135,7 +135,7 @@ angular.module('MetronicApp')
        
         var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
                                                                                                             //console.log("application: ", appUid, $rootScope.userData);
-        ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){                   console.log("application: ", result);
+        ApplicationApiService.GetApplication($rootScope.userData, appUid).then(function(result){                   console.log("application: ", result);
             if(result.errors) return; 
             $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
             

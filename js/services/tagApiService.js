@@ -9,20 +9,26 @@
 
     function TagApiService($http, $rootScope) {
 
-        var Base_URL = $rootScope.Base_URL;                                     //"http://52.4.14.123/ectd";
-        var service = {};
-
-        service.GetTagsList = GetTagsList;
+        const Base_URL = $rootScope.Base_URL;                                     //"http://52.4.14.123/ectd";
+        const service = {};
+        service.GetAppTags = GetAppTags;
+        // service.GetTagsList = GetTagsList;
         service.GetTagByNid = GetTagByNid;
         service.CreateTag = CreateTag;
         service.SearchTagsList = SearchTagsList;
 
         return service;
-
-        function GetTagsList(userData, pageno, pagesize) {
-            return $http.get(Base_URL + '/a/content/tag/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all taglist'));
+        function GetAppTags(userData, id) {
+            return $http({
+               method: 'GET',
+               url:  `${Base_URL}/applications/${id}/tags`, 
+               headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+           }).then(handleSuccess, handleError('Error in creating Application Tags'));
         }
+        // function GetTagsList(userData, pageno, pagesize) {
+        //     return $http.get(Base_URL + '/a/content/tag/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all taglist'));
+        // }
 
         function GetTagByNid(appUid, nid, userData) {
             return $http.get(Base_URL + '/a/application/' + appUid + '/tag/info?nodeId='+ nid +'&uid=' + userData.uid +

@@ -5,37 +5,36 @@
 angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$state', 'CookiesApiService', 'ApplicationApiService', "TagApiService",
     function($rootScope, $scope, $state,  CookiesApiService, ApplicationApiService, TagApiService) {
         //function JstreeCtrl($rootScope, $scope, CookiesApiService, ApplicationApiService){
-        var appUid;                                                console.log("edit info");
+        var appId;                                                console.log("edit info");
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appId = $rootScope.appData.id;
             JsTree.userData = $rootScope.userData;
         }
 
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     console.log("appData ", result);
-                $rootScope.subFiles = result.nodeList;
-                //$rootScope.appData.NumOfFiles = result.nodeList.length;
-                
-                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
-                $rootScope.substanceTags = {};
-                getSubTags(appUid, $rootScope.userData);
-                
+            ApplicationApiService.GetAppNodes($rootScope.userData, appId).then(function(result){     console.log("appData ", result);
+                if(result){
+                    $rootScope.subFiles = result;                
+                    JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+                    $rootScope.substanceTags = {};
+                    getSubTags(appId, $rootScope.userData); 
+                }
             });
         }else{
             JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);                                   console.log('subFiles: ',  $rootScope.substanceTags);
-            // getSubTags(appUid, $rootScope.userData);
+            // getSubTags(appId, $rootScope.userData);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
             $rootScope.open = ! $rootScope.open; 
         };
 
-        function getSubTags(appUid, userData){
+        function getSubTags(appId, userData){
             var promises = [];
             
             angular.forEach(["m23S", "m23P", "m32S", "m32P"], function(value, key){
                 promises.push(
-                    TagApiService.GetTagByNid(appUid, value, userData)
+                    TagApiService.GetTagByNid(appId, value, userData)
                 );
             });
             Promise.all(promises).then(x=>{
@@ -58,16 +57,15 @@ angular.module('MetronicApp').controller('JstreeCtrl', ['$rootScope','$scope','$
 angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$state','$cookies', 'CookiesApiService', 'GenInfoApiService',
     function($rootScope, $scope, $state, $cookies, CookiesApiService, GenInfoApiService) {
 
-        //function AdinfoCtrl($rootScope, $scope, $state, $translate, CookiesApiService, GenInfoApiService){  //console.log($rootScope.subFiles);
-        var appUid, adminData;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appId, adminData;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appId = $rootScope.appData.id;
         }
 
         $scope.getUserData = function(){
             return $rootScope.userData;
         };
-        if(appUid) adminData ={"appNumber": $rootScope.appData.folder, "subnum": $rootScope.appData.version}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
+        if(appId) adminData ={"appNumber": $rootScope.appData.number, "subnum": $rootScope.appData.sequence}; // = $cookies.get("adminData")? JSON.parse($cookies.get("adminData")):{};
         
         var referenceData={};
         $scope.appTypes=[], $scope.subTypes=[], $scope.subSubTypes=[];
@@ -84,36 +82,54 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         $scope.referenceData = angular.copy(referenceData);
         var typeArr=[], subTypeArr = [];
 
-        GenInfoApiService.GetAppType($scope.userData).then(
-            function(result){
-                if(result && result.length){         //console.log(result);
-                    typeArr = result;
-                    GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(
-                        function(result){            //console.log(result);
-                            if(result && result.id){
-                                if (result.appType){
-                                    subTypeArr = getTypeList(typeArr, result.appType);   
-                                    $scope.subTypes = getTypes(subTypeArr);         console.log($scope.subTypes)
-                                }
-                                if(result.subType){
-                                    var subSubTypeArr = getTypeList(subTypeArr, result.subType);  //console.log(subTypeArr, result.subType);
-                                    $scope.subSubTypes = getTypes(subSubTypeArr);   console.log($scope.subSubTypes)
-                                }
-                                adminData = result;
-                            }
-                            $scope.adminData = angular.copy(adminData);
-                        });
+        // GenInfoApiService.GetAppType($scope.userData).then(
+        //     function(result){
+        //         if(result && result.length){         //console.log(result);
+        //             typeArr = result;
+        //             GenInfoApiService.GetGenInfo(appId, $rootScope.userData).then(
+        //                 function(result){            //console.log(result);
+        //                     if(result && result.id){
+        //                         if (result.appType){
+        //                             subTypeArr = getTypeList(typeArr, result.appType);   
+        //                             $scope.subTypes = getTypes(subTypeArr);         console.log($scope.subTypes)
+        //                         }
+        //                         if(result.subType){
+        //                             var subSubTypeArr = getTypeList(subTypeArr, result.subType);  //console.log(subTypeArr, result.subType);
+        //                             $scope.subSubTypes = getTypes(subSubTypeArr);   console.log($scope.subSubTypes)
+        //                         }
+        //                         adminData = result;
+        //                     }
+        //                     $scope.adminData = angular.copy(adminData);
+        //                 });
+        //         }
+        //     });
+        GenInfoApiService.GetAppInfo($rootScope.userData, appId).then(
+            function(result){                       
+                if(result&&result.status==200){    console.log(result);
+                    adminData = result;
+                    $scope.adminData = angular.copy(adminData);
                 }
-            });
-            
+            }
+        );
+
         var contacts = [], contact={};
-        GenInfoApiService.GetContacts(appUid, $rootScope.userData).then(
-            function(result){                                               //console.log("contact data: ", result);
-                if(result){ contacts = result;
+        // GenInfoApiService.GetContacts(appId, $rootScope.userData).then(
+        //     function(result){                                               //console.log("contact data: ", result);
+        //         if(result){ contacts = result;
+        //             contact = contacts[0];
+        //         }
+        //         $scope.contactData = angular.copy(contact);
+        //     });
+        GenInfoApiService.GetAppContacts($rootScope.userData, appId).then(
+            function(res){                    console.log(res);
+                if(res && res.length>0){
+                    contacts = res;
                     contact = contacts[0];
+                    $scope.contactData = angular.copy(contact);
                 }
-                $scope.contactData = angular.copy(contact);
-            });
+                
+            }
+        );
         
         $scope.selectAppType = function(appType){   //console.log(appType);
             subTypeArr = getTypeList(typeArr, appType);   
@@ -137,7 +153,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                     delete $scope.adminData.updatedAt;
                 }
                 var jsonData =JSON.stringify( $scope.adminData);                                 console.log("submit admin", jsonData);
-                GenInfoApiService.CreateGenInfo(appUid, $rootScope.userData, jsonData).then(function(result){
+                GenInfoApiService.CreateGenInfo(appId, $rootScope.userData, jsonData).then(function(result){
                     if(result.id){
                         toastr.success('Admin info Saved');
                         //$rootScope.appData.folder = $scope.adminData.appNumber;
@@ -161,7 +177,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         };
         $scope.submitContact = function(){
             //if(!$scope.isStringNumberic($scope.contactForm.phone.$viewValue)) return;
-            //$scope.contactData.appUid = appUid;                                        console.log(JSON.stringify($scope.contactData));
+            //$scope.contactData.appId = appId;                                        console.log(JSON.stringify($scope.contactData));
             if($scope.contactForm.$valid){
                 if($scope.contactData.createdAt) {
                     delete $scope.contactData.createdAt;
@@ -169,7 +185,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 }
                 var jsonData =JSON.stringify($scope.contactData);               console.log("contact data: ", jsonData);
 
-                GenInfoApiService.CreateContact(appUid, $rootScope.userData, jsonData).then(
+                GenInfoApiService.CreateContact(appId, $rootScope.userData, jsonData).then(
                     function(result){                                       console.log(result);
                         if(result && result.id){
                             contact = result;
@@ -247,16 +263,12 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
     function($rootScope, $scope, $state,  CookiesApiService, TagApiService) {
 
         //function TagCtrl($rootScope, $scope, $state, CookiesApiService, TagApiService){
-        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appId;                                                //console.log("user Data", CookiesApiService.GetCookies());
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appId = $rootScope.appData.appId;
         }
         var jsonx= {}, nodeId;
-        /*if($cookies.get("tagData")) {
-         tagData = JSON.parse($cookies.get("tagData"));                      console.log(tagData);
-         };*/
-
-
+      
         $scope.stfTypes = ["Pre-Clinical Study Report", "Legacy Clinical Study Report", "Synopsis", "Study Report Body", "Protocol or Amendment", 
             "Sample Case Report Form", "IEC IRB Consent Form List", "List Description Investigator Site", "Signatures Investigators", 
             "List Patients with Batches", "Randomisation Scheme", "Audit Certificates Report", "Statistical Methods Interim Analysis Plan", 
@@ -293,7 +305,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                 if($scope.species && $scope.species.length) $scope.genData.species =  $scope.species.toString();
                 var genData = JSON.stringify($scope.genData);                                                 //console.log("tag: " , $scope.genData);
 
-                TagApiService.CreateTag($rootScope.userData, appUid, genData).then(function(result){           console.log(result)
+                TagApiService.CreateTag($rootScope.userData, appId, genData).then(function(result){           console.log(result)
                     if(result.id){
                         toastr.success('Tag info');
                         if($scope.genData.nodeId=="m32S"||$scope.genData.nodeId=="m23S"){
@@ -326,7 +338,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
             var studyTag = showTags(node);
             $scope.isNodeFile = node.type === "file";                                                   //console.log('isNodeFile',$scope.isNodefile);
 
-            TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData).then(function(result){    //console.log("tag:", result);
+            TagApiService.GetTagByNid(appId, nodeId, $rootScope.userData).then(function(result){    //console.log("tag:", result);
                 if(result && result.id){
                     if(node.type==="file" && !result.operation) result.operation = "New";
                        

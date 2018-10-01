@@ -9,42 +9,40 @@
 
     function ApplicationApiService($http, $rootScope) {
 
-        var Base_URL = $rootScope.Base_URL;                                    //"http://52.4.14.123/ectd"; //"http://192.168.88.187:8080/ectd";
+        const Base_URL = $rootScope.Base_URL;                                    //"http://52.4.14.123/ectd"; //"http://192.168.88.187:8080/ectd";
 
-        var service = {};
+        const service = {};
 
-        service.GetApplicationList = GetApplicationList;
+        // service.GetApplicationList = GetApplicationList;
         service.GetClientAppList = GetClientAppList;
         service.GetApplication = GetApplication;
         service.ApplicationCreate = ApplicationCreate;
         service.ApplicationUpdate = ApplicationUpdate;
         service.DeleteApplication = DeleteApplication;
-        service.ExtractApp = ExtractApp;
-        service.GetApplicationById = GetApplicationById;
-
+        service.GetAppNodes = GetAppNodes;
+        // service.GetAppInfo = GetAppInfo;
+        // service.GetAppContacts = GetAppContacts;
         return service;
 
-        function GetApplicationList(userData, pageno, pagesize) { 
-            return $http({
-                method: 'GET',
-                url:$rootScope.Base_URL + '/applications',
-                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
-            }).then(handleSuccess, handleError('Error getting all Application list'));
-            // return $http.get(Base_URL + '/a/application/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
-            //     "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all Application list'));
-        }
+        // function GetApplicationList(userData, pageno, pagesize) { 
+        //     return $http({
+        //         method: 'GET',
+        //         url:Base_URL + '/applications',
+        //         headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+        //     }).then(handleSuccess, handleError('Error getting all Application list'));
+        // }
         
         function GetClientAppList(userData, pageno, pagesize) {
             return $http({
                 method: 'GET',
-                url:$rootScope.Base_URL + '/applications',
+                url:Base_URL + '/companies/1/applications/',
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error getting all Application list'));
         }
-        function GetApplication(appUid, userData) {
+        function GetApplication(userData, id) {
             return $http({
                 method: 'GET',
-                url:$rootScope.Base_URL + '/applications/'+appUid,
+                url:Base_URL + '/applications/'+id,
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error getting Application by id'));
         }
@@ -60,27 +58,40 @@
             }).then(handleSuccess, handleError('Error in creating an Application'));
         }
 
-        function ApplicationUpdate(userData, applicationData) {
-            return $http.post(Base_URL + '/a/application/update.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in creating an Application'));
+        function ApplicationUpdate(userData, applicationData, id) {
+             return $http({
+                method: 'PUT',
+                url:  `${Base_URL}/applications/${id}/`,
+                data: applicationData, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating an Application'));
+        
         }
 
-        function DeleteApplication(appUid, userData) {
-            return $http.get(Base_URL + '/a/application/delete/' + appUid + '/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting an Application'));
+        function DeleteApplication(userData, id) {
+            return $http({
+                method: 'DELETE',
+                url: Base_URL + '/applications/'+id,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating an Application'));
         }
-        function ExtractApp(app){ 
-            return {"appUid": app.appUid, "description": app.description, "folder": app.folder, "version": app.version,
-                          "sequence": app.sequence, "createdAt": app.createdAt, "updatedAt": app.updatedAt,
-                          "template": {"id": app.template.id, "name": app.template.name}};
+
+        function GetAppNodes(userData, id) {
+            return $http({
+               method: 'GET',
+               url:  `${Base_URL}/applications/${id}/nodes`, 
+               headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+           }).then(handleSuccess, handleError('Error in creating an Application'));
         }
-        function GetApplicationById(applications, id){
-            var application;
-            angular.forEach(applications, function(value, key){ 
-                if(value.id ===id) {application=value; }
-            });
-            return application;
-        }
+       
+
+        // function GetApplicationById(userData, id){
+        //    return $http({
+        //        method: 'GET',
+        //        url:  `${Base_URL}/applications/${id}/`, 
+        //        headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+        //    });
+        // }
 
         function handleSuccess(res) {
             return res.data;
