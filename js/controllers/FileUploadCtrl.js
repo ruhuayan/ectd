@@ -1,16 +1,15 @@
 angular.module('MetronicApp')
     .controller('FileUploadCtrl', ['$scope', '$rootScope',  '$state',  '$translate', 'FileUploader', 'CookiesApiService', 'FileApiService', 'ApplicationApiService','ModalService',
         function($scope, $rootScope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService ) {
-
-    //function FileUploadCtrl( $rootScope, $scope, $state, $translate, FileUploader, CookiesApiService, FileApiService, ApplicationApiService, ModalService){ //$http does not use
-        var appUid, toasts = {};                                                console.log("upload ctrl");
+        var appId, toasts = {};                                                console.log("upload ctrl");
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;
+            appId = $rootScope.appData.id;
             JsTree.userData = JsTree.userData || $rootScope.userData;
         }                                                                       
 
         var uploader = $scope.uploader = new FileUploader({
-            url: $rootScope.Base_URL + "/a/application/file/create/appUid/" + appUid+"/?uid=" + $rootScope.userData.uid + "&apptoken=" + $rootScope.userData.access_token,
+            url: `${$rootScope.Base_URL}/applications/${appId}/fileUpload`,
+            headers: {'Authorization': 'JWT '+$rootScope.userData.token},
             removeAfterUpload: true
         }); 
         // FILTERS
@@ -28,6 +27,7 @@ angular.module('MetronicApp')
             fn: function(item /*{File|FileLikeObject}*/, options){
                 return item.type == "application/pdf";
             }
+
         });
         /*uploader.filters.push({
             name: "lowerCase",
@@ -75,11 +75,15 @@ angular.module('MetronicApp')
         });*/
         
         // CALLBACKS
+        // uploader.onBeforeUploadItem = function (fileItem) {
+        //     fileItem.headers = {
+        //         headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+        //     };
+        // };
         uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/ , filter, options){
             $translate(filter.message).then(function(translation){
-                toastr.warning(item.name+" loading failed", translation);                            //"You need to create an application to upload files!"
+                toastr.warning(item.name+" loading failed", translation);       //"You need to create an application to upload files!"
             });
-            //toastr.warning(item.name+" loading failed", filter.message);
         };
         uploader.onAfterAddingFile = function(fileItem){                       // console.log(uploader.queue);
             var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];        
@@ -87,28 +91,25 @@ angular.module('MetronicApp')
                 for(var i=0; i<upFiles.length; i++){
                     var fileName = fileItem.file.name; 
                     if(upFiles[i].text===fileName ){                            //console.log(upFiles[i].text);
-                       
                         var warning = ["WARNING_EXISTS", "REPLACE"];
                         $translate(warning).then(function(translations){                            //console.log(translations);
                             toasts[fileName] = toastr.warning(fileName + translations.WARNING_EXISTS, translations.REPLACE,
                             { "closeButton": true,"newestOnTop": true,"timeOut": 0,"extendedTimeOut": 0,"showEasing": "swing","hideEasing": "linear","showMethod": "fadeIn","positionClass": "toast-top-right",
                             "hideMethod": "fadeOut","tapToDismiss": false, "onShown": function(){}});
                         });
-                        
                     }
                 }
             }
-            //if(removeFile($rootScope.uploadFiles, fileItem, 0)) fileItem.remove();  
         };
        
         uploader.onCompleteItem = function(fileItem, res, status, headers){
-            toastr.remove();
-            if(res.fileId){                                                            //console.log(res)                                                        
+            toastr.remove();                    //console.log(fileItem, res)    
+            if( res && res.id){                                                                                                                
                 //if(removeFile($rootScope.uploadFiles, fileItem, 0)) {fileItem.remove(); return; }            //to make sure that no duplicate file name
                 var upFiles = $rootScope.uploadFiles = $rootScope.uploadFiles || [];
                 if(upFiles && upFiles.length>0){                    //console.log(upFiles)                           
                     for(var i=1; i<upFiles.length; i++){ 
-                        if(upFiles[i].text===res.filename ){                                      
+                        if(upFiles[i].text===res.name ){                                      
                             $translate("SUCCESS_REPLACED").then(function(translation){
                                 toastr.success(res.filename + translation, translation);                            //"You need to create an application to upload files!"
                             });
@@ -118,7 +119,7 @@ angular.module('MetronicApp')
                     }
                 } 
                
-                var treeNode = {'id': res.fileId, 'parent': 'up1', 'text': res.name, 'type': 'file', 'createdAt': res.createdAt/*, 'fileId': res.fileId*/};
+                const treeNode = {'id': res.id, 'parent': 'up1', 'text': res.name, 'type': 'file', 'createdAt': res.created_at/*, 'fileId': res.fileId*/};
                 upFiles.push(treeNode);                                         //console.log("on complete", upFiles)                                                                 
             }else console.log(res);
         };
@@ -134,21 +135,37 @@ angular.module('MetronicApp')
         /************getting uploaded files******************************************/
        
         var upFileNodes = [{ "id" : "up1", "parent" : "#", "text" : "uploaded Files", 'type': 'root', "fileId": "Uploaded files", "state" : { "opened" : true}}];
-                                                                                                            //console.log("application: ", appUid, $rootScope.userData);
-        ApplicationApiService.GetApplication($rootScope.userData, appUid).then(function(result){                   console.log("application: ", result);
-            if(result.errors) return; 
-            $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
+                                                                                                            //console.log("application: ", appId, $rootScope.userData);
+        // ApplicationApiService.GetApplication($rootScope.userData, appId).then(function(result){                   console.log("application: ", result);
+        //     if(result.errors) return; 
+        //     $rootScope.subFiles = result.nodeList;                                                      //console.log("result: ", fileTree[3]);
             
-            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
+        //     JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
            
-            var upFiles = result.ectdFileList;                                  //console.log("upfiles: ", upFiles);
-            if(upFiles.length>0){
+        //     var upFiles = result.ectdFileList;                                  //console.log("upfiles: ", upFiles);
+        //     if(upFiles.length>0){
+        //         setFileNodes(upFiles);                                          
+        //         restoreUpfileNode($rootScope.subFiles);
+        //         JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
+        //         $scope.showHint = false;
+        //     }else $scope.noUpfile = true;
+        // });
+        ApplicationApiService.GetAppNodes($rootScope.userData, appId).then(function(res){     //console.log("appData ", result);
+            if(res){                              
+                $rootScope.subFiles = res;                
+                JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);         //console.log('subFiles: ', $rootScope.subFiles); 
+            }
+        });
+        FileApiService.GetAppFileList($rootScope.userData, appId).then(function(res){
+            if(res&&res.length){
+                const upFiles = res;                                  //console.log("upfiles: ", upFiles);
                 setFileNodes(upFiles);                                          
                 restoreUpfileNode($rootScope.subFiles);
                 JsTree.initUploadTree(upFileNodes.concat($rootScope.uploadFiles));
                 $scope.showHint = false;
             }else $scope.noUpfile = true;
-        });
+            
+        })
         
         $scope.removeItem = function(item){                                                                    
             if(toasts[item.file.name]) { console.log(toasts[item.file.name]);
@@ -162,7 +179,7 @@ angular.module('MetronicApp')
             toastr.remove();
         };
         $scope.savetree = function(){
-            if(!appUid){ 
+            if(!appId){ 
                 $translate("WARNING_NOAPP").then(function(translation){
                     toastr.warning(translation);                            //"You need to create an application to upload/SAVE files!"
                 });
@@ -197,7 +214,7 @@ angular.module('MetronicApp')
                 overlayColor: "#999"//'#d9534f'
             });
 
-            FileApiService.BatchUpdate($rootScope.userData, appUid, json).then(function(result){            //console.log(result);
+            FileApiService.BatchUpdate($rootScope.userData, appId, json).then(function(result){            //console.log(result);
 
                 if(result){
                     toastr.remove();
@@ -222,12 +239,12 @@ angular.module('MetronicApp')
         $scope.hideUpfileNode = function(id){                                     
             getUpfileNodeById(id).state =  { "hidden" : true };                                                                    
         };
-        $scope.deleteFileNode = function(id){
+        $scope.deleteFileNode = function(id){   console.log(id)
             var node = getUpfileNodeById(id);   
             $rootScope.uploadFiles.splice( $.inArray(node, $rootScope.uploadFiles), 1 );                                                //console.log($scope.uploadFiles);
 
-            FileApiService.FileDelete(id, $rootScope.userData ).then(function(result){ console.log(result);
-                //toasts.success("File deleted");
+            FileApiService.FileDelete($rootScope.userData, id).then(function(result){ console.log(result);
+                toastr.success("File deleted");
             });
         }
         $scope.showUpfileNode = function(id){
@@ -285,9 +302,9 @@ angular.module('MetronicApp')
         };
         function setFileNodes(upFiles){
             $rootScope.uploadFiles = [];
-           for(var i=0; i<upFiles.length; i++){
-               $rootScope.uploadFiles.push({'id': upFiles[i].fileId, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file', 'createdAt': upFiles[i].createdAt});
-           }
+            for(var i=0; i<upFiles.length; i++){
+                $rootScope.uploadFiles.push({'id': upFiles[i].id, 'parent': 'up1', 'text': upFiles[i].name, 'type': 'file', 'createdAt': upFiles[i].created_at});
+            }
         }
         var uptreeSortAsce = false;
         $scope.sortUptree = function(){                             //console.log($scope.uploadFiles);
@@ -372,12 +389,3 @@ angular.module('MetronicApp')
         }
     //};
     }]);
-// function SaveTreeYesNoCtrl($scope, $element, title, body, close){
-//     $scope.title = title;
-//     $scope.body = body;
-//     $scope.hideForm = true;
-//     $scope.close = function(result) {
-//         close(result, 300); // close, but give 500ms for bootstrap to animate
-//     };
-// }
-

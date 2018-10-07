@@ -62,8 +62,6 @@
                 data: contactData,
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in creating Application Contact'));
-            // return $http.post(Base_URL + '/a/application/'+ appUid +'/contact/info/createUpdate?uid=' + userData.uid +
-            //     "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in creating an Application'));
         }
         
         function UpdateContact(userData, appId, contactData){

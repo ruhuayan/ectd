@@ -8,16 +8,12 @@
     FileApiService.$inject = ['$http', '$rootScope'];
 
     function FileApiService($http, $rootScope) {
-        var Base_URL = $rootScope.Base_URL;                                     // "http://52.4.14.123/ectd"; 
+        const Base_URL = $rootScope.Base_URL;                                     // "http://52.4.14.123/ectd"; 
 
-        var service = {};
+        const service = {};
         
-        service.GetFileList = GetFileList;
         service.GetAppFileList = GetAppFileList;
-        service.GetClientFileList = GetClientFileList; 
         service.GetFileById = GetFileById;
-        service.FileCreate = FileCreate;
-        service.FileUpdate = FileUpdate;
         service.FileDelete = FileDelete;
         service.DownloadFileByUuid = DownloadFileByUuid;
         service.BatchUpdate = BatchUpdate;
@@ -28,22 +24,12 @@
 
         return service;
 
-        function GetFileList(userData) {                                        // no url
-            return $http.get(Base_URL + 'list.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file list'));
-        }
-        function GetAppFileList(userData, appUid){                              // get file list by appUid
-            return $http.get(Base_URL +"/a/application/file/getByAppUid/"+ appUid +'/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting application file list'));
-        }
-        function GetClientFileList(userData, pageno, pagesize){
-            return $http.get(Base_URL +"/a/application/file/client/list?"+ pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting client file list'));
-        }
-        
-        function GetFile(uuid, userData) {
-            return $http.get(Base_URL + '/a/application/file/getByUuid/' + uuid + '?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
+        function GetAppFileList(userData, appId){    
+            return $http({
+                method: 'GET',
+                url:  `${Base_URL}/applications/${appId}/files`, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating Application Files'));
         }
 
         function GetFileById(fileId, userData) {
@@ -51,19 +37,22 @@
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
         }
 
-        function FileCreate(userData, appUid, postData) {                             // it is used to upload file
-            return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
-        }
+        // function FileCreate(userData, appUid, postData) {                             // it is used to upload file
+        //     return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
+        // }
 
-        function FileUpdate(userData, postData) {                               //console.log(postData); 
-            return $http.post(Base_URL + '/a/application/file/update.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error in updating file info'));
-        }
+        // function FileUpdate(userData, postData) {                               //console.log(postData); 
+        //     return $http.post(Base_URL + '/a/application/file/update.json?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error in updating file info'));
+        // }
 
-        function FileDelete(fid, userData) {
-            return $http.get(Base_URL + '/a/application/file/delete/' + fid + '.json?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error in deleting file info'));
+        function FileDelete(userData, fid) {
+            return $http({
+                method: 'DELETE',
+                url:  `${Base_URL}/files/${fid}`, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in Deleting Application File'));
         }
         function DownloadFileByUuid(uuid, userData){
             return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
