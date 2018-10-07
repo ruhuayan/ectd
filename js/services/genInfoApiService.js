@@ -12,10 +12,10 @@
 
         const service = {};
 
-        // service.GetGenInfo = GetGenInfo;
-        service.CreateGenInfo = CreateGenInfo;
+        service.CreateAppInfo = CreateAppInfo;
         service.CreateContact = CreateContact;
-        service.GetContacts = GetContacts; 
+        service.UpdateAppInfo = UpdateAppInfo;
+        service.UpdateContact = UpdateContact; 
         // service.GetAppType = GetAppType;
         service.GetAppInfo = GetAppInfo;
         service.GetAppContacts = GetAppContacts;
@@ -37,24 +37,42 @@
            }).then(handleSuccess, handleError('Error in creating Application Contacts'));
         }
 
-        // function GetGenInfo(appUid, userData) {                                 // not ready
-        //     return $http.get(Base_URL + '/a/application/'+ appUid +'/general/info/?uid=' + userData.uid +
-        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all users'));
-        // }
-
-        function CreateGenInfo(appUid, userData, applicationData) {
-            return $http.post(Base_URL + '/a/application/'+ appUid +'/general/info/createUpdate?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in creating an Application'));
+        function CreateAppInfo( userData, appinfo) {
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/appinfos/`, 
+                data: appinfo,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating Application information'));
         }
 
-        function CreateContact(appUid, userData, applicationData) {             // not ready
-            return $http.post(Base_URL + '/a/application/'+ appUid +'/contact/info/createUpdate?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in creating an Application'));
+        function UpdateAppInfo(userData, appId, appinfo){
+            return $http({
+                method: 'PUT',
+                url:  `${Base_URL}/appinfos/${appId}/`, 
+                data: appinfo,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in updating Application Information'));
+        }
+
+        function CreateContact(userData, contactData) {             
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/contacts/`, 
+                data: contactData,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating Application Contact'));
+            // return $http.post(Base_URL + '/a/application/'+ appUid +'/contact/info/createUpdate?uid=' + userData.uid +
+            //     "&apptoken=" + userData.access_token, applicationData).then(handleSuccess, handleError('Error in creating an Application'));
         }
         
-        function GetContacts(appUid, userData) {                                 // not ready
-            return $http.get(Base_URL + '/a/application/'+ appUid +'/contact/info/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all users'));
+        function UpdateContact(userData, appId, contactData){
+            return $http({
+                method: 'PUT',
+                url:  `${Base_URL}/contacts/${appId}/`, 
+                data: contactData,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in updating Application Contact'));
         }
         // function GetAppType(userData){
         //     return $http.get(Base_URL + '/a/getAppType?uid=' + userData.uid +

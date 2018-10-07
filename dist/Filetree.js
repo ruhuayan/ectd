@@ -61,7 +61,7 @@ Filetree.prototype ={
             var addText = "["+tag.manufacturer+"]["+tag.substance+"]";
             this.addNodeText(id, addText);
         }else if(id=="m32P"||id=="m23P"){
-            var addText = "["+tag.manufacturer+"]["+tag.prodName+"]["+tag.dosage+"]";
+            var addText = "["+tag.manufacturer+"]["+tag.productName+"]["+tag.dosage+"]";
             this.addNodeText(id, addText);
         }
     },
