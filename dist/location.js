@@ -1,4 +1,4 @@
- var Base_URL = "http://192.168.88.187:8080/ectd";
+ const Base_URL = "http://localhost:8000";
 //  var Base_URL = "http://52.4.14.123/ectd";
 
  // to prevent client from leaving the page

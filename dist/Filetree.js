@@ -141,9 +141,9 @@ Filetree.prototype ={
         if(node.type=="file"){
             var fileId = node.id;
             var userData = this.userData; // || angular.element(this.ctrlId).scope().getUserData();                         //console.log("userData: ",this.userData );
-            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(url);
+            // var url = `${Base_URL}/files/${fileId}/read_file/`
             //var url = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //
-            this.openIframe( url, userData);
+            this.openIframe(userData, fileId);
         }else if(node.type=="default"){                                         //console.log(node.state);
             if(!node.state.opened){
                 tree.jstree().close_node(nodeId);
@@ -157,7 +157,7 @@ Filetree.prototype ={
             }
         }
     },
-    openIframe: function(url, userData){
+    openIframe: function(userData, fileId){
         var w = $(window).width(), h = $(window).height(), gap = 50;
         var layer = $("<div>").attr("id", "layer")
                 .css({"position": "absolute", "top": 0, "left": 0, "width": w, "height": $(document).height(), "background-color": "rgba(0, 0, 0, 0.5)", "text-align": "center", "z-index": 10001 })
@@ -172,24 +172,32 @@ Filetree.prototype ={
         $("#layer").click(function(){
             $(this).remove();
         });
-        var _this = this;
-        $.when($.ajax(url)).then(function(result, textStatus, jqXHR){                         console.log("result", result);
-            if(jqXHR.status !== 200) return;
-            if(!result.ectdFileStateList) return;
+        $.when($.ajax({//lastStateUrl
+                type: 'GET',
+                url: `${Base_URL}/files/${fileId}/last_state/`,
+                headers: { 'Content-Type': 'application/json', "Authorization":`JWT ${userData.token}`}
+            })).then(function(result, textStatus, jqXHR){                         console.log("result", result);
+            if(jqXHR.status !== 200){
+                return;
+            } else{
+                if(result.id) return; 
+            }
+            // if(!result.ectdFileStateList) return;
 
             // for IE browser
-            var isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
-            if(isIE){
-                var fileURL = Base_URL + result.ectdFileStateList[result.ectdFileStateList.length-1].path;
-                $("#frame").attr("src", fileURL);
-                return;
-            }
+            // var isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
+            // if(isIE){
+            //     var fileURL = Base_URL + result.ectdFileStateList[result.ectdFileStateList.length-1].path;
+            //     $("#frame").attr("src", fileURL);
+            //     return;
+            // }
             // for other browser
-            var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             //console.log("file", uuid);
-            var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +"&apptoken=" + userData.access_token;              //console.log(fileURL);
+            // var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             //console.log("file", uuid);
+            var fileURL = `${Base_URL}/files/${fileId}/read_file/`;
 
             var xhr = new XMLHttpRequest();
             xhr.open('GET', fileURL, true);
+            xhr.setRequestHeader('Authorization', `JWT ${userData.token}`);
             xhr.responseType = 'blob';
 
             xhr.onprogress = function(e){        //console.log (e);
@@ -209,10 +217,6 @@ Filetree.prototype ={
             };
             xhr.send();
         });
-        /*$.get(url, function(result){
-            if(!result || !result.ectdFileStateList.length ) return;
-        });*/
-
     }
 };
 

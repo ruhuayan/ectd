@@ -13,9 +13,9 @@
         const service = {};
         
         service.GetAppFileList = GetAppFileList;
-        service.GetFileById = GetFileById;
+        // service.GetFileById = GetFileById;
         service.FileDelete = FileDelete;
-        service.DownloadFileByUuid = DownloadFileByUuid;
+        // service.DownloadFileByUuid = DownloadFileByUuid;
         service.BatchUpdate = BatchUpdate;
         service.SaveEdits = SaveEdits;
         //service.AssignFile = AssignFile;
@@ -32,10 +32,10 @@
             }).then(handleSuccess, handleError('Error in creating Application Files'));
         }
 
-        function GetFileById(fileId, userData) {
-            return $http.get(Base_URL + '/a/application/file/get_by_file_id/' + fileId + '?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
-        }
+        // function GetFileById(fileId, userData) {
+        //     return $http.get(Base_URL + '/a/application/file/get_by_file_id/' + fileId + '?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
+        // }
 
         // function FileCreate(userData, appUid, postData) {                             // it is used to upload file
         //     return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
@@ -54,13 +54,17 @@
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in Deleting Application File'));
         }
-        function DownloadFileByUuid(uuid, userData){
-            return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
-        }
-        function BatchUpdate(userData, appUid, batchData){
-            return $http.post(Base_URL + '/a/application/node/batch_update/appUid/'+appUid+'/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, batchData).then(handleSuccess, handleError('Error batch updating nodes!'));
+        // function DownloadFileByUuid(uuid, userData){
+        //     return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
+        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
+        // }
+        function BatchUpdate(userData, appId, batchData){
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/applications/${appId}/batch_nodes/`, 
+                data: batchData,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating Application Nodes'));
         }
         function SaveEdits(uuid, userData, editData){
             return $http.post(Base_URL + '/a/application/file/save_state/'+ uuid +'?uid=' + userData.uid +
