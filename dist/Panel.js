@@ -66,7 +66,6 @@
 
                 if(t.parents('div.pdf-editor').length && pdfEditor.panel.attr('data-loaded')=='false')
                     pdfEditor.setEditCount()
-                        //.loadEdits(fileId)
                         .openPanel(fileName, fileId, function(_this){
                             pdfEditor.replaceEdits(_this);
                             pdfEditor.fileUnsaved = false;
@@ -115,49 +114,39 @@
             this.panel.attr('data-loaded', 'true');
             this.fileZone.show();                              //console.log(JsTree.userData);
 
-            var url = Base_URL + "/a/application/file/get_by_file_id/" + fileId + "/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
-
-            var _this = this;
-            $.get(url, function(result){                                        console.log(result);
-                if(!result.ectdFileStateList || !result.ectdFileStateList.length ) return;
-
-                var uuid, lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];
-                if(_this.id =="pdf-frame")
-                    uuid = lastState.uuid
-                else {
-                    uuid = result.ectdFileStateList[0].uuid;
-                    if(lastState.action) _this.edits = JSON.parse(lastState.action);
+            var _this = this, fileURL;  
+            if(_this.id =="pdf-frame")
+                fileURL = `${Base_URL}/files/${fileId}/last_file/`;
+            else {
+                fileURL = `${Base_URL}/files/${fileId}/read_file/`;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', fileURL, true);
+            xhr.responseType = 'blob';
+            xhr.setRequestHeader('Authorization', `JWT ${JsTree.userData.token}`);
+            xhr.onprogress = function(e){        //console.log (e);
+                if (e.lengthComputable) {}
+            };
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var blob = new Blob([this.response], {type: 'application/pdf'}),
+                        pdfBlob = URL.createObjectURL(blob);
+                    var loadingTask = PDFJS.getDocument(pdfBlob);
+                    loadingTask.onProgress = function(progress){
+                        _this.panel.find('div.load-process').show();
+                        _this.panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
+                    };
+                    loadingTask.promise.then(function(pdf){
+                        _this.fileName = file, _this.fid = fileId, _this.pdf = pdf;
+                        //_this.pdfCache[fileId] = {'name': file, 'pdf': pdf};
+                        _this.panel.find('div.load-process').fadeOut(1000);
+                        _this.pdf2html(callback);
+                    }).catch(function(error){                                   //console.log(error);
+                        alert(error);
+                    });
                 }
-                var fileURL = Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + JsTree.userData.uid +"&apptoken=" + JsTree.userData.access_token;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', fileURL, true);
-                xhr.responseType = 'blob';
-                xhr.onprogress = function(e){        //console.log (e);
-                    if (e.lengthComputable) {}
-                };
-                xhr.onload = function() {
-                    if (this.status === 200) {
-                        var blob = new Blob([this.response], {type: 'application/pdf'}),
-                            pdfBlob = URL.createObjectURL(blob);
-                        var loadingTask = PDFJS.getDocument(pdfBlob);
-                        loadingTask.onProgress = function(progress){
-                            _this.panel.find('div.load-process').show();
-                            _this.panel.find('div.load-process').css('width', ((progress.loaded/progress.total)*100)+'%');
-                        };
-                        loadingTask.promise.then(function(pdf){
-                            _this.fileName = file, _this.fid = fileId, _this.pdf = pdf;
-                            //_this.pdfCache[fileId] = {'name': file, 'pdf': pdf};
-                            _this.panel.find('div.load-process').fadeOut(1000);
-                            _this.pdf2html(callback);
-                        }).catch(function(error){                                   //console.log(error);
-                            alert(error);
-                        });
-                    }
-                };
-                xhr.send();
-            });
-                                                            //console.log(_this.panel);
-
+            };
+            xhr.send();
             return this;
         },
         pdf2html: function(callback){
@@ -325,6 +314,7 @@
             delete this.pdf; delete this.fid; delete this.fileName; delete this.edits;
         },
         toggleSplitter: function(show){
+
             if(show){ $('.splitter').show(); } else { $('.splitter').hide(); }
         }
 
@@ -352,12 +342,12 @@
                         for(var i=0; i<operations.length; i++) {
                             var operation = operations[i];                            //console.log(operation);
                             var scale = (this.fileZone.width()-window.browserScrollbarWidth)/operation.pw;
-                            if(operation.boundingBox)                  // link edit
+                            if(operation.rect)                  // link edit
                                 $('#'+operation.id).css({
-                                    'width': operation.boundingBox.width * scale,
-                                    'height': operation.boundingBox.height * scale,
-                                    'top': operation.boundingBox.top * scale,
-                                    'left': operation.boundingBox.left * scale
+                                    'width': operation.rect.width * scale,
+                                    'height': operation.rect.height * scale,
+                                    'top': operation.rect.top * scale,
+                                    'left': operation.rect.left * scale
                                 });
                             if(operation.position)                  // text edit
                                 $('#'+operation.id).css({
@@ -381,7 +371,7 @@
             return false;
         },
         getEditList: function(){
-            var _this = this, edits = {'linkOperations':[], 'textOperations': []}, pageWrap = this.pageWrap;
+            var _this = this, edits = {'link':[], 'texts': []}, pageWrap = this.pageWrap;
             this.panel.find(".target-editable").each(function(index, value){       //console.log('inside at function - target', new Big(1, 5));
                 var n = parseFloat(pageWrap.attr("data-scale")),
                     d =  $(this).offset(),
@@ -395,14 +385,14 @@
                     };
                 var p = {
                     id: id,
-                    boundingBox: f,
+                    rect: f,
                     pw: parseInt(pageWrap.attr('data-pw')),
                     page: $(this).attr("data-page-num"),
                     tfid: $(this).attr('data-target-fid'),         // target-fid
                     uri:  $(this).attr("data-uri"),           //$(this).attr('data-fid');               no need in real application because of tfid
                     tpage: $(this).attr("data-target-page") || 1
                 };
-                p.id && edits.linkOperations.push(p);                    //console.log(c); to JSON.stringify(p) before sending to server
+                p.id && edits.link.push(p);                    //console.log(c); to JSON.stringify(p) before sending to server
             });
             this.panel.find(".text-editable").each(function(index, value) {
                 var e = $(this);                                                //console.log(e);
@@ -432,7 +422,7 @@
                         },
                         page: e.attr("data-page-num"),
                     };
-                "" != f.text.trim() && edits.textOperations.push(f)
+                "" != f.text.trim() && edits.texts.push(f)
                 //}
             });
             return edits;
@@ -451,31 +441,30 @@
         },
         loadEdits: function(fid){
             var _this = this;
-            angular.element(JsTree.ctrlId).scope().getFileById(fid).then(function(result){                                  console.log("loadEdits", result);
-                if(result.errors) return;
-                if(result && result.ectdFileStateList){
-                    var lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
-                    _this.edits = JSON.parse(lastState.action);                        //console.log("actions: ", _this.edits);
-                }
-            });
-            //angular.element("#JstreeCtrl").scope().getFileById(fid).then(function(result){});
-            return this;
+            return angular.element(JsTree.ctrlId).scope().getFileLastState(fid);
+            // angular.element(JsTree.ctrlId).scope().getFileLastState(fid).then(function(result){                                  
+            //     if(result) {
+            //         var lastState = result.ectdFileStateList[result.ectdFileStateList.length-1];                               //console.log("edits: ", JSON.parse(lastState.action) );
+            //         _this.edits = JSON.parse(lastState.action);         
+            //     }
+            // });
+            // return this;
         },
         replaceEdits: function(_this){                                                                 console.log("edits", _this.edits);
             if(!_this.edits || _this.edits.length<=0) return false;
             var edits = _this.edits, editZone = _this.fileZone;
-            var linkEdits = edits["linkOperations"];
-            var textEdits = edits["textOperations"];
+            var linkEdits = edits["link"];
+            var textEdits = edits["texts"];
 
                 if(linkEdits && linkEdits.length>0){
                     for (var i=0; i<linkEdits.length; i++){                               //console.log("page num: ", linkEdits[i].page);
                         var lastOpNum = linkEdits[i].id.split("-")[2];
                         if(_this.editCount<lastOpNum) _this.editCount = lastOpNum;
                         var scale = (editZone.width()-window.browserScrollbarWidth)/linkEdits[i].pw;                   //console.log("scale: ", scale);
-                        var t = linkEdits[i].boundingBox.top * scale,
-                            l = linkEdits[i].boundingBox.left * scale,
-                            w = linkEdits[i].boundingBox.width * scale,
-                            h = linkEdits[i].boundingBox.height * scale,
+                        var t = linkEdits[i].rect.top * scale,
+                            l = linkEdits[i].rect.left * scale,
+                            w = linkEdits[i].rect.width * scale,
+                            h = linkEdits[i].rect.height * scale,
                             tfid = linkEdits[i].tfid,
                             id = linkEdits[i].id,
                             page = linkEdits[i].page,

@@ -7,25 +7,29 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
     function($rootScope, $scope, $state, $cookies,$translate, CookiesApiService,FileApiService, ApplicationApiService, ModalService) {
         //function EditTreeCtrl($rootScope, $scope, $state, $cookies, $translate, CookiesApiService, ApplicationApiService, FileApiService, ModalService){
 
-            var appUid, userData;                                                //console.log("user Data", CookiesApiService.GetCookies());
+            var appId, userData;                                                //console.log("user Data", CookiesApiService.GetCookies());
             if(CookiesApiService.GetCookies()){
-                appUid = $rootScope.appData.appUid;
+                appId = $rootScope.appData.id;
                 userData = $rootScope.userData;
                 JsTree.userData = JsTree.userData || userData;
             }
-            //userData = JSON.parse($cookies.get('globals'));                         //console.log(userData)
+
             if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-                //$state.go("submission").then(function(){});
-                ApplicationApiService.GetApplication( $rootScope.userData, appUid).then(function(result){     //console.log("appData ", JsTree);
-                    $rootScope.subFiles = result.nodeList;            //$rootScope.appData.NumOfFiles = result.nodeList.length;
-                    JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
-                    JsTree.setSelectList($rootScope.subFiles);
+                ApplicationApiService.GetAppNodes($rootScope.userData, appId).then(function(res){     //console.log("appData ", result);
+                    if(res){                              
+                        $rootScope.subFiles = res;                
+                        JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);         //console.log('subFiles: ', $rootScope.subFiles); 
+                    }
                 });
+                // ApplicationApiService.GetApplication( $rootScope.userData, appId).then(function(result){     //console.log("appData ", JsTree);
+                //     $rootScope.subFiles = result.nodeList;            //$rootScope.appData.NumOfFiles = result.nodeList.length;
+                //     JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+                //     JsTree.setSelectList($rootScope.subFiles);
+                // });
             }else{
                 //var fileJson = fileTree.concat($rootScope.subFiles);                 //console.log($rootScope.subFiles);
                 JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
                 JsTree.setSelectList($rootScope.subFiles);
-                //JsTree.upFiles = $rootScope.subFiles;
             }
             $scope.toggleTree = function(){
                 JsTree.toggle($rootScope.open);
@@ -35,17 +39,17 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
             JsTree.closeSidebar();
             //$rootScope.settings.layout.pageSidebarClosed = true;
             $scope.saveEdits = function(fid, editData){
-                return FileApiService.SaveEdits(fid, userData, editData);
+                return FileApiService.SaveEdits(userData, fid, editData);
             }
-            $scope.getFileById = function(fid){
-                return FileApiService.GetFileById(fid, userData);
+            $scope.getFileLastState = function(fid){
+                return FileApiService.GetLastState(userData, fid);
             }
             $scope.getUserData = function(){
                 return userData;
             };
-            $scope.getAppUid = function(){
-                return appUid;
-            }
+            // $scope.getappId = function(){
+            //     return appId;
+            // }
             $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
                 if(pdfEditor.fileUnsaved) $scope.edits = pdfEditor.getEditList();   //console.log(pdfEditor.getEditList());
             });
@@ -82,11 +86,3 @@ angular.module('MetronicApp').controller('EditTreeCtrl', ['$rootScope','$scope',
                 });
             };
     }]);
-        // function SaveEditYesNoCtrl($scope, $element, title, body, close){
-        //     $scope.title = title;
-        //     $scope.body = body;
-        //     $scope.hideForm = true;
-        //     $scope.close = function(result) {
-        //         close(result, 300); // close, but give 500ms for bootstrap to animate
-        //     };
-        // }

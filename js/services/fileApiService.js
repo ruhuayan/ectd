@@ -13,14 +13,10 @@
         const service = {};
         
         service.GetAppFileList = GetAppFileList;
-        // service.GetFileById = GetFileById;
         service.FileDelete = FileDelete;
-        // service.DownloadFileByUuid = DownloadFileByUuid;
         service.BatchUpdate = BatchUpdate;
         service.SaveEdits = SaveEdits;
-        //service.AssignFile = AssignFile;
-        //service.CreateFolder = CreateFolder;
-        //service.GetAssignedFileByAppUid = GetAssignedFileByAppUid;
+        service.GetLastState = GetLastState;
 
         return service;
 
@@ -32,21 +28,6 @@
             }).then(handleSuccess, handleError('Error in creating Application Files'));
         }
 
-        // function GetFileById(fileId, userData) {
-        //     return $http.get(Base_URL + '/a/application/file/get_by_file_id/' + fileId + '?uid=' + userData.uid +
-        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
-        // }
-
-        // function FileCreate(userData, appUid, postData) {                             // it is used to upload file
-        //     return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
-        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
-        // }
-
-        // function FileUpdate(userData, postData) {                               //console.log(postData); 
-        //     return $http.post(Base_URL + '/a/application/file/update.json?uid=' + userData.uid +
-        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error in updating file info'));
-        // }
-
         function FileDelete(userData, fid) {
             return $http({
                 method: 'DELETE',
@@ -54,10 +35,6 @@
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in Deleting Application File'));
         }
-        // function DownloadFileByUuid(uuid, userData){
-        //     return $http.get(Base_URL + "/a/application/file/download/" + uuid +"/?uid=" + userData.uid +
-        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error at downloading file'));
-        // }
         function BatchUpdate(userData, appId, batchData){
             return $http({
                 method: 'POST',
@@ -66,9 +43,21 @@
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in creating Application Nodes'));
         }
-        function SaveEdits(uuid, userData, editData){
-            return $http.post(Base_URL + '/a/application/file/save_state/'+ uuid +'?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, editData).then(handleSuccess, handleError('Error in updating file info'));
+        function SaveEdits(userData, fid, editData){
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/file/${fid}/state/`, 
+                data: editData,
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in editing file'));
+        }
+
+        function GetLastState(userData, fid){
+            return $http({
+                method: 'GET',
+                url:  `${Base_URL}/file/${fid}/last_state/`, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in getting file last state'));
         }
         /*function AssignFile(uuid, nodeId, userData){
             return $http.get(Base_URL + "/a/application/file/assign/"+uuid+"?id=" + nodeId +"/?uid=" + userData.uid +
@@ -83,6 +72,20 @@
             return $http.get(Base_URL +"/a/application/file/getAssignedByAppUid/"+ appUid +'/?uid=' + userData.uid +
                 "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting application file list'));
         }*/
+        // function GetFileById(fileId, userData) {
+        //     return $http.get(Base_URL + '/a/application/file/get_by_file_id/' + fileId + '?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting file by uuid'));
+        // }
+
+        // function FileCreate(userData, appUid, postData) {                             // it is used to upload file
+        //     return $http.post(Base_URL + '/a/application/file/create/appUid/'+appUid+'/?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error creating file info'));
+        // }
+
+        // function FileUpdate(userData, postData) {                               //console.log(postData); 
+        //     return $http.post(Base_URL + '/a/application/file/update.json?uid=' + userData.uid +
+        //         "&apptoken=" + userData.access_token, postData).then(handleSuccess, handleError('Error in updating file info'));
+        // }
 
         function handleSuccess(res) {
             return res.data;
