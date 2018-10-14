@@ -46,8 +46,8 @@
         function SaveEdits(userData, fid, editData){
             return $http({
                 method: 'POST',
-                url:  `${Base_URL}/file/${fid}/state/`, 
-                data: editData,
+                url:  `${Base_URL}/files/${fid}/states/`, 
+                data: {action: editData},
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in editing file'));
         }
@@ -55,7 +55,7 @@
         function GetLastState(userData, fid){
             return $http({
                 method: 'GET',
-                url:  `${Base_URL}/file/${fid}/last_state/`, 
+                url:  `${Base_URL}/files/${fid}/last_state/`, 
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error in getting file last state'));
         }

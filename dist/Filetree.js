@@ -172,18 +172,17 @@ Filetree.prototype ={
         $("#layer").click(function(){
             $(this).remove();
         });
-        $.when($.ajax({//lastStateUrl
-                type: 'GET',
-                url: `${Base_URL}/files/${fileId}/last_state/`,
-                headers: { 'Content-Type': 'application/json', "Authorization":`JWT ${userData.token}`}
-            })).then(function(result, textStatus, jqXHR){                         console.log("result", result);
-            if(jqXHR.status !== 200){
-                return;
-            } else{
-                if(result.id) return; 
-            }
+        // $.when($.ajax({//lastStateUrl
+        //         type: 'GET',
+        //         url: `${Base_URL}/files/${fileId}/last_state/`,
+        //         headers: { 'Content-Type': 'application/json', "Authorization":`JWT ${userData.token}`}
+        //     })).then(function(result, textStatus, jqXHR){                         console.log("result", result);
+        //     if(jqXHR.status !== 200){
+        //         return;
+        //     } else{
+        //         if(result.id) return; 
+        //     }
             // if(!result.ectdFileStateList) return;
-
             // for IE browser
             // var isIE = /(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent);
             // if(isIE){
@@ -193,30 +192,30 @@ Filetree.prototype ={
             // }
             // for other browser
             // var uuid = result.ectdFileStateList[result.ectdFileStateList.length-1].uuid;             //console.log("file", uuid);
-            var fileURL = `${Base_URL}/files/${fileId}/read_file/`;
+        var fileURL = `${Base_URL}/files/${fileId}/last_file/`;
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', fileURL, true);
-            xhr.setRequestHeader('Authorization', `JWT ${userData.token}`);
-            xhr.responseType = 'blob';
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', fileURL, true);
+        xhr.setRequestHeader('Authorization', `JWT ${userData.token}`);
+        xhr.responseType = 'blob';
 
-            xhr.onprogress = function(e){        //console.log (e);
-                if (e.lengthComputable) {
-                    var progress = e.loaded/e.total;
-                    progressbar.show().css("width", progress +"%");                                                              //console.log(progress);
-                }
-            };
-            xhr.onload = function(e) {
-                if (this.status === 200) {        console.log(this.response)
-                    var blob = new Blob([this.response], {type: 'application/pdf'}),
-                        file = URL.createObjectURL(blob);                               console.log(blob);
-                    progressbar.hide();
-                    //layer.append(iframe);
-                    $("#frame").attr("src", file);
-                }
-            };
-            xhr.send();
-        });
+        xhr.onprogress = function(e){        //console.log (e);
+            if (e.lengthComputable) {
+                var progress = e.loaded/e.total;
+                progressbar.show().css("width", progress +"%");                                                              //console.log(progress);
+            }
+        };
+        xhr.onload = function(e) {
+            if (this.status === 200) {        console.log(this.response)
+                var blob = new Blob([this.response], {type: 'application/pdf'}),
+                    file = URL.createObjectURL(blob);                               console.log(blob);
+                progressbar.hide();
+                //layer.append(iframe);
+                $("#frame").attr("src", file);
+            }
+        };
+        xhr.send();
+        // });
     }
 };
 
