@@ -1049,6 +1049,6 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
     // $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    $rootScope.Base_URL = "http://localhost:8000";
+    $rootScope.Base_URL = "http://www.9341xie.com:8000";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
 });
