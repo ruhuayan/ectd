@@ -1,11 +1,13 @@
 <div class="login-page" ng-controller="LoginController">
     <div class="company_logo">
         <!-- <img class="login-logo" src="assets/ectd.png" /> -->
-        <div class="logo-title"><h2>JTECH SOFT</h2><p>Electronic Common Technical Document</p>
+        <div class="logo-title">
+            <h2>JTECH SOFT</h2>
+            <p>Electronic Common Technical Document</p>
         </div>
     </div>
 
-    <div class="login-content" ng-controller="LoginController">
+    <div class="login-content" ng-show="state=='login'">
 
         <form action="javascript:;" class="login-form" ng-submit="signin();">
             <h2>
@@ -18,12 +20,13 @@
                 <span>Enter any username and password. </span>
             </div>
             <div class="row">
-                <input class="form-control form-group" id="input-name" ng-keyup="$event.keyCode == 13 && signin();" type="text" autocomplete="off"
-                    ng-model="user.name" placeholder="Username" name="name" required/>
+                <input class="form-control form-group" id="input-name" ng-keyup="$event.keyCode == 13 && signin();"
+                    type="text" autocomplete="off" ng-model="user.name" placeholder="Email" name="name" required />
             </div>
             <div class="row">
-                <input class="form-control form-group" id="input-pass" ng-keyup="$event.keyCode == 13 && signin();" type="password" autocomplete="off"
-                    ng-model="user.password" placeholder="Password" name="password" required/>
+                <input class="form-control form-group" id="input-pass" ng-keyup="$event.keyCode == 13 && signin();"
+                    type="password" autocomplete="off" ng-model="user.password" placeholder="Password" name="password"
+                    required />
             </div>
             <!--<div class="row" style='margin-bottom: -10px;'>
                 <input class="form-control form-group" id="input-code" ng-keyup="$event.keyCode == 13 && signin();" type="text" autocomplete="off"
@@ -31,12 +34,12 @@
             </div>-->
             <div class="row">
                 <div class="register" style="float: left">
-                    <a ui-sref="register" id="register" class="register">
+                    <a href="javascript:;" id="register" class="register" ng-click="state='register'">
                         <span translate>REGISTER</span>
                     </a>
                 </div>
                 <div class="forgot-password" style="float: right;">
-                    <a href="javascript:;" id="forget-password" class="forget-password" ng-click="">
+                    <a href="javascript:;" id="forget-password" class="forget-password" ng-click="state='forgot'">
                         <span translate>FORGOTPW</span>
                     </a>
                 </div>
@@ -53,10 +56,75 @@
                     </button>
                 </div>
             </div>
-            <p ng-show="" class="help-block">template is required.</p>
+            <!-- <p ng-show="" class="help-block">template is required.</p> -->
         </form>
 
     </div>
+    <div class="login-content" ng-show="state=='register'">
+        <form class="login-form" role="form" ng-submit="singup()" name="registerForm" style="width:100%;">
+            <h3>Sign up </h3>
+            <!-- <div class="form-body"> -->
+            <div class="row" ng-class="{'has-error' : registerForm.username.$touched && registerForm.username.$invalid}">
+                <input type="email" class="form-control form-group input-sm" name="username" id="username" ng-model="register.username"
+                    placeholder="Email" minlength="6" maxlength="50" required>
+                <p ng-show="registerForm.username.$touched && registerForm.username.$error.required" class="help-block">User
+                    name is required.</p>
+                <p ng-show="registerForm.username.$error.minlength || registerForm.username.$error.maxlength" class="help-block">User
+                    name must be between 6 - 50 characters.</p>
+            </div>
+            <div class="row" ng-class="{'has-error' : registerForm.pass.$touched && registerForm.pass.$invalid}">
+                <input type="password" name="pass" id="pass" class="form-control form-group" ng-model="register.password"
+                    placeholder="password" required pattern="^(?=.*\d)(?=.*[a-z]).{6,30}$" />
+                <span ng-show="registerForm.pass.$touched && registerForm.pass.$error.required" class="help-block">Password
+                    is required</span>
+                <p ng-show="registerForm.pass.$error.pattern" class="help-block">Password must contain at least
+                    one number,one capital letter, length 6-16.</p>
+            </div>
 
+            <div class="row" ng-class="{'has-error' : registerForm.repass.$touched && registerForm.repass.$invalid}">
+                <!-- <div class="col-sm-9"> -->
+                <input type="password" name="repass" id="repass" class="form-control form-group" ng-model="register.repassword"
+                    placeholder="confirm password" password-check='register.password' required />
+                <span ng-show="registerForm.repass.$touched && registerForm.repass.$error.required" class="help-block">Retyping
+                    password is required</span>
+                <span ng-show='registerForm.repass.$error.match' class="help-block">Passwords don't match.</span>
+            </div>
+            <!-- </div> -->
+            <div class="row" style="margin-top: 20px;">
+                <div style="float: left;">
+                    <button type="submit" class="btn green-haze" ng-disabled="registerForm.$invalid"><span class="title"
+                            translate>REGISTER</span></button>
+                </div>
+                <div style="float: right;">
+                    <button type="button" class="btn default" ng-click="back()"><span class="title" translate>CANCEL</span></button>
+                </div>
+            </div>
+
+            <!-- </div> -->
+        </form>
+    </div>
+    <div class="login-content" ng-show="state=='forgot'">
+        <form action="javascript:;" class="login-form" ng-submit="forgot();" name="forgotForm">
+            <h3>Forgot your password? </h3>
+            <div class="row" ng-class="{'has-error' : registerForm.email.$touched && registerForm.email.$invalid}">
+                <input type="email" class="form-control form-group input-sm" name="email" id="email" ng-model="forgot.email"
+                    placeholder="Email" minlength="6" maxlength="50" required>
+                <p ng-show="registerForm.email.$touched && registerForm.email.$error.required" class="help-block">User
+                    name is required.</p>
+                <p ng-show="registerForm.email.$error.minlength || registerForm.email.$error.maxlength" class="help-block">Email
+                    is invalid.</p>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+
+                <div style="float: left;">
+                        <button type="submit" class="btn green-haze" ng-disabled="registerForm.$invalid"><span class="title"
+                            translate>SEND</span></button>
+                </div>
+                <div style="float: right;">
+                    <button type="button" class="btn default" ng-click="back()"><span class="title" translate>CANCEL</span></button>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </div>

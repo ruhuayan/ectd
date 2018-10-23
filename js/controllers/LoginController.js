@@ -1,18 +1,29 @@
-angular.module('MetronicApp').controller('LoginController', ['$scope', '$location', '$rootScope', '$state', '$cookies', 'AuthenticationService',
-    function($scope, $location, $rootScope, $state, $cookies, AuthenticationService){
+angular.module('MetronicApp').controller('LoginController', ['$scope', '$rootScope', '$location', '$state', 'AuthenticationService',
+    function($scope,  $rootScope, $location, $state, AuthenticationService){
 
-        $scope.user = {};                            
-       
+        $scope.user = {}; 
+        $scope.register = {};
+        $scope.forgot = {};                           
         $scope.signin = signin;
         $scope.cancel = cancel;
-
+        $scope.state = 'login';
         (function initController() {              
-            // reset login status
             AuthenticationService.ClearCredentials();
         })();
         
+        const token = $location.search()['activate'];
+        const uid = $location.search()['uid'];                console.log(token, username)
+        if(token && username){
+            AuthenticationService.Activate({uid, token}).then(
+                res=>{    console.log(res); 
+                    toastr.success('Your account is activated. Please log in.')
+                },err=>{console.log(err);
+                    toastr.warning('Activation of your account Failed!')
+                }
+            );
+        }
         function cancel(){
-            alert('are you sure to want to give up!');
+            // alert('are you sure to want to give up!');
         }
         function signin() { 
            
@@ -21,10 +32,7 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
                     // $rootScope.currentuser = response.username;
                     AuthenticationService.SetCredentials(res);
                     toastr.success('Succesfully Logged In');
-                    // $rootScope.loaded = 0; 
                     $state.go("dashboard").then(function() {
-                        // $rootScope.loaded = 1;
-                        //$window.location.reload();
                         $state.reload();
                     });
                 } else {
@@ -32,4 +40,22 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$locatio
                 }
             });
         };
+
+        $scope.singup = function(){   console.log($scope.register)
+            AuthenticationService.Signup({username:$scope.register.username, password: $scope.register.password})
+                .then(function(res){
+                        if(res) {                       console.log(res);
+                            toastr.success('Sign up successfully. please activate it from your email.')
+                        }
+                    }, function(err){           console.log(err);
+                        toastr.warning('Register Failed!')
+                    }
+                );
+        }
+        $scope.back = function(){
+            $scope.state = 'login';
+        }
+        $scope.forgot = function(){
+
+        }
     }]);

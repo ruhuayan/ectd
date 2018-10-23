@@ -1,18 +1,18 @@
 angular.module('MetronicApp').controller('UserAccountController', function($rootScope, $scope, $http, $timeout, $state , $cookies, UserApiService) {
     $scope.$on('$viewContentLoaded', function() {
         App.initAjax(); // initialize core components
-        Layout.setAngularJsSidebarMenuActiveLink('set', $('#sidebar_menu_link_profile'), $state); // set profile link active in sidebar menu
+        //Layout.setAngularJsSidebarMenuActiveLink('set', $('#sidebar_menu_link_profile'), $state); // set profile link active in sidebar menu
     });
 
-    var loginUser = $cookies.getObject('globals');
+    var loginUser = $cookies.getObject('globals');          console.log(loginUser)
     $scope.userData = {}; var userData = {};
-    UserApiService.GetCurrentUser(loginUser).then(function(result){
-        if(result && result.id) { 
-            userData = result;                                                  console.log(result);
-            $scope.userData = angular.copy(userData);                           console.log(result.addressList[0].country);
-            $scope.userData.country = result.addressList[0].country;
-        }
-    });
+    // UserApiService.GetCurrentUser(loginUser).then(function(result){
+    //     if(result && result.id) { 
+    //         userData = result;                                                  console.log(result);
+    //         $scope.userData = angular.copy(userData);                           console.log(result.addressList[0].country);
+    //         $scope.userData.country = result.addressList[0].country;
+    //     }
+    // });
 
     $scope.provinceCode = {};
     
@@ -49,18 +49,7 @@ angular.module('MetronicApp').controller('UserAccountController', function($root
         }
         $scope.provinces = provinces[countryCode];
         $scope.userData.country = $scope.country.code;
-        /*$http({
-            method: 'GET',
-            url: 'http://192.168.88.187:8080/ecvcms/a/addresses/provinceList/'+countryCode+'?uid=' + uid + "&apptoken=" + appToken
-            //data: $scope.userData,
-        }).success(function (data, status) {
-            if(status == 200 && data!=null){
-                $scope.provinces = data;
-            }
-        }).error(function (data, status) {
-            // Some error occurred
-            $scope.error = "Get province list fail cause: " + data.exception.message;
-        });*/
+        
     };
 
     $scope.selectedProvince = function(){
@@ -103,14 +92,14 @@ angular.module('MetronicApp').controller('UserAccountController', function($root
             fd.append('file',file);               
         });                                                         //console.log(fd);
 
-        $http({
-            method: 'POST', 
-            url: 'upload.php',
-            headers: {'Content-Type': undefined },
-            data: fd,
-        }).success(function(response) {
-            console.log(response);
-        });
+        // $http({
+        //     method: 'POST', 
+        //     url: 'upload.php',
+        //     headers: {'Content-Type': undefined },
+        //     data: fd,
+        // }).success(function(response) {
+        //     console.log(response);
+        // });
     };
     
 });

@@ -1,4 +1,5 @@
- const Base_URL = "http://www.9341xie.com:8000";
+//  const Base_URL = "http://www.9341xie.com:8000";
+const Base_URL = 'http://localhost:8000';
 //  var Base_URL = "http://52.4.14.123/ectd";
 
  // to prevent client from leaving the page

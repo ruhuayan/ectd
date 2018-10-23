@@ -667,9 +667,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
+                        // 'js/services/authService.js',
                         'assets/layouts/layout/css/login.css',
-                        'js/controllers/LoginController.js',
-                        // 'js/angular-base64.js'
+                        'js/controllers/LoginController.js'
                     ]
                 });
             }]
@@ -911,11 +911,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     name: 'MetronicApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                     files: [
-                        'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                        // 'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
                         'assets/pages/css/profile.css',
-                        'assets/global/plugins/jquery.sparkline.min.js',
-                        'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
-                        'assets/pages/scripts/profile.min.js',
+                        // 'assets/global/plugins/jquery.sparkline.min.js',
+                        // 'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
+                        // 'assets/pages/scripts/profile.min.js',
                         'js/controllers/UserProfileController.js'
                     ]
                 });
@@ -924,11 +924,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     })
 
     // User Profile Dashboard
-    .state("profile.dashboard", {
-        url: "/dashboard",
-        templateUrl: "views/profile/dashboard.html",
-        data: { pageTitle: 'User Profile' }
-    })
+    // .state("profile.dashboard", {
+    //     url: "/dashboard",
+    //     templateUrl: "views/profile/dashboard.html",
+    //     data: { pageTitle: 'User Profile' }
+    // })
 
     // User Profile Account
     .state("profile.account", {
@@ -956,68 +956,68 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         templateUrl: "views/profile/help.html",
         data: { pageTitle: 'User Help' }
     })
-    .state("admin", {
-        url: "/admin",
-        templateUrl: "views/admin/dashboard.html",
-        data: { pageTitle: 'Admin Home' },
-        controller: "DashboardController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', 
-                    files: [
-                       'js/controllers/DashboardController.js',
-                        'js/services/applicationApiService.js'
-                    ]
-                });
-            }]
-        }
-    })
-    //Post lists
-    .state('/admin/users', {
-        url: "/admin/users",
-        templateUrl: "views/admin/users.html",
-        data: { pageTitle: 'Admin Users' },
-        controller: "",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [
-                        'js/services/userApiService.js',
-                        'js/controllers/admin/userCtrl.js',
-                        //'js/controllers/SystemController/UserMgtController.js',
-                        //'js/systemApiService.js',
-                        'assets/global/plugins/datatables/datatables.min.css',
-                        'assets/global/plugins/datatables/datatables.min.js',
-                        'assets/pages/scripts/angular-datatables.js'
-                    ]
-                });
-            }]
-        }
-    }).state("/admin/submissions", {
-        url: "/admin/submissions",
-        templateUrl: "views/admin/submissions.html",
-        data: { pageTitle: 'Admin submissions' },
-        controller: "",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', 
-                    files: [
-                        'js/services/applicationApiService.js',
-                        'js/controllers/admin/adminSubCtrl.js',
-                        'assets/global/plugins/datatables/datatables.min.css',
-                        'assets/global/plugins/datatables/datatables.min.js',
-                        'assets/pages/scripts/angular-datatables.js'
-                    ]
-                });
-            }]
-        }
-    })
+    // .state("admin", {
+    //     url: "/admin",
+    //     templateUrl: "views/admin/dashboard.html",
+    //     data: { pageTitle: 'Admin Home' },
+    //     controller: "DashboardController",
+    //     resolve: {
+    //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+    //             return $ocLazyLoad.load({
+    //                 name: 'MetronicApp',
+    //                 insertBefore: '#ng_load_plugins_before', 
+    //                 files: [
+    //                    'js/controllers/DashboardController.js',
+    //                     'js/services/applicationApiService.js'
+    //                 ]
+    //             });
+    //         }]
+    //     }
+    // })
+    // //Post lists
+    // .state('/admin/users', {
+    //     url: "/admin/users",
+    //     templateUrl: "views/admin/users.html",
+    //     data: { pageTitle: 'Admin Users' },
+    //     controller: "",
+    //     resolve: {
+    //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+    //             return $ocLazyLoad.load({
+    //                 name: 'MetronicApp',
+    //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+    //                 files: [
+    //                     'js/services/userApiService.js',
+    //                     'js/controllers/admin/userCtrl.js',
+    //                     //'js/controllers/SystemController/UserMgtController.js',
+    //                     //'js/systemApiService.js',
+    //                     'assets/global/plugins/datatables/datatables.min.css',
+    //                     'assets/global/plugins/datatables/datatables.min.js',
+    //                     'assets/pages/scripts/angular-datatables.js'
+    //                 ]
+    //             });
+    //         }]
+    //     }
+    // }).state("/admin/submissions", {
+    //     url: "/admin/submissions",
+    //     templateUrl: "views/admin/submissions.html",
+    //     data: { pageTitle: 'Admin submissions' },
+    //     controller: "",
+    //     resolve: {
+    //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+    //             return $ocLazyLoad.load({
+    //                 name: 'MetronicApp',
+    //                 insertBefore: '#ng_load_plugins_before', 
+    //                 files: [
+    //                     'js/services/applicationApiService.js',
+    //                     'js/controllers/admin/adminSubCtrl.js',
+    //                     'assets/global/plugins/datatables/datatables.min.css',
+    //                     'assets/global/plugins/datatables/datatables.min.js',
+    //                     'assets/pages/scripts/angular-datatables.js'
+    //                 ]
+    //             });
+    //         }]
+    //     }
+    // })
     
     
 }]);
@@ -1048,7 +1048,7 @@ MetronicApp.run(function($rootScope, $state, $templateCache, $location, $cookies
 
 // To logout user forcibly after certain time if no action is performed on application
 MetronicApp.run(function($rootScope) {
-    // $rootScope.Base_URL = "http://192.168.88.187:8080/ectd";
-    $rootScope.Base_URL = "http://www.9341xie.com:8000";
+    $rootScope.Base_URL = "http://localhost:8000";
+    // $rootScope.Base_URL = "http://www.9341xie.com:8000";
     var lastDigestRun = new Date();                                             console.log(lastDigestRun);
 });
