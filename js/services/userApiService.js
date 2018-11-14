@@ -9,45 +9,61 @@
 
     function UserApiService($http, $rootScope) {
 
-        var Base_URL = $rootScope.Base_URL; //"http://52.4.14.123/ectd"; //'http://192.168.88.187:8080/ectd';
-        var service = {};
+        const Base_URL = $rootScope.Base_URL; 
+        const service = {};
 
         service.GetCurrentUser = GetCurrentUser;
-        service.RegisterUser = RegisterUser;
-        service.SaveUserAccount = SaveUserAccount; 
-        service.GetUserByUid = GetUserByUid;
+        service.UpdateAccount = UpdateAccount; 
+        service.CreateCompany = CreateCompany;
+        service.UpdateCompany = UpdateCompany;
         service.ChangePassword = ChangePassword;
-        service.GetUserList = GetUserList;
 
         return service;
         function GetCurrentUser(userData) {
-            return $http.get(Base_URL + '/a/users/loginUser?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting tag by id'));
-        }
-        function RegisterUser(userData) {
-            return $http.post(Base_URL + '/a/users/client/register', userData).then(handleSuccess, handleError('Error in creating tag'));
-        }
-        function SaveUserAccount(userData, newData){
-            return $http.post(Base_URL + '/a/users/client/save?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, newData).then(handleSuccess, handleError('Error in creating tag'));
-        }
-        function GetUserList(userData, pageno, pagesize) {
-            return $http.get(Base_URL + '/a/users/list?pageNo=' + pageno + '&pageSize=' + pagesize + '&uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting all taglist'));
+            return $http({
+                method: 'GET',
+                url:  `${Base_URL}/users/verify`, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in verifying user'));
         }
 
-        function GetUserByUid(uid, userData) {
-            return $http.get(Base_URL + '/a/users/uid/' + uid + '/?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token).then(handleSuccess, handleError('Error getting tag by id'));
+        function UpdateAccount(userData, data){
+            return $http({
+                method: 'PUT',
+                url:  `${Base_URL}/users/${data.id}/`, 
+                data: data, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in updating user account'));
+        }
+
+        function CreateCompany(userData, data){
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/companies/`, 
+                data: data, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in creating company'));
+        }
+
+        function UpdateCompany(userData, id, data){
+            return $http({
+                method: 'PUT',
+                url:  `${Base_URL}/companies/${id}/`, 
+                data: data, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in updating company'));
         }
         
-        function ChangePassword(userData, newData) {
-            return $http.get(Base_URL + '/a/users/changePassword?uid=' + userData.uid +
-                "&apptoken=" + userData.access_token, newData).then(handleSuccess, handleError('Error in search tag'));
+        function ChangePassword(userData, userid, newData) {
+            return $http({
+                method: 'POST',
+                url:  `${Base_URL}/users/${userid}/set_password/`, 
+                data: newData, 
+                headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
+            }).then(handleSuccess, handleError('Error in resetting password'));
         }
 
         // private functions
-
         function handleSuccess(res) {
             return res.data;
         }

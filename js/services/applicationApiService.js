@@ -32,10 +32,10 @@
         //     }).then(handleSuccess, handleError('Error getting all Application list'));
         // }
         
-        function GetClientAppList(userData, pageno, pagesize) {
+        function GetClientAppList(userData, companyId) {
             return $http({
                 method: 'GET',
-                url:Base_URL + '/companies/1/applications/',
+                url:`${Base_URL}/companies/${companyId}/applications/`,
                 headers: {'Content-Type': 'application/json', 'Authorization': 'JWT '+userData.token}
             }).then(handleSuccess, handleError('Error getting all Application list'));
         }

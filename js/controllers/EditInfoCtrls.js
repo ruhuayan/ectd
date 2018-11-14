@@ -136,8 +136,8 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
         };
 
         $scope.submitAdinfo = function(){
-            if($scope.adminForm.$valid){
-                if(adminData.application){
+            if($scope.adminForm.$valid){ 
+                if($scope.adminData['application']){
                     const jsonData =JSON.stringify( $scope.adminData);       //console.log($scope.adminForm)
                     GenInfoApiService.UpdateAppInfo($rootScope.userData, adminData.application, jsonData).then(res=>{
                         if(res && res.application){  
@@ -146,7 +146,7 @@ angular.module('MetronicApp').controller('AdinfoCtrl', ['$rootScope','$scope','$
                     });
                 }else{
                     $scope.adminData['application'] = appId;
-                    const jsonData =JSON.stringify( $scope.adminData);                                 console.log("submit admin", jsonData);
+                    const jsonData =JSON.stringify( $scope.adminData);                                // console.log("submit admin", jsonData);
                     GenInfoApiService.CreateAppInfo($rootScope.userData, jsonData).then(function(result){
                         if(result && result.application){
                             toastr.success('Admin info created');

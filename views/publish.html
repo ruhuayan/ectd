@@ -56,7 +56,8 @@ END PAGE HEADER-->
                 </div>
             </div>
             <div class="portlet-body">
-                 <div><button class="btn btn-sm green" href="#" id="validate-btn" ng-click="validateApp()" ng-disabled="inprocess"><span class="title" translate>VALIDATE</span></button>
+                 <div>
+                    <!-- <button class="btn btn-sm green" href="#" id="validate-btn" ng-click="validateApp()" ng-disabled="inprocess"><span class="title" translate>VALIDATE</span></button> -->
                     <button class="btn btn-sm green" href="#" id="download-btn" ng-click="downloadApp()" ng-disabled="inprocess"><span class="title" translate>PUBLISH</span></button>
                 </div>
             </div>
@@ -144,7 +145,7 @@ END PAGE HEADER-->
                 }
             });
         },
-        downloadTree: function(appUid, appNumber, userData){
+        downloadTree: function(appId, appNumber, userData){
             var _this = this;
             App.blockUI({
                         target: $("body"),
@@ -170,9 +171,10 @@ END PAGE HEADER-->
                
             })();
             
-            var url = Base_URL + "/a/application/file/getZipFilesByAppUid/" + appUid + "/?uid=" + userData.uid + "&apptoken=" + userData.access_token;
+            var url = `${Base_URL}/applications/${appId}/download/`;
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
+            xhr.setRequestHeader('Authorization', `JWT ${userData.token}`);
             xhr.responseType = 'blob';
             xhr.onprogress = function (e) {        //console.log (e);
                 if (e.lengthComputable) {

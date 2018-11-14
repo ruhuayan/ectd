@@ -12,8 +12,8 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$rootSco
         })();
         
         const token = $location.search()['activate'];
-        const uid = $location.search()['uid'];                console.log(token, username)
-        if(token && username){
+        const uid = $location.search()['uid'];       
+        if(token && uid){
             AuthenticationService.Activate({uid, token}).then(
                 res=>{    console.log(res); 
                     toastr.success('Your account is activated. Please log in.')
@@ -36,15 +36,15 @@ angular.module('MetronicApp').controller('LoginController', ['$scope', '$rootSco
                         $state.reload();
                     });
                 } else {
-                    toastr.warning('Login Fail'); //console.log("error in login controller");
+                    toastr.warning('Login Fail'); 
                 }
             });
         };
 
-        $scope.singup = function(){   console.log($scope.register)
+        $scope.singup = function(){   //console.log($scope.register)
             AuthenticationService.Signup({username:$scope.register.username, password: $scope.register.password})
                 .then(function(res){
-                        if(res) {                       console.log(res);
+                        if(res) {                       //console.log(res);
                             toastr.success('Sign up successfully. please activate it from your email.')
                         }
                     }, function(err){           console.log(err);

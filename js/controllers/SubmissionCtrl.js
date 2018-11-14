@@ -1,6 +1,6 @@
 angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope','$state','$cookies','$stateParams','CookiesApiService', 'ApplicationApiService',
-'TemplateApiService', 'ModalService', "DTOptionsBuilder",
-    function($rootScope, $scope, $state, $cookies, $stateParams, CookiesApiService, ApplicationApiService, TemplateApiService, ModalService, DTOptionsBuilder) {
+'TemplateApiService','UserApiService', 'ModalService', "DTOptionsBuilder",
+    function($rootScope, $scope, $state, $cookies, $stateParams, CookiesApiService, ApplicationApiService, TemplateApiService, UserApiService, ModalService, DTOptionsBuilder) {
         
         $scope.changeLanguage($stateParams['lang']);
         // var dest = $stateParams['lang']=="cn"? "中國" : "USA";
@@ -11,6 +11,7 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
         else {
             appData = {"sequence": "0000"};                            //console.log('app data:', $rootScope.userData.role==="Admin");
         }
+
         var dtOptions = {
                     sEmptyTable: "Empty Table",
                     order: [3, 'desc'],                   
@@ -25,16 +26,26 @@ angular.module('MetronicApp').controller('SubmissionCtrl', ['$rootScope','$scope
                 };
         $scope.dtInstance = {};
         $scope.submissions = [{}];                    // to make sure data-table has json data
-        if($rootScope.applications) {
-            $scope.submissions = $rootScope.applications;
-            $scope.dtOptions = dtOptions;
-        } else {                                                                                          //console.log("Applications loading...");
-            ApplicationApiService.GetClientAppList($rootScope.userData, 1, 50).then(function(data){   console.log("api service", data);
-                if(!data) {$rootScope.applications=[]; return;}
-                $scope.submissions =  $rootScope.applications = data;//.slice(0,8);        //console.log($rootScope.applications)
-                $scope.dtOptions = dtOptions;
-            });
-        }
+        UserApiService.GetCurrentUser($rootScope.userData).then(
+            function(res){
+                if(!res.company){
+                    toastr.warning('You need to create/join a company to create an application');
+                    $state.go('profile');
+                }else{
+                    if($rootScope.applications) {
+                        $scope.submissions = $rootScope.applications;
+                        $scope.dtOptions = dtOptions;
+                    } else {                                                                                          //console.log("Applications loading...");
+                        ApplicationApiService.GetClientAppList($rootScope.userData, res.company.id).then(function(data){   console.log("api service", data);
+                            if(!data) {$rootScope.applications=[]; return;}
+                            $scope.submissions =  $rootScope.applications = data;//.slice(0,8);        //console.log($rootScope.applications)
+                            $scope.dtOptions = dtOptions;
+                        });
+                    }
+                }
+            }
+        );
+        
         getTemplateList();                         // to create templates                                            
         if(appData.id){                                         
             $scope.submitLabel = "EDITAPP";

@@ -198,36 +198,8 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         COMPANY: "Comapny Information",
         CODE: "Postal Code", 
         
-        //dashboard
-        HASHRATE: 'Hash Rate',
-        UNPAIDBAL: 'Unpaid Balance',
-        MININGSUM: 'Mining Summary (Ethereum)',
-        TOTALETH: 'Total Ethereum',
-        TOTALDOLLAR: 'Total Dollar',
-        STARTTIME: 'Start Date',
-        MINETIME: 'Mining Time',
-        MONTH: 'Month',
-        DATE: 'Paid on',
-        // DURATION: 'Duration',
-        ESTIMATE: 'Estimated Earnings',
-        CURRENT: '(BASED ON YOUR CURRENT HASH RATE)',
-        CAD:'Canadian dollar',
-        CNY:'Chinese Yuan',
-        WEEK:'Week',
-        YEAR:'Year',
-        DAY: 'Day',
-        FIVEYEARS: 'Five Years',
-        TOTALBAL:'Total Balance',
-        PAIDETH:'Paid',
-        TOTALINDOLLAR: 'Total balance in Canadian Dollar',
-        //User page
-        FNAME:'First Name',
-        LNAME: 'Last Name',
-        MOBILE:'Mobile Number',
-        
         PROFILE:'Profile',
         
-        WALLET: 'Wallet',
         CHANGEPW: 'Change Password',
         SETUP: 'Set up Wallet here',
         CURPW: 'Current Password',
@@ -240,28 +212,11 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         HELP: "Help",
         ACC_SETTINGS: "Account Settings",
         PER_INFO: "Personal Info",
+        COMPANY_INFO: "Company Info",
         CHANGE_PASSWORD: "Change Password",
         PRIV_SETTINGS: "Privacy Settings",
-        CHANGE_IMAGE: "Change Image",
-        
-        //Upgrade page
-        MININGPOWER: 'Mining Power',
-        HASHPOWER: 'Hash Power (MH): ',
-        ESTIMATERET: 'Estimate Return',
-        CURRATE: 'Current Rate: ',
-        ETHPERMONTH: 'Ethereum Per Month',
-        CADPERMONTH: 'Canadian Dollar Per Month: ',
-        FORTWOYEARS: '（for 2 years）',
-        CADTOTAL: 'Total Canadian Dollar for two years',
-        //order page
-        ORDERLIST: 'Order List',
-        ORDER: 'Order',
-        ITEM: 'Item',
-        TOTAL: 'Total',
-        
-        QUANTITY: 'Quantity',
-        PAIDON: 'Placed on'
-        
+        INVITE: 'Invite',
+
     };
 
     var cn_translations = {
@@ -432,36 +387,13 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         PERSONAL: "个人资料",
         COMPANY: "公司资料",
         CODE: "邮 编", 
-        //dashboard
-        HASHRATE: '算力',
-        UNPAIDBAL: '未支付金额',
-        MININGSUM: '挖矿结果 （以太）',
-        TOTALETH: '总以太',
-        TOTALDOLLAR: '总加币收入',
-        STARTTIME: '开始时间',
-        MINETIME: '挖矿时间',
-        MONTH: '月',
-        DATE: ' 转账日期',
-        // DURATION: '挖矿时间',
-        ESTIMATE: '预计收入',
-        CURRENT: '（根据目前算力）',
-        CAD:'加币',
-        CNY:'元',
-        WEEK:'周',
-        YEAR:'年',
-        DAY: '日',
-        FIVEYEARS: '五年',
-        TOTALBAL:'总金额',
-        PAIDETH:'已支付金额',
-        TOTALINDOLLAR: '加币总收入',
+        
         //User page
         FNAME:'名',
         LNAME: '姓',
         MOBILE:'手机号码',
-        //EMAIL:'电子邮箱',
         PROFILE:'我的账户',
         
-        WALLET: '钱包',
         CHANGEPW: '修改密码',
         SETUP: '在此设置钱包',
         CURPW: '目前密码',
@@ -475,26 +407,9 @@ MetronicApp.config(["$translateProvider", function($translateProvider) {
         PER_INFO: "个人 信息",
         CHANGE_PASSWORD: "更改 密码",
         PRIV_SETTINGS: "隐私 设置",
-        CHANGE_IMAGE: "更改 头像",
+        COMPANY_INFO: "公司信息",
+        INVITE: '邀请',
         
-        //Upgrade page
-        MININGPOWER: '挖矿算力',
-        HASHPOWER: 'Hash 算力 (MH): ',
-        PRICE: '价格: ',
-        ESTIMATERET: '估算回报',
-        CURRATE: '目前汇率: ',
-        ETHPERMONTH: '月入以太',
-        CADPERMONTH: '月入加币: ',
-        FORTWOYEARS: '（两年）',
-        CADTOTAL: '两年总收入（加币）',
-        QUANTITY: '数量',
-        //order page
-        ORDERLIST: '订单列表',
-        ORDER: '订单',
-        ITEM: '介绍',
-        TOTAL: '总价',
-       
-        PAIDON: '下单日期'
         //login page
         /*
         SIGNUP: '注册',
@@ -604,13 +519,9 @@ MetronicApp.controller('HeaderController', ['$scope', '$rootScope', '$location',
         $scope.$on('$includeContentLoaded', function() {
             Layout.initHeader();
         });
-        var userData = JSON.parse($cookies.get('globals'));
-        if(userData.uid =="bad94a71544d4146b8a9f4ad04d5e19b"){
-            $scope.admin = true; 
-            $scope.username = "root";
+        if(!$rootScope.userData){
+            $rootScope.userData = JSON.parse($cookies.get('globals'));
         }
-        else $scope.username = "test";            //userData.uid; //console.log('user Data: ', userData);
-        
     }
 ]);
 
@@ -620,29 +531,6 @@ MetronicApp.controller('SidebarController', ['$state', '$scope', function($state
         Layout.initSidebar($state); // init sidebar
     });
 }]);
-
-/* Setup Layout Part - Quick Sidebar */
-// MetronicApp.controller('QuickSidebarController', ['$scope', function($scope) {
-//     $scope.$on('$includeContentLoaded', function() {
-//         setTimeout(function() {
-//             QuickSidebar.init(); // init quick sidebar        
-//         }, 2000);
-//     });
-// }]);
-
-/* Setup Layout Part - Theme Panel
-MetronicApp.controller('ThemePanelController', ['$scope', function($scope) {
-    $scope.$on('$includeContentLoaded', function() {
-        Demo.init(); // init theme panel
-    });
-}]); */
-
-/* Setup Layout Part - Footer 
-MetronicApp.controller('FooterController', ['$scope', function($scope) {
-    $scope.$on('$includeContentLoaded', function() {
-        Layout.initFooter(); // init footer
-    });
-}]);*/
 
 
 /* Setup Rounting For All Pages */
@@ -670,23 +558,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         // 'js/services/authService.js',
                         'assets/layouts/layout/css/login.css',
                         'js/controllers/LoginController.js'
-                    ]
-                });
-            }]
-        }
-    }).state("register", {
-        url: "/register",
-        templateUrl: "views/register.html",
-        data: { pageTitle: 'Register' },
-        // controller: "RegisterCtrl",         //already in ng-controller
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                    files: [   
-                        // 'js/angular-base64.js',
-                        'js/controllers/RegisterCtrl.js'
                     ]
                 });
             }]
@@ -747,6 +618,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         'assets/pages/scripts/angular-datatables.js',
                         'css/edit.css',
                         'js/services/cookiesApiService.js',
+                        'js/services/userApiService.js',
                         'js/services/templateApiService.js',
                         'js/services/applicationApiService.js',
                         'js/controllers/SubmissionCtrl.js',
@@ -902,9 +774,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     // User Profile
     .state("profile", {
         url: "/profile",
-        templateUrl: "views/profile/main.html",
+        templateUrl: "views/profile/account.html",
         data: { pageTitle: 'User Profile' },
-        controller: "UserProfileController",
+        controller: "UserAccountCtrl",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
@@ -912,18 +784,20 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                     files: [
                         // 'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
-                        'assets/pages/css/profile.css',
+                        // 'assets/pages/css/profile.css',
                         // 'assets/global/plugins/jquery.sparkline.min.js',
                         // 'assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
                         // 'assets/pages/scripts/profile.min.js',
-                        'js/controllers/UserProfileController.js'
+                        // 'js/controllers/UserProfileController.js',
+                        'js/services/userApiService.js',
+                        'js/controllers/UserAccountCtrl.js'
                     ]
                 });
             }]
         }
     })
 
-    // User Profile Dashboard
+    // //User Profile Dashboard
     // .state("profile.dashboard", {
     //     url: "/dashboard",
     //     templateUrl: "views/profile/dashboard.html",
@@ -931,31 +805,31 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
     // })
 
     // User Profile Account
-    .state("profile.account", {
-        url: "/account",
-        templateUrl: "views/profile/account.html",
-        data: { pageTitle: 'User Account' },
-        controller: "UserAccountController",
-        resolve: {
-            deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name: 'MetronicApp',
-                    insertBefore: '#ng_load_plugins_before', 
-                    files: [
-                        'js/services/userApiService.js',
-                        'js/controllers/UserAccountController.js'
-                    ]
-                });
-            }]
-        }
-    })
+    // .state("profile.account", {
+    //     url: "/account",
+    //     templateUrl: "views/profile/account.html",
+    //     data: { pageTitle: 'User Account' },
+    //     controller: "UserAccountController",
+    //     resolve: {
+    //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+    //             return $ocLazyLoad.load({
+    //                 name: 'MetronicApp',
+    //                 insertBefore: '#ng_load_plugins_before', 
+    //                 files: [
+    //                     'js/services/userApiService.js',
+    //                     'js/controllers/UserAccountController.js'
+    //                 ]
+    //             });
+    //         }]
+    //     }
+    // })
 
-    // User Profile Help
-    .state("profile.help", {
-        url: "/help",
-        templateUrl: "views/profile/help.html",
-        data: { pageTitle: 'User Help' }
-    })
+    // // User Profile Help
+    // .state("profile.help", {
+    //     url: "/help",
+    //     templateUrl: "views/profile/help.html",
+    //     data: { pageTitle: 'User Help' }
+    // })
     // .state("admin", {
     //     url: "/admin",
     //     templateUrl: "views/admin/dashboard.html",

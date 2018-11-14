@@ -2,22 +2,24 @@ angular.module('MetronicApp')
     .controller('PublishTreeCtrl', [ '$rootScope', '$scope', 'CookiesApiService', 'ApplicationApiService', 'GenInfoApiService', 'TagApiService', 'ModalService',
     function($rootScope, $scope, CookiesApiService, ApplicationApiService, GenInfoApiService, TagApiService, ModalService){
         $scope.inprocess = true;
-        var appUid;                                                //console.log("user Data", CookiesApiService.GetCookies());
+        var appId;
         if(CookiesApiService.GetCookies()){
-            appUid = $rootScope.appData.appUid;                    //console.log($rootScope.appData);
-            $scope.appNumber = $rootScope.appData.folder;
+            appId = $rootScope.appData.id;                    
+            // $scope.appNumber = $rootScope.appData.folder;
             JsTree.userData = JsTree.userData || $rootScope.userData;
         }
 
         if(!$rootScope.subFiles || $rootScope.subFiles.length==0){
-            ApplicationApiService.GetApplication(appUid, $rootScope.userData).then(function(result){     //console.log("appData infopage", result);
-                $rootScope.subFiles = result.nodeList;
-                $scope.fileList = result.ectdFileList;
-                //$rootScope.appData.NumOfFiles = result.nodeList.length;
-                JsTree.initTree($rootScope.subFiles);                               //console.log('subFiles: ', $rootScope.subFiles);
+            ApplicationApiService.GetAppNodes($rootScope.userData, appId).then(function(res){     //console.log("appData ", result);
+                if(res){                              
+                    $rootScope.subFiles = res;                
+                    JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);  
+                    //JsTree.setSelectList($rootScope.subFiles);       //console.log('subFiles: ', $rootScope.subFiles); 
+                }
             });
         }else{
-            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);         //console.log('subFiles: ', $rootScope.subFiles);
+            JsTree.initTree($rootScope.subFiles, $rootScope.substanceTags);
+            //JsTree.setSelectList($rootScope.subFiles);
         }
         $scope.toggleTree = function(){
             JsTree.toggle($rootScope.open);
@@ -26,19 +28,14 @@ angular.module('MetronicApp')
         $scope.getUserData = function(){
             return $rootScope.userData;
         };
-        $scope.getAppUid = function(){
-            return appUid;
+        $scope.getappId = function(){
+            return appId;
         };
         $scope.downloadApp = async function(){
             var result = await checkGenInfo();
-                if(!result || !result.id) toastr.error(" The application does not have general information", "Error:");
-                else
-                    JsTree.downloadTree(appUid, $scope.appNumber, $rootScope.userData);
-            // GenInfoApiService.GetGenInfo(appUid, $rootScope.userData).then(function(result){        //console.log("geninfo: ",result);
-            //     if(!result || !result.id) toastr.error(" The application does not have general information", "Error:");
-            //     else
-            //         JsTree.downloadTree(appUid, $scope.appNumber, $rootScope.userData);
-            // });
+            if(!result || !result.application) toastr.error(" The application does not have general information", "Error:");
+            else
+                JsTree.downloadTree(appId, $rootScope.appData.number, $rootScope.userData);
         };
         $scope.validateApp = async function(){
             // if($scope.inprocess) return;
@@ -77,15 +74,10 @@ angular.module('MetronicApp')
             //JsTree._hideProgressbar();
         };
         function checkGenInfo(){
-            return GenInfoApiService.GetGenInfo(appUid, $rootScope.userData);/*.then(function(result){        console.log("geninfo: ",result);
-                if(!result || !result.id) JsTree._writeMsg("Application", " does not have general information");
-            });*/
+            return GenInfoApiService.GetAppInfo($rootScope.userData, appId);
         }
         function checkContacts(){
-            return GenInfoApiService.GetContacts(appUid, $rootScope.userData)/*.then(function(result){        console.log("contact info: ", result);
-                if(!result || !result.length) JsTree._writeMsg("Application", " does not have contact information");
-                $scope.inprocess = false;
-            });*/
+            return GenInfoApiService.GetAppContacts($rootScope.userData, appId);
         }
         function fileExits(filename){
             var found = false;
@@ -98,7 +90,7 @@ angular.module('MetronicApp')
         }
 
         $scope.validateTag = function(nodeId){
-            return TagApiService.GetTagByNid(appUid, nodeId, $rootScope.userData);
+            return TagApiService.GetTagByNid(appId, nodeId, $rootScope.userData);
         }
     
     }]);

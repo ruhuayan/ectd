@@ -67,10 +67,8 @@
             <div class="row" ng-class="{'has-error' : registerForm.username.$touched && registerForm.username.$invalid}">
                 <input type="email" class="form-control form-group input-sm" name="username" id="username" ng-model="register.username"
                     placeholder="Email" minlength="6" maxlength="50" required>
-                <p ng-show="registerForm.username.$touched && registerForm.username.$error.required" class="help-block">User
-                    name is required.</p>
-                <p ng-show="registerForm.username.$error.minlength || registerForm.username.$error.maxlength" class="help-block">User
-                    name must be between 6 - 50 characters.</p>
+                <p ng-show="registerForm.username.$touched && registerForm.username.$error.required" class="help-block">Email is required.</p>
+                <p ng-show="registerForm.username.$error.minlength || registerForm.username.$error.maxlength" class="help-block">Email must be between 6 - 50 characters.</p>
             </div>
             <div class="row" ng-class="{'has-error' : registerForm.pass.$touched && registerForm.pass.$invalid}">
                 <input type="password" name="pass" id="pass" class="form-control form-group" ng-model="register.password"
